@@ -84,10 +84,56 @@ def cleanup_mana(s):
 def unreplace_newlines(s):
     return s.replace('\\', '\n')
 
+
+def forum_reorder(s):
+    fields = s.split('|')
+    # should see ten of em
+    if not len(fields) == 10:
+        return s
+    # first and last should be empty, if we had | on the ends
+    if not (fields[0] == '' and fields [-1] == ''):
+        return s
+    name = fields[1]
+    supertypes = fields[2]
+    types = fields[3]
+    loyalty = fields[4]
+    subtypes = fields[5]
+    pt = fields[6]
+    cost = fields[7]
+    text = fields[8]
+
+    new_s = ''
+    if not cost == '':
+        new_s += cost + '\n'
+    #if not name == '':
+    new_s += name + '\n'
+    if not supertypes == '':
+        new_s += supertypes + ' '
+    #if not types == '':
+    new_s += types
+    if not subtypes == '':
+        new_s += ' - ' + subtypes + '\n'
+    else:
+        new_s += '\n'
+    if not text == '':
+        new_s += text + '\n'
+    if not pt == '':
+        new_s += pt
+    if not loyalty == '':
+        new_s += loyalty
+
+    new_s = new_s.replace('{', '[mana]')
+    new_s = new_s.replace('}', '[/mana]')
+    new_s = new_s.replace('T', '[mana]T[/mana]')
+    new_s = new_s.replace('Q', '[mana]Q[/mana]')
+
+    return s
+
 def unscramble(s):
     s = from_unary(s)
     s = cleanup_mana(s)
     s = unreplace_newlines(s)
+    s = forum_reorder(s)
     return s
     
 
