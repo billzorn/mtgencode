@@ -29322,7 +29322,7 @@
 
 |zombie cutthroat||creature||zombie|&^^^/&^^^^|{^^^BBBB}|morph~pay &^^^^^ life. |
 
-|doubling season||enchantment||||{^^^^GG}|countertype # ore\if an effect would put one or more tokens onto the battlefield under your control, it puts twice that many of those tokens onto the battlefield instead.\if an effect would place one or m# counters on a permanent you control, it places twice that many of those counters on that permanent instead.|
+|doubling season||enchantment||||{^^^^GG}|if an effect would put one or more tokens onto the battlefield under your control, it puts twice that many of those tokens onto the battlefield instead.\if an effect would place one or more counters on a permanent you control, it places twice that many of those counters on that permanent instead.|
 
 |compulsive research||sorcery||||{^^UU}|target player draws three cards. then that player discards two cards unless he or she discards a land card.|
 

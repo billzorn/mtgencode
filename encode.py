@@ -353,7 +353,8 @@ def replace_counters(s):
         'ore counter',
     ]
     for countername in shortcounters:
-        if countername in s:
+        # SUPER HACKY fix for doubling season
+        if countername in s and 'more counter' not in s:
             usedcounters += [countername]
             s = s.replace(countername, counter_marker + ' counter')
     
