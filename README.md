@@ -13,6 +13,8 @@ python encode.py AllSets.json output.txt
 ```
 will read the corpus from AllSets.json and put the new encoding in output.txt.
 
+You can also use unscramble.py to take data formatted like hte output of encode.py and make it more human readable (though definitely not valid json). Works the same way as encode.
+
 Apparently I'm running Python 2.7.6.
 
 ======
