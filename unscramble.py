@@ -74,9 +74,9 @@ def cleanup_mana(s):
         
         if len(innercost) == 0 and success:
             s = s.replace(cost, newcost)
-        else:
-            print cost
-            print newcost
+        # else:
+        #     print cost
+        #     print newcost
     
     return s
 
