@@ -1,41 +1,67 @@
 import re
 import codecs
 import sys
+from collections import OrderedDict
 
 # returns back a dictionary mapping the names of classes of cards
 # to lists of cards in those classes
 def sortcards(cards):
-    classes = {
-        'multicards' : [],
-
-        'X cards' : [],
-        'counter cards' : [],
-        'choice cards' : [],
-        'equipment' : [],
-        'levelers' : [],
-        'legendary' : [],
-        
-        'planeswalkers' : [],
-        'lands' : [],
-        'instants' : [],
-        'sorceries' : [],
-        'enchantments' : [],
-        'noncreature artifacts' : [],
-        'creatures' : [],
-        'other' : [],
-    }
+    classes = OrderedDict([
+        ('Special classes:', None),
+        ('multicards', []),
+        ('Inclusive classes:', None),
+        ('X cards', []),
+        ('kicker cards', []),
+        ('counter cards', []),
+        ('uncast cards', []),
+        ('choice cards', []),
+        ('equipment', []),
+        ('levelers', []),
+        ('legendary', []),
+        ('Exclusive classes:', None),
+        ('planeswalkers', []),
+        ('lands', []),
+        ('instants', []),
+        ('sorceries', []),
+        ('enchantments', []),
+        ('noncreature artifacts', []),
+        ('creatures', []),
+        ('other', []),
+        ('By color:', None),
+        ('white', []),
+        ('blue', []),
+        ('black', []),
+        ('red', []),
+        ('green', []),
+        ('colorless nonland', []),
+        ('colorless land', []),
+        ('unknown color', []),
+        ('By number of colors:', None),
+        ('zero colors', []),                
+        ('one color', []),
+        ('two colors', []),
+        ('three colors', []),
+        ('four colors', []),
+        ('five colors', []),
+        ('more colors?', []),
+    ])
 
     for card in cards:
         # special classes
         if '|\n|' in card:
-            classes['multicards'] += [card]
+            # better formatting pls???
+            classes['multicards'] += [card.replace('|\n|', '|\n~~~~~~~~~~~~~~~~\n|')]
             continue
         
         # inclusive classes
         if 'X' in card:
             classes['X cards'] += [card]
+        if 'kick' in card:
+            classes['kicker cards'] += [card]
         if '#' in card:
             classes['counter cards'] += [card]
+        if 'uncast' in card:
+            classes['uncast cards'] += [card]
         if 'choose one ~' in card or 'choose two ~' in card or '=' in card:
             classes['choice cards'] += [card]
         if '|equipment|' in card or 'equip {' in card:
@@ -62,8 +88,56 @@ def sortcards(cards):
             classes['creatures'] += [card]
         else:
             classes['other'] += [card]
+
+        # color classes need to find the mana cost
+        fields = card.split('|')
+        if len(fields) != 10:
+            classes['unknown color'] += [card]
+        else:
+            cost = fields[7]
+            color_count = 0
+            if 'W' in cost or 'U' in cost or 'B' in cost or 'R' in cost or 'G' in cost:
+                if 'W' in cost:
+                    classes['white'] += [card]
+                    color_count += 1
+                if 'U' in cost:
+                    classes['blue'] += [card]
+                    color_count += 1
+                if 'B' in cost:
+                    classes['black'] += [card]
+                    color_count += 1
+                if 'R' in cost:
+                    classes['red'] += [card]
+                    color_count += 1
+                if 'G' in cost:
+                    classes['green'] += [card]
+                    color_count += 1
+                # should be unreachable
+                if color_count == 0:
+                    classes['unknown color'] += [card]
+            else:
+                if '|land|' in card:
+                    classes['colorless land'] += [card]
+                else:
+                    classes['colorless nonland'] += [card]
+            
+            if color_count == 0:
+                classes['zero colors'] += [card]
+            elif color_count == 1:
+                classes['one color'] += [card]
+            elif color_count == 2:
+                classes['two colors'] += [card]
+            elif color_count == 3:
+                classes['three colors'] += [card]
+            elif color_count == 4:
+                classes['four colors'] += [card]
+            elif color_count == 5:
+                classes['five colors'] += [card]
+            else:
+                classes['more colors?'] += [card]
         
     return classes
+
 
 def main(fname, oname = None, verbose = True):
     if verbose:
@@ -83,7 +157,10 @@ def main(fname, oname = None, verbose = True):
         ofile = codecs.open(oname, 'w', 'utf-8')
 
     for cardclass in classes:
-        print cardclass + ': ' + str(len(classes[cardclass]))
+        if classes[cardclass] == None:
+            print cardclass
+        else:
+            print '  ' + cardclass + ': ' + str(len(classes[cardclass]))
 
     if oname == None:
         outputter = sys.stdout
@@ -91,10 +168,15 @@ def main(fname, oname = None, verbose = True):
         outputter = ofile
 
     for cardclass in classes:
-        outputter.write('[spoiler=' + cardclass + ']\n')
-        for card in classes[cardclass]:
-            outputter.write(card + '\n\n')
-        outputter.write('[/spoiler]')
+        if classes[cardclass] == None:
+            outputter.write(cardclass + '\n')
+        else:
+            classlen = len(classes[cardclass])
+            if classlen > 0:
+                outputter.write('[spoiler=' + cardclass + ': ' + str(classlen) + ' cards]\n')
+                for card in classes[cardclass]:
+                    outputter.write(card + '\n\n')
+                outputter.write('[/spoiler]\n')
 
     if not oname == None:
         ofile.close()

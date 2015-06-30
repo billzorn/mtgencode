@@ -93,7 +93,7 @@ def cleanup_mana(s, pretty = False):
             innercost = innercost[2:]
 
         if pretty:
-            cost = '[mana]' + cost + '[/mana]'
+            newcost = '[mana]' + newcost + '[/mana]'
         
         if len(innercost) == 0 and success:
             s = s.replace(cost, newcost)
@@ -165,6 +165,9 @@ def unscramble(s, pretty = False):
 def main(fname, oname = None, verbose = True, pretty = False):
     if verbose:
         print 'Opening encoded card file: ' + fname
+
+    if pretty:
+        print 'Using pretty [mana][/mana] encoding for mtgsalvation forum'
 
     f = open(fname, 'r')
     lines = f.readlines()
