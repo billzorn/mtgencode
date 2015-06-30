@@ -75,13 +75,17 @@ this_marker = '@'
 counter_marker = '#'
 bsidesep = '\n'
 
-unary_max = 30
+unary_max = 20
 
 def to_unary(s):
     numbers = re.findall(r'[0123456789]+', s)
     for n in sorted(numbers, cmp = lambda x,y: cmp(int(x), int(y)) * -1):
         i = int(n)
-        if i == 40:
+        if i == 25:
+            s = s.replace(n, 'twenty~five')
+        elif i == 30:
+            s = s.replace(n, 'thirty')
+        elif i == 40:
             s = s.replace(n, 'forty')
         elif i == 50:
             s = s.replace(n, 'fifty')
@@ -377,6 +381,56 @@ def replace_counters(s):
     return s
 
 
+# the word counter is confusing when used to refer to what we do to spells
+# and sometimes abilities to make them not happen. Let's rename that.
+# call this after doing the counter replacement to simplify the regexes
+counter_rename = 'uncast'
+def rename_uncast(s):
+    # pre-checks to make sure we aren't doing anything dumb
+    # if '# counter target ' in s or '^ counter target ' in s or '& counter target ' in s:
+    #     print s + '\n'
+    # if '# counter a ' in s or '^ counter a ' in s or '& counter a ' in s:
+    #     print s + '\n'
+    # if '# counter all ' in s or '^ counter all ' in s or '& counter all ' in s:
+    #     print s + '\n'
+    # if '# counter a ' in s or '^ counter a ' in s or '& counter a ' in s:
+    #     print s + '\n'
+    # if '# counter that ' in s or '^ counter that ' in s or '& counter that ' in s:
+    #     print s + '\n'
+    # if '# counter @' in s or '^ counter @' in s or '& counter @' in s:
+    #     print s + '\n'
+    # if '# counter the ' in s or '^ counter the ' in s or '& counter the ' in s:
+    #     print s + '\n'
+
+    # counter target
+    s = s.replace('counter target ', counter_rename + ' target ')
+    # counter a
+    s = s.replace('counter a ', counter_rename + ' a ')
+    # counter all
+    s = s.replace('counter all ', counter_rename + ' all ')
+    # counters a
+    s = s.replace('counters a ', counter_rename + 's a ')
+    # countered (this could get weird in terms of englishing the word)
+    s = s.replace('countered', counter_rename)
+    # counter that
+    s = s.replace('counter that ', counter_rename + ' that ')
+    # counter @
+    s = s.replace('counter @', counter_rename + ' @')
+    # counter it (this is tricky
+    s = s.replace(', counter it', ', ' + counter_rename + ' it')
+    # counter the (it happens at least once, thanks wizards!)
+    s = s.replace('counter the ', counter_rename + ' the ')
+    # counter up to
+    s = s.replace('counter up to ', counter_rename + ' up to ')
+
+    # check if the word exists in any other context
+    # if 'counter' in s.replace('# counter', '').replace('countertype', '').replace('^ counter', '').replace('& counter', ''):
+    #     print s + '\n'
+
+    # whew! by manual inspection of a few dozen texts, it looks like this about covers it.
+    return s
+    
+
 # run only after doing unary conversion
 def fix_dashes(s):
     s = s.replace('-' + unary_marker, reserved_indicator)
@@ -470,6 +524,7 @@ def encode(card):
         text = fix_dashes(text)
         text = fix_x(text)
         text = replace_counters(text)
+        text = rename_uncast(text)
         text = relocate_equip(text)
         text = replace_newlines(text)
         encoding += text

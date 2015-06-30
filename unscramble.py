@@ -11,7 +11,7 @@ def from_unary(s):
         s = s.replace(number, str(i))
     return s
 
-def cleanup_mana(s):
+def cleanup_mana(s, pretty = False):
     untranslations = {
         'WW' : '{W}',
         'UU' : '{U}',
@@ -43,10 +43,28 @@ def cleanup_mana(s):
         'XX' : '{X}',
     }
 
+    untranslations_pretty = {
+        'WW' : 'W',
+        'UU' : 'U',
+        'BB' : 'B',
+        'RR' : 'R',
+        'GG' : 'G',
+        'PP' : 'P',
+        'SS' : 'S',
+        'XX' : 'X',
+    }
+
+    if pretty:
+        ldelim = ''
+        rdelim = ''
+    else:
+        ldelim = '{'
+        rdelim = '}'
+
     manacosts = re.findall(r'\{[WUBRGPVSX\^]*\}', s)
     for cost in manacosts:
         if cost == '{}':
-            s = s.replace(cost, '{0}')
+            s = s.replace(cost, ldelim + '0' + rdelim)
             continue
 
         innercost = cost[1:-1]
@@ -59,18 +77,23 @@ def cleanup_mana(s):
             innercost = innercost.replace(count, '')
             colorless_total += len(count)            
         if colorless_total > 0:
-            newcost += '{' + str(colorless_total) + '}'
+            newcost += ldelim + str(colorless_total) + rdelim
 
         # now try to read the remaining characters in pairs
         success = True
         while len(innercost) > 1:
             fragment = innercost[0:2]
-            if fragment in untranslations:
+            if pretty and fragment in untranslations_pretty:
+                newcost += untranslations_pretty[fragment]
+            elif fragment in untranslations:
                 newcost += untranslations[fragment]
             else:
                 success = False
                 break
             innercost = innercost[2:]
+
+        if pretty:
+            cost = '[mana]' + cost + '[/mana]'
         
         if len(innercost) == 0 and success:
             s = s.replace(cost, newcost)
@@ -89,9 +112,11 @@ def forum_reorder(s):
     fields = s.split('|')
     # should see ten of em
     if not len(fields) == 10:
+        #print 'badlen ' + str(len(fields))
         return s
     # first and last should be empty, if we had | on the ends
-    if not (fields[0] == '' and fields [-1] == ''):
+    if not (fields[0] == '' and fields [-1] == '\n'):
+        #print 'badfields ' + repr(fields[0]) + ', ' + repr(fields[-1]) 
         return s
     name = fields[1]
     supertypes = fields[2]
@@ -103,41 +128,41 @@ def forum_reorder(s):
     text = fields[8]
 
     new_s = ''
+    if not name == '':
+        new_s += name + '\n'
     if not cost == '':
         new_s += cost + '\n'
-    #if not name == '':
-    new_s += name + '\n'
+
     if not supertypes == '':
         new_s += supertypes + ' '
-    #if not types == '':
-    new_s += types
+    if not types == '':
+        new_s += types
     if not subtypes == '':
-        new_s += ' - ' + subtypes + '\n'
+        new_s += ' ~ ' + subtypes + '\n'
     else:
         new_s += '\n'
+    # super special case, doubt it will come up
+    if types == '' and subtypes == '':
+        new_s += '\n'
+    
     if not text == '':
         new_s += text + '\n'
     if not pt == '':
-        new_s += pt
+        new_s += pt + '\n'
     if not loyalty == '':
-        new_s += loyalty
+        new_s += '(' + loyalty + ')\n'
 
-    new_s = new_s.replace('{', '[mana]')
-    new_s = new_s.replace('}', '[/mana]')
-    new_s = new_s.replace('T', '[mana]T[/mana]')
-    new_s = new_s.replace('Q', '[mana]Q[/mana]')
+    return new_s
 
-    return s
-
-def unscramble(s):
+def unscramble(s, pretty = False):
     s = from_unary(s)
-    s = cleanup_mana(s)
+    s = cleanup_mana(s, pretty)
     s = unreplace_newlines(s)
     s = forum_reorder(s)
     return s
     
 
-def main(fname, oname = None, verbose = True):
+def main(fname, oname = None, verbose = True, pretty = False):
     if verbose:
         print 'Opening encoded card file: ' + fname
 
@@ -151,15 +176,11 @@ def main(fname, oname = None, verbose = True):
         ofile = codecs.open(oname, 'w', 'utf-8')
 
     for line in lines:
-        val = unscramble(line)
+        val = unscramble(line, pretty)
         if oname == None:
             sys.stdout.write(val)
         else:
             ofile.write(val)
-        
-    # print len(badwords)
-    # for word in badwords:
-    #     print word
 
     if not oname == None:
         ofile.close()
@@ -171,7 +192,9 @@ if __name__ == '__main__':
         main(sys.argv[1])
     elif len(sys.argv) == 3:
         main(sys.argv[1], oname = sys.argv[2])
+    elif len(sys.argv) == 4 and sys.argv[3] in ['p', '-p', 'pretty', '-pretty', '--pretty']:
+        main(sys.argv[1], oname = sys.argv[2], pretty = True)
     else:
-        print 'Usage: ' + sys.argv[0] + ' ' + '<encoded file> [output filename]'
+        print 'Usage: ' + sys.argv[0] + ' ' + '<encoded file> [output filename [p]]'
         exit(1)
 
