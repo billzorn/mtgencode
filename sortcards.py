@@ -58,7 +58,7 @@ def sortcards(cards):
             classes['X cards'] += [card]
         if 'kick' in card:
             classes['kicker cards'] += [card]
-        if '%' in card:
+        if '%' in card or '#' in card:
             classes['counter cards'] += [card]
         if 'uncast' in card:
             classes['uncast cards'] += [card]
