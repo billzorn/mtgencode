@@ -5,7 +5,7 @@ import sys
 
 #badwords = []
 
-valid_encoded_char = r'[abcdefghijklmnopqrstuvwxyz\'+\-*",.:;WUBRGPV/XTQ|\\&^\{\}@ \n=~#]'
+valid_encoded_char = r'[abcdefghijklmnopqrstuvwxyz\'+\-*",.:;WUBRGPV/XTQ|\\&^\{\}@ \n=~%\[\]]'
 
 dash_marker = '~'
 bullet_marker = '='
@@ -73,7 +73,7 @@ x_marker = 'X'
 tap_marker = 'T'
 untap_marker = 'Q'
 this_marker = '@'
-counter_marker = '#'
+counter_marker = '%'
 bsidesep = '\n'
 
 unary_max = 20
@@ -616,4 +616,3 @@ if __name__ == '__main__':
     else:
         print 'Usage: ' + sys.argv[0] + ' ' + '<JSON file> [output filename]'
         exit(1)
-
