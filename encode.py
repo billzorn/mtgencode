@@ -1,6 +1,7 @@
 import jdecode
 import re
 import codecs
+import sys
 
 #badwords = []
 
@@ -428,7 +429,7 @@ def rename_uncast(s):
     #     print s + '\n'
 
     # whew! by manual inspection of a few dozen texts, it looks like this about covers it.
-    return s
+    return s    
     
 
 # run only after doing unary conversion
@@ -464,6 +465,40 @@ def fix_x(s):
     s = s.replace('x.', x_marker + '.')
     s = s.replace('x,', x_marker + ',')
     s = s.replace('x/x', x_marker + '/' + x_marker)
+    return s
+
+
+# run after fixing dashes, it makes the regexes better, but before replacing newlines
+def reformat_choice(s):
+    # the idea is to take 'choose n ~\n=ability\n=ability\n'
+    # to '[n = ability = ability]\n'
+
+    single_choices = re.findall(r'choose one', s)
+
+    for choice in single_choices:
+        print choice
+        print s
+        # since we have two groups in that regex
+        newchoice = choice
+        # newchoice = newchoice.replace('choose one ~', unary_marker + (unary_counter * 1))
+        # newchoice = newchoice.replace('\n', ' ')
+        # # the indexing cuts off the | we know is at the end
+        # newchoice = '[' + newchoice[:-1] + ']|'
+        s = s.replace(choice, newchoice)
+
+    double_choices = re.findall(r'choose two ~[^|]*=[^\n|]*\|', s)
+    
+    for choice in double_choices:
+        # since we have two groups in that regex
+        newchoice = choice
+        newchoice = newchoice.replace('choose two ~', unary_marker + (unary_counter * 2))
+        newchoice = newchoice.replace('\n', ' ')
+        # the indexing cuts off the | we know is at the end
+        newchoice = '[' + newchoice[:-1] + ']|'
+        s = s.replace(choice, newchoice)
+
+    # sys.stdout.write('.')
+        
     return s
 
 
@@ -525,6 +560,7 @@ def encode(card):
         text = fix_x(text)
         text = replace_counters(text)
         text = rename_uncast(text)
+        text = reformat_choice(text)
         text = relocate_equip(text)
         text = replace_newlines(text)
         encoding += text
