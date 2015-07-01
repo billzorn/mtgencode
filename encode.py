@@ -468,37 +468,32 @@ def fix_x(s):
     return s
 
 
+
+
 # run after fixing dashes, it makes the regexes better, but before replacing newlines
 def reformat_choice(s):
     # the idea is to take 'choose n ~\n=ability\n=ability\n'
     # to '[n = ability = ability]\n'
-
-    single_choices = re.findall(r'choose one', s)
-
-    for choice in single_choices:
-        print choice
-        print s
-        # since we have two groups in that regex
-        newchoice = choice
-        # newchoice = newchoice.replace('choose one ~', unary_marker + (unary_counter * 1))
-        # newchoice = newchoice.replace('\n', ' ')
-        # # the indexing cuts off the | we know is at the end
-        # newchoice = '[' + newchoice[:-1] + ']|'
-        s = s.replace(choice, newchoice)
-
-    double_choices = re.findall(r'choose two ~[^|]*=[^\n|]*\|', s)
     
-    for choice in double_choices:
-        # since we have two groups in that regex
-        newchoice = choice
-        newchoice = newchoice.replace('choose two ~', unary_marker + (unary_counter * 2))
-        newchoice = newchoice.replace('\n', ' ')
-        # the indexing cuts off the | we know is at the end
-        newchoice = '[' + newchoice[:-1] + ']|'
-        s = s.replace(choice, newchoice)
+    def choice_formatting_helper(s_helper, prefix, count):
+        single_choices = re.findall(ur'(' + prefix + ur'\n?(\u2022.*(\n|$))+)', s_helper)
+        for choice in single_choices:
+            newchoice = choice[0]
+            newchoice = newchoice.replace(prefix, unary_marker + (unary_counter * count))
+            newchoice = newchoice.replace('\n', ' ')
+            if newchoice[-1:] == ' ':
+                newchoice = '[' + newchoice[:-1] + ']\n'
+            else:
+                newchoice = '[' + newchoice + ']'
+            s_helper = s_helper.replace(choice[0], newchoice)
+        return s_helper
 
-    # sys.stdout.write('.')
-        
+    s = choice_formatting_helper(s, ur'choose one \u2014', 1)
+    s = choice_formatting_helper(s, ur'choose one \u2014 ', 1) # ty Promise of Power
+    s = choice_formatting_helper(s, ur'choose two \u2014', 2)
+    s = choice_formatting_helper(s, ur'choose one or both \u2014', 0)
+    s = choice_formatting_helper(s, ur'choose one or more \u2014', 0)
+
     return s
 
 
@@ -563,7 +558,7 @@ def encode(card):
         text = reformat_choice(text)
         text = relocate_equip(text)
         text = replace_newlines(text)
-        encoding += text
+        encoding += text.strip()
     encoding += fieldsep
     # if 'flavor' in card:
     #     encoding += card['flavor'].lower()
@@ -573,7 +568,7 @@ def encode(card):
     if 'bside' in card:
         encoding += bsidesep
         encoding += encode(card['bside'])
-    
+
     encoding = to_ascii(encoding)
     # encoding = re.sub(valid_encoded_char, '', encoding)
     # if not encoding == '':
