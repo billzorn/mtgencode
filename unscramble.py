@@ -108,6 +108,27 @@ def unreplace_newlines(s):
     return s.replace('\\', '\n')
 
 
+def cleanup_choice(s):
+    openbrackets = re.findall(r'\[[0123456789]+', s)
+    for openbracket in openbrackets:
+        number = openbracket[1:]
+        i = int(number)
+        if i == 0:
+            s = s.replace(number, 'choose one or more ~')
+        elif i == 1:
+            s = s.replace(number, 'choose one ~')
+        elif i == 2:
+            s = s.replace(number, 'choose two ~')
+        else:
+            s = s.replace(number, 'choose ' + number + ' ~')
+
+    clauses = re.findall(r'\[choose.*\]', s)
+    for clause in clauses:
+        newclause = clause.replace('=', '\n=')
+        s = s.replace(clause, newclause)
+
+    return s
+
 def forum_reorder(s):
     fields = s.split('|')
     # should see ten of em
@@ -156,6 +177,7 @@ def forum_reorder(s):
 
 def unscramble(s, pretty = False):
     s = from_unary(s)
+    s = cleanup_choice(s)
     s = cleanup_mana(s, pretty)
     s = unreplace_newlines(s)
     s = forum_reorder(s)

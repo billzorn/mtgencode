@@ -58,11 +58,11 @@ def sortcards(cards):
             classes['X cards'] += [card]
         if 'kick' in card:
             classes['kicker cards'] += [card]
-        if '#' in card:
+        if '%' in card:
             classes['counter cards'] += [card]
         if 'uncast' in card:
             classes['uncast cards'] += [card]
-        if 'choose one ~' in card or 'choose two ~' in card or '=' in card:
+        if '[' in card or ']' in card or '=' in card:
             classes['choice cards'] += [card]
         if '|equipment|' in card or 'equip {' in card:
             classes['equipment'] += [card]
