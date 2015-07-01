@@ -9353,7 +9353,7 @@
 
 |akroan hoplite||creature||human soldier|&^/&^^|{RRWW}|whenever @ attacks, it gets +X/+& until end of turn, where X is the number of attacking creatures you control.|
 
-|demonmail hauberk||artifact||equipment||{^^^^}|equipped creature gets +&^^^^/+&^^.\equip~sacrifice a creature.|
+|demonmail hauberk||artifact||equipment||{^^^^}|equip~sacrifice a creature.\equipped creature gets +&^^^^/+&^^.|
 
 |rhox||creature||rhino beast|&^^^^^/&^^^^^|{^^^^GGGG}|you may have @ assign its combat damage as though it weren't blocked.\{^^GG}: regenerate @.|
 
@@ -19297,7 +19297,7 @@
 
 |mishra's toy workshop||land|||||T: add {^^^} to your mana pool. spend this mana only on spells and abilities that put tokens onto the battlefield. use toys to represent the tokens.|
 
-|sigil of distinction||artifact||equipment||{XX}|countertype % charge\@ enters the battlefield with X % counters on it.\equipped creature gets +&^/+&^ for each % counter on @.\equip~remove a % counter from @.|
+|sigil of distinction||artifact||equipment||{XX}|equip~remove a % counter from @.\countertype % charge\@ enters the battlefield with X % counters on it.\equipped creature gets +&^/+&^ for each % counter on @.|
 
 |coerced confession||sorcery||||{^^^^UB}|target player puts the top four cards of his or her library into his or her graveyard. you draw a card for each creature card put into that graveyard this way.|
 
@@ -20259,7 +20259,7 @@
 
 |fyndhorn elder||creature||elf druid|&^/&^|{^^GG}|T: add {GGGG} to your mana pool.|
 
-|piston sledge||artifact||equipment||{^^^}|when @ enters the battlefield, attach it to target creature you control.\equipped creature gets +&^^^/+&^.\equip~sacrifice an artifact.|
+|piston sledge||artifact||equipment||{^^^}|equip~sacrifice an artifact.\when @ enters the battlefield, attach it to target creature you control.\equipped creature gets +&^^^/+&^.|
 
 |marrow shards||instant||||{WP}|\@ deals &^ damage to each attacking creature.|
 
@@ -21476,7 +21476,7 @@
 
 |ebon dragon||creature||dragon|&^^^^^/&^^^^|{^^^^^BBBB}|flying\when @ enters the battlefield, you may have target opponent discard a card.|
 
-|nightmare lash||artifact||equipment||{^^^^}|equipped creature gets +&^/+&^ for each swamp you control.\equip~pay &^^^ life.|
+|nightmare lash||artifact||equipment||{^^^^}|equip~pay &^^^ life.\equipped creature gets +&^/+&^ for each swamp you control.|
 
 |erratic explosion||sorcery||||{^^RR}|choose target creature or player. reveal cards from the top of your library until you reveal a nonland card. @ deals damage equal to that card's converted mana cost to that creature or player. put the revealed cards on the bottom of your library in any order.|
 

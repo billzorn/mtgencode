@@ -515,6 +515,20 @@ def relocate_equip(s):
             s = equip
         else:
             s = equip + '\n' + s
+
+    nonmana = re.findall(ur'(equip\u2014.*(\n|$))', s)
+    if len(nonmana) == 1:
+        equip = nonmana[0][0]
+        s = s.replace('\n' + equip, '')
+        s = s.replace(equip, '')
+        
+        if equip[-1:] == ' ':
+            equip = equip[0:-1]
+
+        if s == '':
+            s = equip
+        else:
+            s = equip + '\n' + s
         
     return s
 
