@@ -132,7 +132,7 @@ def cleanup_choice(s):
 def forum_reorder(s):
     fields = s.split('|')
     # should see ten of em
-    if not len(fields) == 10:
+    if not len(fields) >= 10:
         #print 'badlen ' + str(len(fields))
         return s
     # first and last should be empty, if we had | on the ends
@@ -147,12 +147,19 @@ def forum_reorder(s):
     pt = fields[6]
     cost = fields[7]
     text = fields[8]
+    if len(fields) > 10:
+        cost2 = fields[9]
+    else:
+        cost2 = None
 
     new_s = ''
     if not name == '':
         new_s += name + '\n'
-    if not cost == '':
-        new_s += cost + '\n'
+    if not cost == '':        
+        new_s += cost
+        if cost2:
+            new_s += ' ~ ' + cost2
+        new_s += '\n'
 
     if not supertypes == '':
         new_s += supertypes + ' '

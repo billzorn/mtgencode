@@ -21,6 +21,26 @@ def prettymana(s, for_forum):
         else:
             return '{' + s[0] + '/' + s[1] + '}'
 
+# format a list of rows of data into nice columns
+def padrows(l):
+    # get length for each field
+    lens = []
+    for ll in l:
+        for i, field in enumerate(ll):
+            if i < len(lens):
+                lens[i] = max(len(str(field)), lens[i])
+            else:
+                lens += [len(str(field))]
+    # now pad out to that length
+    padded = []
+    for ll in l:
+        padded += ['']
+        for i, field in enumerate(ll):
+            s = str(field)
+            pad = ' ' * (lens[i] - len(s))
+            padded[-1] += (s + pad + ' ')
+    return padded
+
 punctuation_chars = r'[+\-*",.:;WUBRGPV/XTQ|\\&^\{\}@ \n=~%\[\]]'
 creature_keywords = [
     # evergreen
@@ -44,12 +64,47 @@ creature_keywords = [
     'fear',
     'shroud',
     'intimidate',
-    # rare ones that work the same way and interfere
-    'rampage',
-    'infect',
+    # expert level keywords
+    'absorb',
+    'amplify',
+    'annihilator',
+    'battle cry',
+    'bolster',
+    'bloodthirst',
     'bushido',
+    'changeling',
+    'convoke',
+    'devour',
+    'evolve',
     'exalted',
+    'extort',
+    'fading',
+    'flanking',
+    'frenzy',
+    'graft',
+    'haunt',
+    'horsemanship',
+    'infect',
+    'modular',
+    #'morph',
+    #'ninjutsu',
+    'persist',
+    'poisonous',
+    'provoke',
+    #'prowl',
+    'rampage',
+    'ripple',
+    #'scavenge',
     'shadow',
+    'soulbond',
+    'soulshift',
+    'split second',
+    'sunburst',
+    'undying',
+    #'unearth',
+    'unleash',
+    'vanishing',
+    'wither',
 ] # there are other keywords out there, these are just easy to detect
 
 # data aggregating classes
@@ -233,7 +288,7 @@ class Card:
             self.bside = None
 
         fields = self.raw.split(encode.fieldsep)
-        if not len(fields) == 10:
+        if not len(fields) >= 10:
             self._parsed = False
             self._valid = False
             self.fields = fields
@@ -315,20 +370,29 @@ class Card:
                 # SUPER HACK
                 if 'creature' in self.types:
                     for line in self.text_lines:
+                        orig_line = line
                         guess = []
                         for keyword in creature_keywords:
                             if keyword in line:
                                 guess += [keyword]
                                 line = line.replace(keyword, '')
-                        if re.sub(punctuation_chars, ' ', line).split() == [] or 'protect' in line:
+                        # yeah, I said it was a hack
+                        if re.sub(punctuation_chars, ' ', line).split() == [] or 'protect' in line or 'walk' in line or 'sliver creatures' in line or 'you control have' in line:
                             for word in guess:
                                 if word not in self.creature_words:
                                     self.creature_words += [word]
+                        # elif len(guess) > 0 and len(line) < 30:
+                        #     print orig_line
             else:
                 self.text = None
                 self.text_lines = []
                 self.text_words = []
                 self.creature_words = []
+
+            if len(fields) > 10:
+                self.cost2 = Manacost(fields[9])
+            else:
+                self.cost2 = None
 
     def __str__(self):
         return ''.join([
@@ -360,7 +424,10 @@ def main(fname, oname = None, verbose = False):
     cwords = 0
     allwords = {}
 
-    mcolor = 'G'
+    correct = 0
+    correct_len = 0
+    incorrect = 0
+    incorrect_len = 0
 
     i = 0
     for cardtext in cardtexts:
@@ -371,30 +438,48 @@ def main(fname, oname = None, verbose = False):
             continue
         cards += [card]
 
+        if not str(card.cost) == str(card.cost2):
+            if not card.cost2.check_colors(card.cost.colors):
+                print card.raw + '\n'
+            incorrect += 1
+            if card.text:
+                incorrect_len += len(card.text)
+        else:
+            correct += 1
+            if card.text:
+                correct_len += len(card.text)
+
         if 'creature' in card.types:
             creatures += 1
         if card.creature_words:
             cwords += 1
-
-        if card.cost.check_colors(mcolor):
-            print ' '.join(card.text_words)
 
         for word in card.text_words:
             if word in allwords:
                 allwords[word] += 1
             else:
                 allwords[word] = 1
-            
-
-    # print str(creatures) + ' creatures, ' + str(cwords) + ' with keywords'
-    # print str(len(allwords)) + ' unique words in card text'
-    # i = 0
-    # for word in sorted(allwords, key=allwords.get, reverse=True):
-    #     i += 1
-    #     if i > 0:
-    #         break
-    #     print word + ': ' + str(allwords[word])
     
+    print '\n====================\n'
+
+    for card in cards:
+        if (not str(card.cost) == str(card.cost2)) and card.cost2.check_colors(card.cost.colors):
+            print card.raw + '\n'
+
+    print '\n====================\n'
+
+    for card in cards:
+        if str(card.cost) == str(card.cost2):
+            print card.raw + '\n'
+
+    print '\n====================\n'
+
+    print str(creatures) + ' creatures, ' + str(cwords) + ' with keywords'
+    print str(len(allwords)) + ' unique words in card text'
+    
+    print str(incorrect) + ' cost mismatches, ' + str(correct) + ' cost matches.'
+    print str(incorrect_len / incorrect) + ' average length of cost mismatches.'
+    print str(correct_len / correct) + ' average length of cost matches.'
 
 if __name__ == '__main__':
     import sys

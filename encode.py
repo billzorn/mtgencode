@@ -574,6 +574,12 @@ def encode(card):
         text = replace_newlines(text)
         encoding += text.strip()
     encoding += fieldsep
+
+    # HACK: put the cost again after the text
+    if 'manaCost' in card:
+        encoding += replace_mana(card['manaCost'].lower())
+    encoding += fieldsep
+
     # if 'flavor' in card:
     #     encoding += card['flavor'].lower()
     # encoding += fieldsep
