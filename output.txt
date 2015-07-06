@@ -2117,8 +2117,6 @@
 
 |goblin tinkerer||creature||goblin artificer|&^/&^^|{^RR}|{RR}, T: destroy target artifact. that artifact deals damage equal to its converted mana cost to @.|
 
-|unexpected potential||conspiracy|||||hidden agenda \you may spend mana as though it were mana of any color to cast spells with the chosen name.|
-
 |war elemental||creature||elemental|&^/&^|{RRRRRR}|when @ enters the battlefield, sacrifice it unless an opponent was dealt damage this turn.\whenever an opponent is dealt damage, put that many +&^/+&^ counters on @.|
 
 |ensoul artifact||enchantment||aura||{^UU}|enchant artifact\enchanted artifact is a creature with base power and toughness &^^^^^/&^^^^^ in addition to its other types.|
@@ -2304,8 +2302,6 @@
 |jade leech||creature||leech|&^^^^^/&^^^^^|{^^GGGG}|green spells you cast cost {GG} more to cast.|
 
 |feast of flesh||sorcery||||{BB}|@ deals X damage to target creature and you gain X life, where X is &^ plus the number of cards named @ in all graveyards.|
-
-|secret summoning||conspiracy|||||hidden agenda \whenever a creature with the chosen name enters the battlefield under your control, you may search your library for any number of cards with that name, reveal them, put them into your hand, then shuffle your library.|
 
 |spellshift||instant||||{^^^UU}|uncast target instant or sorcery spell. its controller reveals cards from the top of his or her library until he or she reveals an instant or sorcery card. that player may cast that card without paying its mana cost. then he or she shuffles his or her library.|
 
@@ -4525,8 +4521,6 @@
 
 |pine barrens||land|||||@ enters the battlefield tapped.\T: add {^} to your mana pool.\T: add {BB} or {GG} to your mana pool. @ deals &^ damage to you.|
 
-|double stroke||conspiracy|||||hidden agenda \whenever you cast an instant or sorcery spell with the chosen name, you may copy it. you may choose new targets for the copy.|
-
 |dark betrayal||instant||||{BB}|destroy target black creature.|
 
 |scarred vinebreeder||creature||elf shaman|&^/&^|{^BB}|{^^BB}, exile an elf card from your graveyard: @ gets +&^^^/+&^^^ until end of turn.|
@@ -5840,8 +5834,6 @@
 |banishing knack||instant||||{UU}|until end of turn, target creature gains "T: return target nonland permanent to its owner's hand."|
 
 |volrath's laboratory||artifact||||{^^^^^}|as @ enters the battlefield, choose a color and a creature type.\{^^^^^}, T: put a &^^/&^^ creature token of the chosen color and type onto the battlefield.|
-
-|muzzio's preparations||conspiracy|||||hidden agenda \each creature you control with the chosen name enters the battlefield with an additional +&^/+&^ counter on it.|
 
 |illumination||instant||||{WWWW}|uncast target artifact or enchantment spell. its controller gains life equal to its converted mana cost.|
 
@@ -8176,8 +8168,6 @@
 
 |centaur glade||enchantment||||{^^^GGGG}|{^^GGGG}: put a &^^^/&^^^ green centaur creature token onto the battlefield.|
 
-|sultai ascendacy||enchantment||||{UUBBGG}|at the beginning of your upkeep, look at the top two cards of your library. put any number of them into your graveyard and the rest back on top of your library in any order.|
-
 |deathgaze cockatrice||creature||cockatrice|&^^/&^^|{^^BBBB}|flying\deathtouch|
 
 |brimstone dragon||creature||dragon|&^^^^^^/&^^^^^^|{^^^^^^RRRR}|flying, haste|
@@ -8451,8 +8441,6 @@
 |timberline ridge||land|||||countertype % depletion\@ doesn't untap during your untap step if it has a % counter on it.\at the beginning of your upkeep, remove a % counter from @.\T: add {RR} or {GG} to your mana pool. put a % counter on @.|
 
 |heroic defiance||enchantment||aura||{^WW}|enchant creature\enchanted creature gets +&^^^/+&^^^ unless it shares a color with the most common color among all permanents or a color tied for most common.|
-
-|worldknit||conspiracy|||||\as long as every card in your card pool started the game in your library or in the command zone, lands you control have "T: add one mana of any color to your mana pool."|
 
 |okiba~gang shinobi||creature||rat ninja|&^^^/&^^|{^^^BBBB}|ninjutsu {^^^BB} \whenever @ deals combat damage to a player, that player discards two cards.|
 
@@ -15212,13 +15200,9 @@
 
 |sparkcaster||creature||kavu|&^^^^^/&^^^|{^^RRGG}|when @ enters the battlefield, return a red or green creature you control to its owner's hand.\when @ enters the battlefield, it deals &^ damage to target player.|
 
-|advantageous proclamation||conspiracy|||||\your minimum deck size is reduced by five.|
-
 |precursor golem||artifact creature||golem|&^^^/&^^^|{^^^^^}|when @ enters the battlefield, put two &^^^/&^^^ colorless golem artifact creature tokens onto the battlefield.\whenever a player casts an instant or sorcery spell that targets only a single golem, that player copies that spell for each other golem that spell could target. each copy targets a different one of those golems.|
 
 |sarcomancy||enchantment||||{BB}|when @ enters the battlefield, put a &^^/&^^ black zombie creature token onto the battlefield.\at the beginning of your upkeep, if there are no zombies on the battlefield, @ deals &^ damage to you.|
-
-|iterative analysis||conspiracy|||||hidden agenda \whenever you cast an instant or sorcery spell with the chosen name, you may draw a card.|
 
 |monastery flock||creature||bird|&/&^^^^^|{^^UU}|defender, flying\morph {UU}|
 
@@ -15943,8 +15927,6 @@
 |raging spirit||creature||spirit|&^^^/&^^^|{^^^RR}|{^^}: @ becomes colorless until end of turn.|
 
 |chain of vapor||instant||||{UU}|return target nonland permanent to its owner's hand. then that permanent's controller may sacrifice a land. if the player does, he or she may copy this spell and may choose a new target for that copy.|
-
-|secrets of paradise||conspiracy|||||hidden agenda \creatures you control with the chosen name have "T: add one mana of any color to your mana pool."|
 
 |wall of hope||creature||wall|&/&^^^|{WW}|defender \whenever @ is dealt damage, you gain that much life.|
 
@@ -20005,8 +19987,6 @@
 
 |ink~treader nephilim||creature||nephilim|&^^^/&^^^|{RRGGWWUU}|whenever a player casts an instant or sorcery spell, if that spell targets only @, copy the spell for each other creature that spell could target. each copy targets a different one of those creatures.|
 
-|sentinel dispatch||conspiracy|||||\at the beginning of the first upkeep, put a &^/&^ colorless construct artifact creature token with defender onto the battlefield.|
-
 |chasm drake||creature||drake|&^^^/&^^^|{^^^^UU}|flying\whenever @ attacks, target creature you control gains flying until end of turn.|
 
 |primitive justice||sorcery||||{^RR}|as an additional cost to cast @, you may pay {^RR} and/or {^GG} any number of times.\destroy target artifact. for each additional {^RR} you paid, destroy another target artifact. for each additional {^GG} you paid, destroy another target artifact, and you gain &^ life.|
@@ -22568,8 +22548,6 @@
 
 |myr incubator||artifact||||{^^^^^^}|{^^^^^^}, T, sacrifice @: search your library for any number of artifact cards, exile them, then put that many &^/&^ colorless myr artifact creature tokens onto the battlefield. then shuffle your library.|
 
-|immediate action||conspiracy|||||hidden agenda \creatures you control with the chosen name have haste.|
-
 |distant melody||sorcery||||{^^^UU}|choose a creature type. draw a card for each permanent you control of that type.|
 
 |symbiotic wurm||creature||wurm|&^^^^^^^/&^^^^^^^|{^^^^^GGGGGG}|when @ dies, put seven &^/&^ green insect creature tokens onto the battlefield.|
@@ -23858,8 +23836,6 @@
 |crowd's favor||instant||||{RR}|convoke \target creature gets +&^/+& and gains first strike until end of turn.|
 
 |igneous golem||artifact creature||golem|&^^^/&^^^^|{^^^^^}|{^^}: @ gains trample until end of turn.|
-
-|backup plan||conspiracy|||||\draw an additional hand of seven cards as the game begins. before taking mulligans, shuffle all but one of your hands into your library.|
 
 |cloudcrest lake||land|||||T: add {^} to your mana pool.\T: add {WW} or {UU} to your mana pool. @ doesn't untap during your next untap step.|
 
@@ -26071,8 +26047,6 @@
 |harmony of nature||sorcery||||{^^GG}|tap any number of untapped creatures you control. you gain &^^^^ life for each creature tapped this way.|
 
 |crumbling colossus||artifact creature||golem|&^^^^^^^/&^^^^|{^^^^^}|trample \when @ attacks, sacrifice it at end of combat.|
-
-|brago's favor||conspiracy|||||hidden agenda \spells with the chosen name you cast cost {^} less to cast.|
 
 |caustic hound||creature||hound|&^^^^/&^^^^|{^^^^^BB}|when @ dies, each player loses &^^^^ life.|
 
@@ -29178,8 +29152,6 @@
 |angel of despair||creature||angel|&^^^^^/&^^^^^|{^^^WWWWBBBB}|flying\when @ enters the battlefield, destroy target permanent.|
 
 |ruination||sorcery||||{^^^RR}|destroy all nonbasic lands.|
-
-|power play||conspiracy|||||\you are the starting player. if multiple players would be the starting player, one of those players is chosen at random.|
 
 |fresh volunteers||creature||human rebel|&^^/&^^|{^WW}||
 

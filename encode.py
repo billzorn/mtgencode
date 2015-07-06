@@ -9,7 +9,7 @@ valid_encoded_char = r'[abcdefghijklmnopqrstuvwxyz\'+\-*",.:;WUBRGPV/XTQ|\\&^\{\
 
 dash_marker = '~'
 bullet_marker = '='
-reserved_indicator = '\r'
+reserved_marker = '\r'
 
 def to_ascii(s):
     s = s.replace(u'\u2014', dash_marker) # unicode long dash
@@ -96,7 +96,9 @@ def to_unary(s):
             s = s.replace(n, 'two hundred')
         else:
             if i > unary_max:
+                # truncate to unary_max
                 i = unary_max
+                # warn, because we probably don't want this to happen
                 print s
             s = s.replace(n, unary_marker + unary_counter * i)
 
@@ -135,8 +137,6 @@ def compress_mana(manastring):
         '{r/g}' : 'RG',
         '{s}' : 'SS',
         '{x}' : x_marker * 2,
-        #'{xx}' : x_marker * 4,
-        #'{xxx}' : x_marker * 6,
         '{t}' : tap_marker,
         '{q}' : untap_marker,
     }
@@ -434,9 +434,9 @@ def rename_uncast(s):
 
 # run only after doing unary conversion
 def fix_dashes(s):
-    s = s.replace('-' + unary_marker, reserved_indicator)
+    s = s.replace('-' + unary_marker, reserved_marker)
     s = s.replace('-', dash_marker)
-    s = s.replace(reserved_indicator, '-' + unary_marker)
+    s = s.replace(reserved_marker, '-' + unary_marker)
     
     # level up is annoying
     levels = re.findall(r'level &\^*\-&', s)
@@ -466,8 +466,6 @@ def fix_x(s):
     s = s.replace('x,', x_marker + ',')
     s = s.replace('x/x', x_marker + '/' + x_marker)
     return s
-
-
 
 
 # run after fixing dashes, it makes the regexes better, but before replacing newlines
@@ -537,6 +535,8 @@ def encode(card):
     # filter out vanguard cards
     if card['layout'] in ['token', 'plane', 'scheme', 'phenomenon', 'vanguard']:
         return
+    if card['type'] in ['Conspiracy']: # just for now?
+        return
 
     encoding = fieldsep
     name = card['name'].lower()
@@ -576,9 +576,9 @@ def encode(card):
     encoding += fieldsep
 
     # HACK: put the cost again after the text
-    if 'manaCost' in card:
-        encoding += replace_mana(card['manaCost'].lower())
-    encoding += fieldsep
+    # if 'manaCost' in card:
+    #     encoding += replace_mana(card['manaCost'].lower())
+    # encoding += fieldsep
 
     # if 'flavor' in card:
     #     encoding += card['flavor'].lower()

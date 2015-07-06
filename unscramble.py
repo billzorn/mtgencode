@@ -6,7 +6,7 @@ import sys
 
 def from_unary(s):
     numbers = re.findall(r'&\^*', s)
-    for number in sorted(numbers, cmp = lambda x,y: cmp(len(x), len(y)) * -1):
+    for number in sorted(numbers, cmp = lambda x,y: cmp(len(x), len(y)), reverse = True):
         i = len(number) - 1
         s = s.replace(number, str(i))
     return s
