@@ -407,18 +407,30 @@ json_symbol_trans = {
     mana_json_open_delimiter + json_symbol_untap + mana_json_close_delimiter : untap_marker,
     mana_json_open_delimiter + json_symbol_untap.lower() + mana_json_close_delimiter : untap_marker,
 }
+json_forum_trans = {
+    mana_forum_open_delimiter + json_symbol_tap + mana_forum_close_delimiter : tap_marker,
+    mana_forum_open_delimiter + json_symbol_tap.lower() + mana_forum_close_delimiter : tap_marker,
+    mana_forum_open_delimiter + json_symbol_untap + mana_forum_close_delimiter : untap_marker,
+    mana_forum_open_delimiter + json_symbol_untap.lower() + mana_forum_close_delimiter : untap_marker,
+}
 symbol_trans = {
     tap_marker : mana_json_open_delimiter + json_symbol_tap + mana_json_close_delimiter,
     untap_marker : mana_json_open_delimiter + json_symbol_untap + mana_json_close_delimiter,
 }
-
-json_symbol_regex = r'\{[TtQq]\}'
+json_symbol_regex = (re.escape(mana_json_open_delimiter) + '['
+                     + json_symbol_tap + json_symbol_tap.lower()
+                     + json_symbol_untap + json_symbol_untap.lower()
+                     + ']' + re.escape(mana_json_close_delimiter))
+symbol_regex = '[' + tap_marker + untap_marker + ']'
 
 def to_symbols(s):
-    symstrs = re.findall(json_symbol_regex, s)
-    for symstr in sorted(symstrs, lambda x,y: cmp(len(x), len(y)), reverse = True):
-        s = s.replace(symstr, json_symbol_trans[symstr])
+    jsymstrs = re.findall(json_symbol_regex, s)
+    for jsymstr in sorted(jsymstrs, lambda x,y: cmp(len(x), len(y)), reverse = True):
+        s = s.replace(jsymstr, json_symbol_trans[jsymstr])
     return s
 
-def from_symbols(s):
-    symstrs
+def from_symbols(s, for_forum = False):
+    symstrs = re.findall(symbol_regex, s)
+    for symstr in sorted(symstrs, lambda x,y: cmp(len(x), len(y)), reverse = True):
+        s = s.replace(symstr, symbol_trans[symstr])
+    return s
