@@ -3,30 +3,27 @@ import re
 import codecs
 import sys
 
+import utils
+
 #badwords = []
 
 valid_encoded_char = r'[abcdefghijklmnopqrstuvwxyz\'+\-*",.:;WUBRGPV/XTQ|\\&^\{\}@ \n=~%\[\]]'
 
-dash_marker = '~'
-bullet_marker = '='
-reserved_marker = '\r'
-
-def to_ascii(s):
-    s = s.replace(u'\u2014', dash_marker) # unicode long dash
-    s = s.replace(u'\u2022', bullet_marker) # unicode bullet
-    s = s.replace(u'\u2019', '"') # single quote
-    s = s.replace(u'\u2018', '"') # single quote
-    s = s.replace(u'\u2212', '-') # minus sign
-    s = s.replace(u'\xe6', 'ae') # ae symbol
-    s = s.replace(u'\xfb', 'u') # u with caret
-    s = s.replace(u'\xfa', 'u') # u with accent
-    s = s.replace(u'\xe9', 'e') # e with accent
-    s = s.replace(u'\xe1', 'a') # a with accent
-    s = s.replace(u'\xe0', 'a') # a with accent going the other way
-    s = s.replace(u'\xe2', 'a') # a with caret
-    s = s.replace(u'\xf6', 'o') # o with umlaut
-    s = s.replace(u'\xed', 'i') # i with accent
-    return s
+cardsep = utils.cardsep
+fieldsep = utils.fieldsep
+bsidesep = utils.bsidesep
+newline = utils.newline
+dash_marker = utils.dash_marker
+bullet_marker = utils.bullet_marker
+this_marker = utils.this_marker
+counter_marker = utils.counter_marker
+reserved_marker = utils.reserved_marker
+x_marker = utils.x_marker
+tap_marker = utils.tap_marker
+untap_marker = utils.untap_marker
+counter_rename = utils.counter_rename
+unary_marker = utils.unary_marker
+unary_counter = utils.unary_counter
 
 # This whole things assumes the json format of mtgjson.com.
 
@@ -63,107 +60,11 @@ def to_ascii(s):
 # releaseDate - string
 # starter - boolean
 
-fieldsep = '|'
-newline = '\\'
-unary_marker = '&'
-unary_counter = '^'
-mana_open_delimiter = '{'
-mana_close_delimiter = '}'
-x_marker = 'X'
-tap_marker = 'T'
-untap_marker = 'Q'
-this_marker = '@'
-counter_marker = '%'
-bsidesep = '\n'
-
-unary_max = 20
-
-def to_unary(s):
-    numbers = re.findall(r'[0123456789]+', s)
-    for n in sorted(numbers, cmp = lambda x,y: cmp(int(x), int(y)) * -1):
-        i = int(n)
-        if i == 25:
-            s = s.replace(n, 'twenty~five')
-        elif i == 30:
-            s = s.replace(n, 'thirty')
-        elif i == 40:
-            s = s.replace(n, 'forty')
-        elif i == 50:
-            s = s.replace(n, 'fifty')
-        elif i == 100:
-            s = s.replace(n, 'one hundred')
-        elif i == 200:
-            s = s.replace(n, 'two hundred')
-        else:
-            if i > unary_max:
-                # truncate to unary_max
-                i = unary_max
-                # warn, because we probably don't want this to happen
-                print s
-            s = s.replace(n, unary_marker + unary_counter * i)
-
-    return s
-
-
-# also handles the tap and untap symbols
-def compress_mana(manastring):
-    # mana string is of the form '{3}{W}{2/B}', as specified by mtgjson
-    translations = {
-        '{w}' : 'WW',
-        '{u}' : 'UU',
-        '{b}' : 'BB',
-        '{r}' : 'RR',
-        '{g}' : 'GG',
-        '{p}' : 'PP',
-        '{w/p}' : 'WP',
-        '{u/p}' : 'UP',
-        '{b/p}' : 'BP',
-        '{r/p}' : 'RP',
-        '{g/p}' : 'GP',
-        '{2/w}' : 'VW',
-        '{2/u}' : 'VU',
-        '{2/b}' : 'VB',
-        '{2/r}' : 'VR',
-        '{2/g}' : 'VG',
-        '{w/u}' : 'WU',
-        '{w/b}' : 'WB',
-        '{r/w}' : 'RW',
-        '{g/w}' : 'GW',
-        '{u/b}' : 'UB',
-        '{u/r}' : 'UR',
-        '{g/u}' : 'GU',
-        '{b/r}' : 'BR',
-        '{b/g}' : 'BG',
-        '{r/g}' : 'RG',
-        '{s}' : 'SS',
-        '{x}' : x_marker * 2,
-        '{t}' : tap_marker,
-        '{q}' : untap_marker,
-    }
-    for t in translations:
-        manastring = manastring.replace(t, translations[t])
-
-    numbers = re.findall(r'\{[0123456789]+\}', manastring)
-    for n in numbers:
-        i = int(re.findall(r'[0123456789]+', n)[0])
-        manastring = manastring.replace(n, unary_counter * i)
-        
-    # we don't really need delimiters for tap, it's a unique symbol anyways
-    if manastring in [tap_marker, untap_marker]:
-        return manastring
-    else:
-        return '{' + manastring + '}'
-
-def replace_mana(s):
-    manastrings = re.findall(r'\{[\{\}wubrgp/xtq0123456789]+\}', s)
-    for manastring in manastrings:
-        s = s.replace(manastring, compress_mana(manastring))
-    return s
-    
 
 def strip_reminder_text(s):
     return re.sub(r'\(.*\)', '', s)
-    
+
+
 def replace_newlines(s):
     return s.replace('\n', '\\')
 
@@ -213,7 +114,7 @@ def replace_cardname(s, name):
     for override in overrides:
         s = s.replace(override, this_marker)
 
-    # some detection code when the overrides need to be fixed...
+    # some detection code for when the overrides need to be fixed...
     # global badwords
     # bad = False
     # for word in name.replace(',', '').split():
@@ -539,32 +440,35 @@ def encode(card):
         return
 
     encoding = fieldsep
-    name = card['name'].lower()
-    encoding += sanitize_name(name)
+    if 'name' in card:
+        name = card['name'].lower()
+        encoding += sanitize_name(name)
     encoding += fieldsep
     if 'supertypes' in card:
         encoding += ' '.join(card['supertypes']).lower()
     encoding += fieldsep
-    encoding += ' '.join(card['types']).lower()
+    if 'types' in card:
+        encoding += ' '.join(card['types']).lower()
     encoding += fieldsep
     if 'loyalty' in card:
-        encoding += to_unary(str(card['loyalty']))
+        encoding += utils.to_unary(str(card['loyalty']))
     encoding += fieldsep
     if 'subtypes' in card:
         encoding += ' '.join(card['subtypes']).lower()
     encoding += fieldsep
     if 'power' in card and 'toughness' in card:
-        encoding += to_unary(card['power']) + '/' + to_unary(card['toughness'])        
+        encoding += utils.to_unary(card['power']) + '/' + utils.to_unary(card['toughness'])        
     encoding += fieldsep
     if 'manaCost' in card:
-        encoding += replace_mana(card['manaCost'].lower())
+        encoding += utils.to_mana(card['manaCost'].lower())
     encoding += fieldsep
     if 'text' in card:
         text = card['text'].lower()
         text = strip_reminder_text(text)
         text = replace_cardname(text, name)
-        text = replace_mana(text)
-        text = to_unary(text)
+        text = utils.to_mana(text)
+        text = utils.to_symbols(text)
+        text = utils.to_unary(text)
         text = fix_dashes(text)
         text = fix_x(text)
         text = replace_counters(text)
@@ -575,24 +479,16 @@ def encode(card):
         encoding += text.strip()
     encoding += fieldsep
 
-    # HACK: put the cost again after the text
-    # if 'manaCost' in card:
-    #     encoding += replace_mana(card['manaCost'].lower())
-    # encoding += fieldsep
-
-    # if 'flavor' in card:
-    #     encoding += card['flavor'].lower()
-    # encoding += fieldsep
-
     # now output the bside if there is one
     if 'bside' in card:
         encoding += bsidesep
         encoding += encode(card['bside'])
 
-    encoding = to_ascii(encoding)
+    encoding = utils.to_ascii(encoding)
     # encoding = re.sub(valid_encoded_char, '', encoding)
     # if not encoding == '':
     #     print card
+
     return encoding
     
 def encode_duplicated(cards):
