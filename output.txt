@@ -3310,7 +3310,7 @@
 
 |armadillo cloak||enchantment||aura||{^GGWW}|enchant creature\enchanted creature gets +&^^/+&^^ and has trample.\whenever enchanted creature deals damage, you gain that much life.|
 
-|reaper of the wilds||creature||gorgon|&^^^^/&^^^^^|{^^BBGG}|whenever another creature dies, scry &^. \{BB}: @ gains deathtouch until end of turn.\{^GG}: @ gains hexproof until end of turn.|
+|siege of towers||sorcery||||{^RR}|replicate {^RR} \target mountain becomes a &^^^/&^ creature. it's still a land.|
 
 |witchstalker||creature||wolf|&^^^/&^^^|{^GGGG}|hexproof \whenever an opponent casts a blue or black spell during your turn, put a +&^/+&^ counter on @.|
 
@@ -9903,6 +9903,8 @@
 
 |rootgrapple||tribal instant||treefolk||{^^^^GG}|destroy target noncreature permanent. if you control a treefolk, draw a card.|
 
+|will~o'~the~wisp||creature||spirit|&/&^|{BB}|flying \{BB}: regenerate @.|
+
 |life from the loam||sorcery||||{^GG}|return up to three target land cards from your graveyard to your hand.\dredge &^^^|
 
 |nessian wilds ravager||creature||hydra|&^^^^^^/&^^^^^^|{^^^^GGGG}|tribute &^^^^^^ \when @ enters the battlefield, if tribute wasn't paid, you may have @ fight another target creature.|
@@ -14295,7 +14297,7 @@
 
 |cerebral vortex||instant||||{^UURR}|target player draws two cards, then @ deals damage to that player equal to the number of cards he or she has drawn this turn.|
 
-|carbonize||instant||||{^^RR}|@ deals &^^^ damage to target creature or player. that creature can't be regenerated this turn. if the creature would die this turn, exile it instead.|
+|chaos orb||artifact||||{^^}|{^}, T: if @ is on the battlefield, flip @ onto the battlefield from a height of at least one foot. if @ turns over completely at least once during the flip, destroy all nontoken permanents it touches. then destroy @.|
 
 |mana reflection||enchantment||||{^^^^GGGG}|if you tap a permanent for mana, it produces twice as much of that mana instead.|
 
@@ -15846,7 +15848,7 @@
 
 |dragon shadow||enchantment||aura||{^BB}|enchant creature\enchanted creature gets +&^/+& and has fear. \when a creature with converted mana cost &^^^^^^ or greater enters the battlefield, you may return @ from your graveyard to the battlefield attached to that creature.|
 
-|mausoleum guard||creature||human scout|&^^/&^^|{^^^WW}|when @ dies, put two &^/&^ white spirit creature tokens with flying onto the battlefield.|
+|clockwork vorrac||artifact creature||boar beast|&/&|{^^^^^}|trample\@ enters the battlefield with four +&^/+&^ counters on it.\whenever @ attacks or blocks, remove a +&^/+&^ counter from it at end of combat.\T: put a +&^/+&^ counter on @.|
 
 |feral instinct||instant||||{^GG}|target creature gets +&^/+&^ until end of turn.\draw a card at the beginning of the next turn's upkeep.|
 
@@ -16708,7 +16710,7 @@
 
 |akroma, angel of fury|legendary|creature||angel|&^^^^^^/&^^^^^^|{^^^^^RRRRRR}|@ can't be uncast.\flying, trample, protection from white and from blue\{RR}: @ gets +&^/+& until end of turn.\morph {^^^RRRRRR}|
 
-|cyclopean tomb||artifact||||{^^^^}|countertype % mire\{^^}, T: put a % counter on target non~swamp land. that land is a swamp for as long as it has a % counter on it. activate this ability only during your upkeep.\when @ is put into a graveyard from the battlefield, at the beginning of each of your upkeeps for the rest of the game, remove all % counters from a land that a % counter was put onto with @ but that a % counter has not been removed from with @.|
+|trostani, selesnya's voice|legendary|creature||dryad|&^^/&^^^^^|{GGGGWWWW}|whenever another creature enters the battlefield under your control, you gain life equal to that creature's toughness.\{^GGWW}, T: populate.|
 
 |heal||instant||||{WW}|prevent the next &^ damage that would be dealt to target creature or player this turn.\draw a card at the beginning of the next turn's upkeep.|
 
@@ -17339,7 +17341,7 @@
 
 |drill~skimmer||artifact creature||thopter|&^^/&^|{^^^^}|flying\@ has shroud as long as you control another artifact creature.|
 
-|clockwork vorrac||artifact creature||boar beast|&/&|{^^^^^}|trample\@ enters the battlefield with four +&^/+&^ counters on it.\whenever @ attacks or blocks, remove a +&^/+&^ counter from it at end of combat.\T: put a +&^/+&^ counter on @.|
+|mausoleum guard||creature||human scout|&^^/&^^|{^^^WW}|when @ dies, put two &^/&^ white spirit creature tokens with flying onto the battlefield.|
 
 |merchant ship||creature||human|&/&^^|{UU}|@ can't attack unless defending player controls an island.\whenever @ attacks and isn't blocked, you gain &^^ life.\when you control no islands, sacrifice @.|
 
@@ -17474,7 +17476,7 @@
 
 |skyshroud claim||sorcery||||{^^^GG}|search your library for up to two forest cards and put them onto the battlefield. then shuffle your library.|
 
-|trostani, selesnya's voice|legendary|creature||dryad|&^^/&^^^^^|{GGGGWWWW}|whenever another creature enters the battlefield under your control, you gain life equal to that creature's toughness.\{^GGWW}, T: populate.|
+|cyclopean tomb||artifact||||{^^^^}|countertype % mire\{^^}, T: put a % counter on target non~swamp land. that land is a swamp for as long as it has a % counter on it. activate this ability only during your upkeep.\when @ is put into a graveyard from the battlefield, at the beginning of each of your upkeeps for the rest of the game, remove all % counters from a land that a % counter was put onto with @ but that a % counter has not been removed from with @.|
 
 |phyrexian monitor||creature||skeleton|&^^/&^^|{^^^BB}|{BB}: regenerate @.|
 
@@ -19969,7 +19971,7 @@
 
 |orim's prayer||enchantment||||{^WWWW}|whenever one or more creatures attack you, you gain &^ life for each attacking creature.|
 
-|siege of towers||sorcery||||{^RR}|replicate {^RR} \target mountain becomes a &^^^/&^ creature. it's still a land.|
+|reaper of the wilds||creature||gorgon|&^^^^/&^^^^^|{^^BBGG}|whenever another creature dies, scry &^. \{BB}: @ gains deathtouch until end of turn.\{^GG}: @ gains hexproof until end of turn.|
 
 |alexi's cloak||enchantment||aura||{^UU}|flash\enchant creature\enchanted creature has shroud.|
 
@@ -26983,7 +26985,7 @@
 
 |mind slash||enchantment||||{^BBBB}|{BB}, sacrifice a creature: target opponent reveals his or her hand. you choose a card from it. that player discards that card. activate this ability only any time you could cast a sorcery.|
 
-|chaos orb||artifact||||{^^}|{^}, T: if @ is on the battlefield, flip @ onto the battlefield from a height of at least one foot. if @ turns over completely at least once during the flip, destroy all nontoken permanents it touches. then destroy @.|
+|carbonize||instant||||{^^RR}|@ deals &^^^ damage to target creature or player. that creature can't be regenerated this turn. if the creature would die this turn, exile it instead.|
 
 |grim harvest||instant||||{^BB}|return target creature card from your graveyard to your hand.\recover {^^BB}|
 
