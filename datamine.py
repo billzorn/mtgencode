@@ -1,25 +1,9 @@
 import re
 import codecs
 import sys
+import random
 
-# grab the characters we need out of encode
-# really we should probably make a settings file with that stuff in it
-import encode
-
-
-# global helpers
-def prettymana(s, for_forum):
-    # this agorithm is pretty generic, intended fro use on Manacost.symbols keys
-    if len(s) == 1:
-        if for_forum:
-            return '[mana]' + s + '[/mana]'
-        else:
-            return '{' + s + '}'
-    elif len(s) == 2:
-        if for_forum:
-            return '[mana]{' + s[0] + '/' + s[1] + '}[/mana]'
-        else:
-            return '{' + s[0] + '/' + s[1] + '}'
+import utils
 
 # format a list of rows of data into nice columns
 def padrows(l):
@@ -40,7 +24,11 @@ def padrows(l):
             pad = ' ' * (lens[i] - len(s))
             padded[-1] += (s + pad + ' ')
     return padded
+def printrows(l):
+    for row in l:
+        print row
 
+# so this stuff still needs to be cleaned up
 punctuation_chars = r'[+\-*",.:;WUBRGPV/XTQ|\\&^\{\}@ \n=~%\[\]]'
 creature_keywords = [
     # evergreen
@@ -111,6 +99,7 @@ creature_keywords = [
 class Manacost:
     '''mana cost representation with data'''
     
+    # hardcoded to be dependent on the symbol structure... ah well
     def get_colors(self):
         colors = ''
         for sym in self.symbols:
@@ -119,7 +108,8 @@ class Manacost:
                 for symcolor in symcolors:
                     if symcolor not in colors:
                         colors += symcolor
-        return colors
+        # sort so the order is always consistent
+        return ''.join(sorted(colors))
 
     def check_colors(self, symbolstring):
         for sym in symbolstring:
@@ -132,36 +122,8 @@ class Manacost:
         self.cmc = 0
         self.colorless = 0
         self.sequence = []
-        self.symbols = {            
-            'W' : 0, # single color
-            'U' : 0,
-            'B' : 0,
-            'R' : 0,
-            'G' : 0,
-            'P' : 0, # colorless phyrexian
-            'S' : 0, # snow
-            'X' : 0, # number of x symbols
-            'WP' : 0, # single color phyrexian
-            'UP' : 0,
-            'BP' : 0,
-            'RP' : 0,
-            'GP' : 0,
-            '2W' : 0, # single color hybrid
-            '2U' : 0,
-            '2B' : 0,
-            '2R' : 0,
-            '2G' : 0,
-            'WU' : 0, # dual color hybrid
-            'WB' : 0,
-            'RW' : 0,
-            'GW' : 0,
-            'UB' : 0,
-            'UR' : 0,
-            'GU' : 0,
-            'BR' : 0,
-            'BG' : 0,
-            'RG' : 0,
-        }
+        self.symbols = {sym : 0 for sym in utils.mana_syms}
+        self.allsymbols = {sym : 0 for sym in utils.mana_symall}
 
         if text == '':
             self._parsed = True
@@ -180,89 +142,61 @@ class Manacost:
             self.none = False
             self.inner = self.raw[1:-1]
 
-            trans_decode = {
-                'WW' : 'W',
-                'UU' : 'U',
-                'BB' : 'B',
-                'RR' : 'R',
-                'GG' : 'G',
-                'PP' : 'P',
-                'SS' : 'S',
-                'XX' : 'X',
-                'WP' : 'WP',
-                'UP' : 'UP',
-                'BP' : 'BP',
-                'RP' : 'RP',
-                'GP' : 'GP',
-                'VW' : '2W',
-                'VU' : '2U',
-                'VB' : '2B',
-                'VR' : '2R',
-                'VG' : '2G',
-                'WU' : 'WU',
-                'WB' : 'WB',
-                'RW' : 'RW',
-                'GW' : 'GW',
-                'UB' : 'UB',
-                'UR' : 'UR',
-                'GU' : 'GU',
-                'BR' : 'BR',
-                'BG' : 'BG',
-                'RG' : 'RG',
-            }
-
-            # read the symbols in a loop
-            inner_current = self.inner
-            while len(inner_current) > 0:
-                # look for counters to get the colorless cost
-                if inner_current[:1] == encode.unary_counter:
+            # structure mirrors the decoding in utils, but we pull out different data here
+            idx = 0
+            while idx < len(self.inner):
+                # taking this branch is an infinite loop if unary_marker is empty
+                if (len(utils.mana_unary_marker) > 0 and 
+                    self.inner[idx:idx+len(utils.mana_unary_marker)] == utils.mana_unary_marker):
+                    idx += len(utils.mana_unary_marker)
+                    self.sequence += [utils.mana_unary_marker]
+                elif self.inner[idx:idx+len(utils.mana_unary_counter)] == utils.mana_unary_counter:
+                    idx += len(utils.mana_unary_counter)
+                    self.sequence += [utils.mana_unary_counter]
                     self.colorless += 1
                     self.cmc += 1
-                    inner_current = inner_current[1:]
-                # or look for symbols to read
-                elif inner_current[:2] in trans_decode:
-                    sym = trans_decode[inner_current[:2]]
-                    self.sequence += [sym]
-                    self.symbols[sym] += 1
-                    if sym == 'X':
-                        self.cmc += 0
-                    elif sym[:1] == '2':
-                        self.cmc += 2
-                    else:
-                        self.cmc += 1
-                    inner_current = inner_current[2:]
-                # if we don't recognize the symbol, bail out
                 else:
-                    self._valid = False
-                    break
+                    old_idx = idx
+                    for symlen in range(utils.mana_symlen_min, utils.mana_symlen_max + 1):
+                        encoded_sym = self.inner[idx:idx+symlen]
+                        if encoded_sym in utils.mana_symall_decode:
+                            idx += symlen
+                            # leave the sequence encoded for convenience
+                            self.sequence += [encoded_sym]
+                            sym = utils.mana_symall_decode[encoded_sym]
+                            self.allsymbols[sym] += 1
+                            if sym in utils.mana_symalt:
+                                self.symbols[utils.mana_alt(sym)] += 1
+                            else:
+                                self.symbols[sym] += 1
+                            if sym == utils.mana_X:
+                                self.cmc += 0
+                            elif utils.mana_2 in sym:
+                                self.cmc += 2
+                            else:
+                                self.cmc += 1
+                            break
+                    # otherwise we'll go into an infinite loop if we see a symbol we don't know
+                    if idx == old_idx:
+                        idx += 1
+                        self._valid = False
 
         self.colors = self.get_colors()
 
     def __str__(self):
-        if self.colorless == 0 and self.sequence == []:
-            return '{0}'
-        else:
-            if self.colorless > 0:
-                colorless_part = '{' + str(self.colorless) + '}'
-            else:
-                colorless_part = ''
-            return colorless_part + ''.join(map(lambda s: prettymana(s, False), self.sequence))
+        return utils.mana_untranslate(''.join(self.sequence))
 
     def format(self, for_forum):
-        if self.colorless == 0 and self.sequence == []:
-            if for_forum:
-                return '[mana]0[/mana]'
-            else:
-                return '{0}'
+        return utils.mana_untranslate(''.join(self.sequence, for_forum))
+
+    def reencode(self, randomize = False):
+        if randomize:
+            # so this won't work very well if mana_unary_marker isn't empty
+            return (utils.mana_open_delimiter 
+                    + ''.join(random.sample(self.sequence, len(self.sequence)))
+                    + utils.mana_close_delimiter)
         else:
-            if self.colorless > 0:
-                if for_forum:
-                    colorless_part = '[mana]{' + str(self.colorless) + '}[/mana]'
-                else:
-                    colorless_part = '{' + str(self.colorless) + '}'
-            else:
-                colorless_part = ''
-            return colorless_part + ''.join(map(lambda s: prettymana(s, for_forum), self.sequence))
+            return utils.mana_open_delimiter + ''.join(self.sequence) + utils.mana_close_delimiter
 
 class Card:
     '''card representation with data'''
@@ -287,7 +221,7 @@ class Card:
         else:
             self.bside = None
 
-        fields = self.raw.split(encode.fieldsep)
+        fields = self.raw.split(utils.fieldsep)
         if not len(fields) >= 10:
             self._parsed = False
             self._valid = False
@@ -334,23 +268,23 @@ class Card:
 
             if not fields[6] == '':
                 self.pt = fields[6]
+                self.power = None
+                self.power_value = None
+                self.toughness = None
+                self.toughness_value = None
                 p_t = self.pt.split('/')
                 if len(p_t) == 2:
-                   self.power = p_t[0]
-                   try:
-                       self.power_value = int(self.power)
-                   except ValueError:
-                       self.power_value = None
-                   self.toughness = p_t[1]
-                   try:
-                       self.toughness_value = int(self.toughness)
-                   except ValueError:
-                       self.toughness_value = None
+                    self.power = p_t[0]
+                    try:
+                        self.power_value = int(self.power)
+                    except ValueError:
+                        self.power_value = None
+                    self.toughness = p_t[1]
+                    try:
+                        self.toughness_value = int(self.toughness)
+                    except ValueError:
+                        self.toughness_value = None
                 else:
-                    self.power = None
-                    self.power_value = None
-                    self.toughess = None
-                    self.toughness_value = None
                     self._valid = False
             else:
                 self.pt = None
@@ -364,7 +298,7 @@ class Card:
             
             if not fields[8] == '':
                 self.text = fields[8]
-                self.text_lines = self.text.split(encode.newline)
+                self.text_lines = self.text.split(utils.newline)
                 self.text_words = re.sub(punctuation_chars, ' ', self.text).split()
                 self.creature_words = []
                 # SUPER HACK
@@ -384,102 +318,201 @@ class Card:
                         # elif len(guess) > 0 and len(line) < 30:
                         #     print orig_line
             else:
-                self.text = None
+                self.text = ''
                 self.text_lines = []
                 self.text_words = []
                 self.creature_words = []
 
-            if len(fields) > 10:
-                self.cost2 = Manacost(fields[9])
-            else:
-                self.cost2 = None
-
     def __str__(self):
         return ''.join([
-            encode.fieldsep,
+            utils.fieldsep,
             self.name,
-            encode.fieldsep,
-            (' ' + encode.dash_marker + ' ').join([' '.join(self.supertypes + self.types),
+            utils.fieldsep,
+            (' ' + utils.dash_marker + ' ').join([' '.join(self.supertypes + self.types),
                                                    ' '.join(self.subtypes)]),
-            encode.fieldsep,
+            utils.fieldsep,
             str(self.cost.cmc) if self.cost.colors == '' 
             else str(self.cost.cmc) + ', ' + self.cost.colors,
-            encode.fieldsep,
+            utils.fieldsep,
+        ])
+        
+    def reencode(self, randomize = False):
+        return ''.join([
+            utils.fieldsep,
+            self.name,
+            utils.fieldsep,
+            ' '.join(self.supertypes),
+            utils.fieldsep,
+            ' '.join(self.types),
+            utils.fieldsep,
+            self.loyalty if self.loyalty else '',
+            utils.fieldsep,
+            ' '.join(self.subtypes),
+            utils.fieldsep,
+            self.pt if self.pt else '',
+            utils.fieldsep,
+            self.cost.reencode(randomize) if not self.cost.none else '',
+            utils.fieldsep,
+            self.text,
+            utils.fieldsep,
+            utils.bsidesep + self.bside.reencode(randomize) if self.bside else '',
         ])
 
+# global card pools
+unparsed_cards = []
+invalid_cards = []
+cards = []
+allcards = []
+
+# global indices
+by_name = {}
+by_type = {}
+by_type_inclusive = {}
+by_supertype = {}
+by_supertype_inclusive = {}
+by_subtype = {}
+by_subtype_inclusive = {}
+by_color = {}
+by_color_inclusive = {}
+by_cmc = {}
+by_cost = {}
+by_power = {}
+by_toughness = {}
+by_pt = {}
+by_loyalty = {}
+by_textlines = {}
+by_textlen = {}
+
+def inc(d, k, obj):
+    if k:
+        if k in d:
+            d[k] += obj
+        else:
+            d[k] = obj
+
+# build the global indices
+def analyze(cardtexts):
+    global unparsed_cards, invalid_cards, cards, allcards
+    for cardtext in cardtexts:
+        # the empty card is not interesting
+        if not cardtext:
+            continue
+        card = Card(cardtext)
+        if card._valid:
+            cards += [card]
+            allcards += [card]
+        elif card._parsed:
+            invalid_cards += [card]
+            allcards += [card]
+        else:
+            unparsed_cards += [card]
+
+        if card._parsed:
+            inc(by_name, card.name, [card])
+
+            inc(by_type, ' '.join(card.types), [card])
+            for t in card.types:
+                inc(by_type_inclusive, t, [card])
+            inc(by_supertype, ' '.join(card.supertypes), [card])
+            for t in card.supertypes:
+                inc(by_supertype_inclusive, t, [card])
+            inc(by_subtype, ' '.join(card.subtypes), [card])
+            for t in card.subtypes:
+                inc(by_subtype_inclusive, t, [card])
+
+            if card.cost.colors:
+                inc(by_color, card.cost.colors, [card])
+                for c in card.cost.colors:
+                    inc(by_color_inclusive, c, [card])
+            else:
+                # colorless, still want to include in these tables
+                inc(by_color, 'A', [card])
+                inc(by_color_inclusive, 'A', [card])
+
+            inc(by_cmc, card.cost.cmc, [card])
+            inc(by_cost, card.cost.reencode(), [card])
+
+
+            inc(by_power, card.power, [card])
+            inc(by_toughness, card.toughness, [card])
+            inc(by_pt, card.pt, [card])
+
+
+            inc(by_loyalty, card.loyalty, [card])
+            
+            inc(by_textlines, len(card.text_lines), [card])
+            inc(by_textlen, len(card.text), [card])
+
+# summarize the indices
+def summarize():
+    print '===================='
+    print str(len(cards)) + ' valid cards, ' + str(len(invalid_cards)) + ' invalid cards.'
+    print str(len(allcards)) + ' cards parsed, ' + str(len(unparsed_cards)) + ' failed to parse'
+    print '--------------------'
+    print str(len(by_name)) + ' unique card names'
+    print '--------------------'
+    print (str(len(by_color)) + ' represented colors (including colorless as \'A\'), ' 
+           + str(len(by_color_inclusive)) + ' combinations')
+    print 'Breakdown by color:'
+    rows = [by_color_inclusive.keys()]
+    rows += [[len(by_color_inclusive[k]) for k in rows[0]]]
+    printrows(padrows(rows))
+    print '--------------------'
+    print str(len(by_type_inclusive)) + ' unique card types, ' + str(len(by_type)) + ' combinations'
+    print 'Breakdown by type:'
+    d = sorted(by_type_inclusive, 
+                    lambda x,y: cmp(len(by_type_inclusive[x]), len(by_type_inclusive[y])), 
+                    reverse = True)
+    rows = [[k for k in d[:10]]]
+    rows += [[len(by_type_inclusive[k]) for k in rows[0]]]
+    printrows(padrows(rows))
+    print '--------------------'
+    print (str(len(by_subtype_inclusive)) + ' unique subtypes, ' 
+           + str(len(by_subtype)) + ' combinations')
+    print '-- Popular subtypes: --'
+    d = sorted(by_subtype_inclusive, 
+                    lambda x,y: cmp(len(by_subtype_inclusive[x]), len(by_subtype_inclusive[y])), 
+                    reverse = True)
+    rows = []
+    for k in d[0:10]:
+        rows += [[k, len(by_subtype_inclusive[k])]]
+    printrows(padrows(rows))
+    print '-- Top combinations: --'
+    d = sorted(by_subtype, 
+                    lambda x,y: cmp(len(by_subtype[x]), len(by_subtype[y])), 
+                    reverse = True)
+    rows = []
+    for k in d[0:10]:
+        rows += [[k, len(by_subtype[k])]]
+    printrows(padrows(rows))
+    print '--------------------'
+    print (str(len(by_supertype_inclusive)) + ' unique supertypes, ' 
+           + str(len(by_supertype)) + ' combinations')
+    print 'Breakdown by supertype:'
+    d = sorted(by_supertype_inclusive, 
+                    lambda x,y: cmp(len(by_supertype_inclusive[x]),len(by_supertype_inclusive[y])), 
+                    reverse = True)
+    rows = [[k for k in d]]
+    rows += [[len(by_supertype_inclusive[k]) for k in rows[0]]]
+    printrows(padrows(rows))
+    print '===================='
+    # TODO: more to come
+
+# describe outliers in the indices
+def outliers():
+    pass
 
 def main(fname, oname = None, verbose = False):
     if verbose:
         print 'Opening encoded card file: ' + fname
 
-    f = open(fname, 'r')
-    text = f.read()
-    f.close()
+    with open(fname, 'rt') as f:
+        text = f.read()
 
-    # we get rid of the first and last because they are probably partial
-    cardtexts = text.split('\n\n')[1:-1]
-    cards = []
-
-    creatures = 0
-    cwords = 0
-    allwords = {}
-
-    correct = 0
-    correct_len = 0
-    incorrect = 0
-    incorrect_len = 0
-
-    i = 0
-    for cardtext in cardtexts:
-        i += 1
-        card = Card(cardtext)
-        if not (card._parsed and card._valid):
-            print card.raw
-            continue
-        cards += [card]
-
-        if not str(card.cost) == str(card.cost2):
-            if not card.cost2.check_colors(card.cost.colors):
-                print card.raw + '\n'
-            incorrect += 1
-            if card.text:
-                incorrect_len += len(card.text)
-        else:
-            correct += 1
-            if card.text:
-                correct_len += len(card.text)
-
-        if 'creature' in card.types:
-            creatures += 1
-        if card.creature_words:
-            cwords += 1
-
-        for word in card.text_words:
-            if word in allwords:
-                allwords[word] += 1
-            else:
-                allwords[word] = 1
-    
-    print '\n====================\n'
-
-    for card in cards:
-        if (not str(card.cost) == str(card.cost2)) and card.cost2.check_colors(card.cost.colors):
-            print card.raw + '\n'
-
-    print '\n====================\n'
-
-    for card in cards:
-        if str(card.cost) == str(card.cost2):
-            print card.raw + '\n'
-
-    print '\n====================\n'
-
-    print str(creatures) + ' creatures, ' + str(cwords) + ' with keywords'
-    print str(len(allwords)) + ' unique words in card text'
-    
-    print str(incorrect) + ' cost mismatches, ' + str(correct) + ' cost matches.'
-    print str(incorrect_len / incorrect) + ' average length of cost mismatches.'
-    print str(correct_len / correct) + ' average length of cost matches.'
+    cardtexts = text.split(utils.cardsep)
+    analyze(cardtexts)
+    summarize()
+    outliers()
 
 if __name__ == '__main__':
     import sys
