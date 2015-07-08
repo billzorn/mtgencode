@@ -2,7 +2,7 @@ import json
 
 # to allow filtering of sets like un sets, etc...
 def legal_set(set):
-    return not set['type'] == 'un'
+    return not (set['type'] == 'un' or set['name'] == 'Celebration')
 
 def mtg_open_json(fname, verbose = False):
 
@@ -25,7 +25,8 @@ def mtg_open_json(fname, verbose = False):
                 cardnumber = None
                 if 'number' in card:
                     cardnumber = card['number']
-                cardname = card['name']
+                # the lower avoids duplication of at least one card (Will-o/O'-the-Wisp)
+                cardname = card['name'].lower()
 
                 uid = set['code']
                 if cardnumber == None:
@@ -45,8 +46,6 @@ def mtg_open_json(fname, verbose = False):
                     asides[uid] = card
                 if uid[-1:] == 'b':
                     bsides[uid] = card
-
-        #break
 
     for uid in bsides:
         aside_uid = uid[:-1] + 'a'

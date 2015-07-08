@@ -513,7 +513,7 @@ def main(fname, oname = None, verbose = True):
             if oname == None:
                 print val + '\n'
             else:
-                ofile.write(val + '\n\n')
+                ofile.write(val + cardsep)
         
     # print len(badwords)
     # for word in badwords:
