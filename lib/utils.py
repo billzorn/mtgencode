@@ -18,12 +18,28 @@ bullet_marker = config.bullet_marker
 this_marker = config.this_marker
 counter_marker = config.counter_marker
 reserved_marker = config.reserved_marker
+reserved_mana_marker = config.reserved_mana_marker
 x_marker = config.x_marker
 tap_marker = config.tap_marker
 untap_marker = config.untap_marker
 
 # unambiguous synonyms
 counter_rename = config.counter_rename
+
+# field labels
+field_label_name = config.field_label_name
+field_label_rarity = config.field_label_rarity
+field_label_cost = config.field_label_cost
+field_label_supertypes = config.field_label_supertypes
+field_label_types = config.field_label_types
+field_label_subtypes = config.field_label_subtypes
+field_label_loyalty = config.field_label_loyalty
+field_label_pt = config.field_label_pt
+field_label_text = config.field_label_text
+
+# additional fields we add to the json cards
+json_field_bside = config.json_field_bside
+json_field_set_name = config.json_field_set_name
 
 # unicode / ascii conversion
 unicode_trans = {
@@ -297,16 +313,16 @@ mana_regex = (re.escape(mana_open_delimiter) + '['
               + ']*' + re.escape(mana_close_delimiter))
 
 # as a special case, we let unary or decimal numbers exist in json mana strings
-mana_jcharset_special = '0123456789' + mana_unary_marker + mana_unary_counter
-mana_jcharset_strict = unique_string(''.join(mana_symall_jdecode) + mana_jcharset_special)
-mana_jcharset = unique_string(mana_jcharset_strict + mana_jcharset_strict.lower())
+mana_json_charset_special = ('0123456789' + unary_marker + unary_counter)
+mana_json_charset_strict = unique_string(''.join(mana_symall_jdecode) + mana_json_charset_special)
+mana_json_charset = unique_string(mana_json_charset_strict + mana_json_charset_strict.lower())
 
 # note that json mana strings can't be empty between the delimiters
-mana_jregex_strict = (re.escape(mana_json_open_delimiter) + '['
-                     + re.escape(mana_jcharset_strict) 
+mana_json_regex_strict = (re.escape(mana_json_open_delimiter) + '['
+                     + re.escape(mana_json_charset_strict) 
                      + ']+' + re.escape(mana_json_close_delimiter))
-mana_jregex = (re.escape(mana_json_open_delimiter) + '['
-               + re.escape(mana_jcharset)
+mana_json_regex = (re.escape(mana_json_open_delimiter) + '['
+               + re.escape(mana_json_charset)
                + ']+' + re.escape(mana_json_close_delimiter))
 
 number_decimal_regex = r'[0123456789]+'
@@ -322,7 +338,7 @@ def mana_translate(jmanastr):
     for n in sorted(re.findall(mana_unary_regex, manastr),
                     lambda x,y: cmp(len(x), len(y)), reverse = True):
         ns = re.findall(number_unary_regex, n)
-        i = (len(ns[0]) - len(mana_unary_marker)) / len(mana_unary_counter)
+        i = (len(ns[0]) - len(unary_marker)) / len(unary_counter)
         manastr = manastr.replace(n, mana_unary_marker + mana_unary_counter * i)
     for n in sorted(re.findall(mana_decimal_regex, manastr),
                         lambda x,y: cmp(len(x), len(y)), reverse = True):
@@ -381,7 +397,7 @@ def mana_untranslate(manastr, for_forum = False):
 # finally, replacing all instances in a string
 # notice the calls to .upper(), this way we recognize lowercase symbols as well just in case
 def to_mana(s):
-    jmanastrs = re.findall(mana_jregex, s)
+    jmanastrs = re.findall(mana_json_regex, s)
     for jmanastr in sorted(jmanastrs, lambda x,y: cmp(len(x), len(y)), reverse = True):
         s = s.replace(jmanastr, mana_translate(jmanastr.upper()))
     return s
@@ -434,3 +450,6 @@ def from_symbols(s, for_forum = False):
     for symstr in sorted(symstrs, lambda x,y: cmp(len(x), len(y)), reverse = True):
         s = s.replace(symstr, symbol_trans[symstr])
     return s
+
+unletters_regex = r"[^abcdefghijklmnopqrstuvwxyz']"
+

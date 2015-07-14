@@ -15,11 +15,13 @@ def main(fname, oname = None, verbose = True):
     datamine.analyze(cardtexts)
 
     multicards = []
-    reps = 5
+    reps = 10
 
     for card in datamine.cards:
         for i in range(reps):
             multicards += [card.reencode(randomize = True)]
+            # multicards += [card.reencode(randomize = True) 
+            #                + card.cost.reencode(randomize = True) + utils.fieldsep]
             
     random.shuffle(multicards)
 
