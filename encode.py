@@ -40,7 +40,8 @@ def main(fname, oname = None, verbose = True):
     invalid = 0
     unparsed = 0
 
-    for jcard_name in jcards:
+    # force a stable ordering, we will randomize later
+    for jcard_name in sorted(jcards):
         card = compile_duplicated(jcards[jcard_name])
         if card:
             if card.valid:
