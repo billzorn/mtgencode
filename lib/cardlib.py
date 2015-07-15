@@ -202,9 +202,74 @@ def fields_from_json(src_json):
     # we don't need to worry about bsides because we handle that in the constructor
     return parsed, valid and fields_check_valid(fields), fields
 
-def fields_from_format(src_text, fmt_ordered, fmt_labeled, fieldsep):
-    pass
 
+def fields_from_format(src_text, fmt_ordered, fmt_labeled, fieldsep):
+    parsed = True
+    valid = True
+    fields = {}
+
+    if fmt_labeled:
+        labels = {fmt_labeled[k] : k for k in fmt_labeled}
+        field_label_regex = '[' + ''.join(labels.keys()) + ']'
+    def addf(fields, fkey, fval):
+        if fkey in fields:
+            fields[fkey] += [fval]
+        else:
+            fields[fkey] = [fval]
+
+    textfields = src_text.split(fieldsep)
+    idx = 0
+    true_idx = 0
+    for textfield in textfields:
+        # ignore leading or trailing empty fields due to seps
+        if textfield == '':
+            if true_idx == 0 or true_idx == len(textfields) - 1:
+                true_idx += 1
+                continue
+            # count the field index for other empty fields but don't add them
+            else:
+                idx += 1
+                true_idx += 1
+                continue
+
+        lab = None
+        if fmt_labeled:
+            labs = re.findall(field_label_regex, textfield)
+            # use the first label if we saw any at all
+            if len(labs) > 0:
+                lab = labs[0]
+        # try to use the field label if we got one
+        if lab and lab in labels:
+            fname = labels[lab]
+        # fall back to the field order specified
+        elif idx < len(fmt_ordered):
+            fname = fmt_ordered[idx]
+        # we don't know what to do with this field: call it other
+        else:
+            fname = field_other
+            parsed = False
+            valid = False
+        
+        # specialized handling
+        if fname in [field_cost]:
+            fval = Manacost(textfield)
+            parsed = parsed and fval.parsed
+            valid = valid and fval.valid
+            addf(fields, fname, (idx, fval))
+        elif fname in [field_text]:
+            fval = Manatext(textfield)
+            valid = valid and fval.valid
+            addf(fields, fname, (idx, fval))
+        elif fname in [field_supertypes, field_types, field_subtypes]:
+            addf(fields, fname, (idx, textfield.split()))
+        else:
+            addf(fields, fname, (idx, textfield))
+
+        idx += 1
+        true_idx += 1
+        
+    # again, bsides are handled by the constructor
+    return parsed, valid and fields_check_valid(fields), fields
 
 # Here's the actual Card class that other files should use.
 
@@ -272,8 +337,8 @@ class Card:
         if self.fields:
             for field in self.fields:
                 # look for a specialized set function
-                if '_set_' + field in self.__dict__:
-                    self.__dict__['_set_' + field](self.fields[field])
+                if hasattr(self, '_set_' + field):
+                    getattr(self, '_set_' + field)(self.fields[field])
                 # otherwise use the default one
                 elif field in self.__dict__:
                     self.set_field_default(field, self.fields[field])
@@ -330,16 +395,16 @@ class Card:
             break # only use the first one...
     
     def _set_text(self, values):
-        mtext = ''
         for idx, value in values:
             mtext = value
-        self.__dict__[field_text] = mtext
-        fulltext = mtext.encode()
-        if fulltext:
-            self.__dict__[field_text + '_lines'] = map(Manatext, fulltext.split(utils.newline))
-            self.__dict__[field_text + '_words'] = re.sub(utils.unletters_regex, 
-                                                          ' ', 
-                                                          fulltext).split()
+            self.__dict__[field_text] = mtext
+            fulltext = mtext.encode()
+            if fulltext:
+                self.__dict__[field_text + '_lines'] = map(Manatext, fulltext.split(utils.newline))
+                self.__dict__[field_text + '_words'] = re.sub(utils.unletters_regex, 
+                                                              ' ', 
+                                                              fulltext).split()
+            break # only use the first one...
         
     def _set_other(self, values):
         # just record these, we could do somthing unset valid if we really wanted
@@ -358,8 +423,8 @@ class Card:
 
         for field in fmt_ordered:
             if field in self.__dict__:
-                if self.__dict__[field]:
-                    outfield = self.__dict__[field]
+                outfield = self.__dict__[field]
+                if outfield:
                     # specialized field handling for the ones that aren't strings (sigh)
                     if isinstance(outfield, list):
                         outfield_str = ' '.join(outfield)
