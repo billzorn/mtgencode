@@ -1,7 +1,7 @@
 # representation for mana costs and text with embedded mana costs
 # data aggregating classes
-import random
 import re
+import random
 
 import utils
 

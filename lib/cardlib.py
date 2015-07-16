@@ -1,5 +1,6 @@
 # card representation
 import re
+import random
 
 import utils
 import transforms
@@ -58,6 +59,7 @@ fmt_labeled_default = {
     field_cost : field_label_cost,
     field_supertypes : field_label_supertypes,
     field_types : field_label_types,
+    field_subtypes : field_label_subtypes,
     field_loyalty : field_label_loyalty,
     field_pt : field_label_pt,
     field_text : field_label_text,
@@ -434,12 +436,11 @@ class Card:
                         outfield_str = outfield.encode(randomize = randomize_mana)
                     else:
                         outfield_str = outfield
-
-                    if fmt_labeled and field in fmt_labeled:
-                        outfield_str = fmt_labeled[field] + outfield_str
-
                 else:
                     outfield_str = ''
+
+                if fmt_labeled and field in fmt_labeled:
+                        outfield_str = fmt_labeled[field] + outfield_str
 
                 outfields += [outfield_str]
 

@@ -1,5 +1,4 @@
 import re
-import sys
 
 import utils
 from cardlib import Card
