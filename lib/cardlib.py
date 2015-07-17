@@ -483,7 +483,12 @@ class Card:
             outstr += ' ' + self.__dict__[field_cost].format(for_forum = for_forum)
 
             if self.__dict__[field_rarity]:
-                outstr += '(' + self.__dict__[rarity] + ')'
+                outstr += ' (' + self.__dict__[rarity] + ')'
+
+            if not self.parsed:
+                outstr += ' _UNPARSED_'
+            if not self.valid:
+                outstr += ' _INVALID_'
                 
             outstr += '\n'
 
@@ -533,7 +538,11 @@ class Card:
             cardname = self.__dict__[field_name]
             outstr += cardname
             if self.__dict__[field_rarity]:
-                outstr += '(' + self.__dict__[field_rarity] + ')'
+                outstr += ' (' + self.__dict__[field_rarity] + ')'
+            if not self.parsed:
+                outstr += ' _UNPARSED_'
+            if not self.valid:
+                outstr += ' _INVALID_'
             outstr += '\n'
             
             outstr += self.__dict__[field_cost].format(for_forum = for_forum)
@@ -571,5 +580,9 @@ class Card:
                 for idx, value in self.__dict__[field_other]:
                     outstr += '<' + str(idx) + '> ' + str(value)
                     outstr += '\n'
+
+        if self.bside:
+            outstr += utils.dash_marker * 8 + '\n'
+            outstr += self.bside.format(gatherer = gatherer, for_forum = for_forum)
 
         return outstr

@@ -441,22 +441,20 @@ symbol_regex = '[' + tap_marker + untap_marker + ']'
 
 def to_symbols(s):
     jsymstrs = re.findall(json_symbol_regex, s)
-    #for jsymstr in sorted(jsymstrs, lambda x,y: cmp(len(x), len(y)), reverse = True):
-    # See below.
-    for jsymstr in jsymstrs:
-        s = s.replace(jsymstr, json_symbol_trans[jsymstr], 1)
+    for jsymstr in sorted(jsymstrs, lambda x,y: cmp(len(x), len(y)), reverse = True):
+        s = s.replace(jsymstr, json_symbol_trans[jsymstr])
     return s
 
 def from_symbols(s, for_forum = False):
     symstrs = re.findall(symbol_regex, s)
     #for symstr in sorted(symstrs, lambda x,y: cmp(len(x), len(y)), reverse = True):
-    # Since replacing doesn't remove the original match, have to do the right thing and go one
-    # at a time. We should probably use this method everywhere.
-    for symstr in symstrs:
+    # We have to do the right thing here, because the thing we replace exists in the thing
+    # we replace it with...
+    for symstr in set(symstrs):
         if for_forum:
-            s = s.replace(symstr, symbol_forum_trans[symstr], 1)
+            s = s.replace(symstr, symbol_forum_trans[symstr])
         else:
-            s = s.replace(symstr, symbol_trans[symstr], 1)
+            s = s.replace(symstr, symbol_trans[symstr])
     return s
 
 unletters_regex = r"[^abcdefghijklmnopqrstuvwxyz']"

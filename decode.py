@@ -24,11 +24,11 @@ def main(fname, oname = None, verbose = True, gatherer = False, for_forum = Fals
                 card = cardlib.Card(json_srcs[json_cardname][0])
                 if card.valid:
                     valid += 1
-                    cards += [card]
                 elif card.parsed:
                     invalid += 1
                 else:
                     unparsed += 1
+                cards += [card]
 
     # fall back to opening a normal encoded file
     else:
@@ -41,11 +41,12 @@ def main(fname, oname = None, verbose = True, gatherer = False, for_forum = Fals
                 card = cardlib.Card(card_src)
                 if card.valid:
                     valid += 1
-                    cards += [card]
                 elif card.parsed:
                     invalid += 1
                 else:
                     unparsed += 1
+                cards += [card]
+
     if verbose:
         print (str(valid) + ' valid, ' + str(invalid) + ' invalid, ' 
                + str(unparsed) + ' failed to parse.')
