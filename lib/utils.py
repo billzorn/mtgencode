@@ -19,6 +19,8 @@ this_marker = config.this_marker
 counter_marker = config.counter_marker
 reserved_marker = config.reserved_marker
 reserved_mana_marker = config.reserved_mana_marker
+choice_open_delimiter = config.choice_open_delimiter
+choice_close_delimiter = config.choice_close_delimiter
 x_marker = config.x_marker
 tap_marker = config.tap_marker
 untap_marker = config.untap_marker
@@ -423,15 +425,13 @@ json_symbol_trans = {
     mana_json_open_delimiter + json_symbol_untap + mana_json_close_delimiter : untap_marker,
     mana_json_open_delimiter + json_symbol_untap.lower() + mana_json_close_delimiter : untap_marker,
 }
-json_forum_trans = {
-    mana_forum_open_delimiter + json_symbol_tap + mana_forum_close_delimiter : tap_marker,
-    mana_forum_open_delimiter + json_symbol_tap.lower() + mana_forum_close_delimiter : tap_marker,
-    mana_forum_open_delimiter + json_symbol_untap + mana_forum_close_delimiter : untap_marker,
-    mana_forum_open_delimiter + json_symbol_untap.lower() + mana_forum_close_delimiter : untap_marker,
-}
 symbol_trans = {
     tap_marker : mana_json_open_delimiter + json_symbol_tap + mana_json_close_delimiter,
     untap_marker : mana_json_open_delimiter + json_symbol_untap + mana_json_close_delimiter,
+}
+symbol_forum_trans = {
+    tap_marker : mana_forum_open_delimiter + json_symbol_tap + mana_forum_close_delimiter,
+    untap_marker : mana_forum_open_delimiter + json_symbol_untap + mana_forum_close_delimiter,
 }
 json_symbol_regex = (re.escape(mana_json_open_delimiter) + '['
                      + json_symbol_tap + json_symbol_tap.lower()
@@ -441,14 +441,22 @@ symbol_regex = '[' + tap_marker + untap_marker + ']'
 
 def to_symbols(s):
     jsymstrs = re.findall(json_symbol_regex, s)
-    for jsymstr in sorted(jsymstrs, lambda x,y: cmp(len(x), len(y)), reverse = True):
-        s = s.replace(jsymstr, json_symbol_trans[jsymstr])
+    #for jsymstr in sorted(jsymstrs, lambda x,y: cmp(len(x), len(y)), reverse = True):
+    # See below.
+    for jsymstr in jsymstrs:
+        s = s.replace(jsymstr, json_symbol_trans[jsymstr], 1)
     return s
 
 def from_symbols(s, for_forum = False):
     symstrs = re.findall(symbol_regex, s)
-    for symstr in sorted(symstrs, lambda x,y: cmp(len(x), len(y)), reverse = True):
-        s = s.replace(symstr, symbol_trans[symstr])
+    #for symstr in sorted(symstrs, lambda x,y: cmp(len(x), len(y)), reverse = True):
+    # Since replacing doesn't remove the original match, have to do the right thing and go one
+    # at a time. We should probably use this method everywhere.
+    for symstr in symstrs:
+        if for_forum:
+            s = s.replace(symstr, symbol_forum_trans[symstr], 1)
+        else:
+            s = s.replace(symstr, symbol_trans[symstr], 1)
     return s
 
 unletters_regex = r"[^abcdefghijklmnopqrstuvwxyz']"

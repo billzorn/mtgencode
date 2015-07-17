@@ -1280,7 +1280,7 @@
 
 |famine||sorcery||||{^^^BBBB}|@ deals &^^^ damage to each creature and each player.|
 
-|profane command||sorcery||||{XXBBBB}|choose two ~ \= target player loses X life. \= return target creature card with converted mana cost X or less from your graveyard to the battlefield.\= target creature gets -X/-X until end of turn.\= up to X target creatures gain fear until end of turn.|
+|profane command||sorcery||||{XXBBBB}|[&^^ = target player loses X life.  = return target creature card with converted mana cost X or less from your graveyard to the battlefield. = target creature gets -X/-X until end of turn. = up to X target creatures gain fear until end of turn.]\|
 
 |kill~suit cultist||creature||goblin berserker|&^/&^|{RR}|@ attacks each turn if able.\{BB}, sacrifice @: the next time damage would be dealt to target creature this turn, destroy that creature instead.|
 
@@ -2500,7 +2500,7 @@
 
 |goblin sharpshooter||creature||goblin|&^/&^|{^^RR}|@ doesn't untap during your untap step.\whenever a creature dies, untap @.\T: @ deals &^ damage to target creature or player.|
 
-|misfortune||sorcery||||{^BBRRGG}|an opponent chooses one ~\= you put a +&^/+&^ counter on each creature you control and gain &^^^^ life.\= you put a -&^/-&^ counter on each creature that player controls and @ deals &^^^^ damage to him or her.|
+|misfortune||sorcery||||{^BBRRGG}|an opponent [&^ = you put a +&^/+&^ counter on each creature you control and gain &^^^^ life. = you put a -&^/-&^ counter on each creature that player controls and @ deals &^^^^ damage to him or her.]|
 
 |mind extraction||sorcery||||{^^BB}|as an additional cost to cast @, sacrifice a creature.\target player reveals his or her hand and discards all cards of each of the sacrificed creature's colors.|
 
@@ -5870,7 +5870,7 @@
 
 |hallowed healer||creature||human cleric|&^/&^|{^^WW}|T: prevent the next &^^ damage that would be dealt to target creature or player this turn.\threshold ~ T: prevent the next &^^^^ damage that would be dealt to target creature or player this turn. activate this ability only if seven or more cards are in your graveyard.|
 
-|library of lat~nam||sorcery||||{^^^^UU}|an opponent chooses one ~\= you draw three cards at the beginning of the next turn's upkeep.\= you search your library for a card, put that card into your hand, then shuffle your library.|
+|library of lat~nam||sorcery||||{^^^^UU}|an opponent [&^ = you draw three cards at the beginning of the next turn's upkeep. = you search your library for a card, put that card into your hand, then shuffle your library.]|
 
 |kor skyfisher||creature||kor soldier|&^^/&^^^|{^WW}|flying\when @ enters the battlefield, return a permanent you control to its owner's hand.|
 
@@ -10108,7 +10108,7 @@
 
 |chaos moon||enchantment||||{^^^RR}|at the beginning of each upkeep, count the number of permanents. if the number is odd, until end of turn, red creatures get +&^/+&^ and whenever a player taps a mountain for mana, that player adds {RR} to his or her mana pool . if the number is even, until end of turn, red creatures get -&^/-&^ and if a player taps a mountain for mana, that mountain produces colorless mana instead of any other type.|
 
-|frontier siege||enchantment||||{^^^GG}|as @ enters the battlefield, choose khans or dragons.\= khans ~ at the beginning of each of your main phases, add {GGGG} to your mana pool.\= dragons ~ whenever a creature with flying enters the battlefield under your control, you may have it fight target creature you don't control.|
+|frontier siege||enchantment||||{^^^GG}|as @ enters the battlefield, [&^ = khans ~ at the beginning of each of your main phases, add {GGGG} to your mana pool. = dragons ~ whenever a creature with flying enters the battlefield under your control, you may have it fight target creature you don't control.]|
 
 |mobile fort||artifact creature||wall|&/&^^^^^^|{^^^^}|defender \{^^^}: @ gets +&^^^/-&^ until end of turn and can attack this turn as though it didn't have defender. activate this ability only once each turn.|
 
@@ -14440,7 +14440,7 @@
 
 |forgotten harvest||enchantment||||{^GG}|at the beginning of your upkeep, you may exile a land card from your graveyard. if you do, put a +&^/+&^ counter on target creature.|
 
-|outpost siege||enchantment||||{^^^RR}|as @ enters the battlefield, choose khans or dragons.\= khans ~ at the beginning of your upkeep, exile the top card of your library. until end of turn, you may play that card.\= dragons ~ whenever a creature you control leaves the battlefield, @ deals &^ damage to target creature or player.|
+|outpost siege||enchantment||||{^^^RR}|as @ enters the battlefield, [&^ = khans ~ at the beginning of your upkeep, exile the top card of your library. until end of turn, you may play that card. = dragons ~ whenever a creature you control leaves the battlefield, @ deals &^ damage to target creature or player.]|
 
 |vigorous charge||instant||||{GG}|kicker {WW} \target creature gains trample until end of turn. whenever that creature deals combat damage this turn, if @ was kicked, you gain life equal to that damage.|
 
@@ -18615,7 +18615,7 @@
 
 |font of vigor||enchantment||||{^WW}|{^^WW}, sacrifice @: you gain &^^^^^^^ life.|
 
-|citadel siege||enchantment||||{^^WWWW}|as @ enters the battlefield, choose khans or dragons.\= khans ~ at the beginning of combat on your turn, put two +&^/+&^ counters on target creature you control.\= dragons ~ at the beginning of combat on each opponent's turn, tap target creature that player controls.|
+|citadel siege||enchantment||||{^^WWWW}|as @ enters the battlefield, [&^ = khans ~ at the beginning of combat on your turn, put two +&^/+&^ counters on target creature you control. = dragons ~ at the beginning of combat on each opponent's turn, tap target creature that player controls.]|
 
 |gigantomancer||creature||human shaman|&^/&^|{^^^^^^^GG}|{^}: target creature you control has base power and toughness &^^^^^^^/&^^^^^^^ until end of turn.|
 
@@ -18689,7 +18689,7 @@
 
 |heroes' bane||creature||hydra|&/&|{^^^GGGG}|@ enters the battlefield with four +&^/+&^ counters on it.\{^^GGGG}: put X +&^/+&^ counters on @, where X is its power.|
 
-|monastery siege||enchantment||||{^^UU}|as @ enters the battlefield, choose khans or dragons.\= khans ~ at the beginning of your draw step, draw an additional card, then discard a card.\= dragons ~ spells your opponents cast that target you or a permanent you control cost {^^} more to cast.|
+|monastery siege||enchantment||||{^^UU}|as @ enters the battlefield, [&^ = khans ~ at the beginning of your draw step, draw an additional card, then discard a card. = dragons ~ spells your opponents cast that target you or a permanent you control cost {^^} more to cast.]|
 
 |cabal trainee||creature||human minion|&^/&^|{BB}|sacrifice @: target creature gets -&^^/-& until end of turn.|
 
@@ -26025,7 +26025,7 @@
 
 |gisela, blade of goldnight|legendary|creature||angel|&^^^^^/&^^^^^|{^^^^RRWWWW}|flying, first strike\if a source would deal damage to an opponent or a permanent an opponent controls, that source deals double that damage to that player or permanent instead.\if a source would deal damage to you or a permanent you control, prevent half that damage, rounded up.|
 
-|fatal lore||sorcery||||{^^BBBB}|an opponent chooses one ~\= you draw three cards.\= you destroy up to two target creatures that player controls. they can't be regenerated. that player draws up to three cards.|
+|fatal lore||sorcery||||{^^BBBB}|an opponent [&^ = you draw three cards. = you destroy up to two target creatures that player controls. they can't be regenerated. that player draws up to three cards.]|
 
 |puncture bolt||instant||||{^RR}|@ deals &^ damage to target creature. put a -&^/-&^ counter on that creature.|
 
@@ -27334,7 +27334,7 @@
 
 |charging badger||creature||badger|&^/&^|{GG}|trample|
 
-|palace siege||enchantment||||{^^^BBBB}|as @ enters the battlefield, choose khans or dragons.\= khans ~ at the beginning of your upkeep, return target creature card from your graveyard to your hand.\= dragons ~ at the beginning of your upkeep, each opponent loses &^^ life and you gain &^^ life.|
+|palace siege||enchantment||||{^^^BBBB}|as @ enters the battlefield, [&^ = khans ~ at the beginning of your upkeep, return target creature card from your graveyard to your hand. = dragons ~ at the beginning of your upkeep, each opponent loses &^^ life and you gain &^^ life.]|
 
 |second guess||instant||||{^UU}|uncast target spell that's the second spell cast this turn.|
 

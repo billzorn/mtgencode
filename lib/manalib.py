@@ -107,8 +107,8 @@ class Manacost:
                                       + utils.mana_close_delimiter)
 
     def format(self, for_forum = False):
-        return utils.mana_untranslate(utils.mana_open_delimiter + ''.join(self.sequence, for_forum)
-                                      + utils.mana_close_delimiter)
+        return utils.mana_untranslate(utils.mana_open_delimiter + ''.join(self.sequence)
+                                      + utils.mana_close_delimiter, for_forum)
 
     def encode(self, randomize = False):
         if self.none:

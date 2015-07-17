@@ -17,6 +17,8 @@ this_marker = '@'
 counter_marker = '%'
 reserved_marker = '\v'
 reserved_mana_marker = '$'
+choice_open_delimiter = '['
+choice_close_delimiter = ']'
 x_marker = 'X'
 tap_marker = 'T'
 untap_marker = 'Q'
@@ -39,7 +41,7 @@ unary_exceptions = {
 
 # field labels, to allow potential reordering of card format
 field_label_name = '1'
-field_label_rarity = '2'
+field_label_rarity = 'Y' # 2 is part of some mana symbols {2/B} ...
 field_label_cost = '3'
 field_label_supertypes = '4'
 field_label_types = '5'

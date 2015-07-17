@@ -15,6 +15,8 @@ bullet_marker = utils.bullet_marker
 this_marker = utils.this_marker
 counter_marker = utils.counter_marker
 reserved_marker = utils.reserved_marker
+choice_open_delimiter = utils.choice_open_delimiter
+choice_close_delimiter = utils.choice_close_delimiter
 x_marker = utils.x_marker
 tap_marker = utils.tap_marker
 untap_marker = utils.untap_marker
@@ -331,17 +333,21 @@ def text_pass_7_choice(s):
             newchoice = newchoice.replace(prefix, unary_marker + (unary_counter * count))
             newchoice = newchoice.replace('\n', ' ')
             if newchoice[-1:] == ' ':
-                newchoice = '[' + newchoice[:-1] + ']\n'
+                newchoice = choice_open_delimiter + newchoice[:-1] + choice_close_delimiter + '\n'
             else:
-                newchoice = '[' + newchoice + ']'
+                newchoice = choice_open_delimiter + newchoice + choice_close_delimiter
             s_helper = s_helper.replace(choice[0], newchoice)
         return s_helper
 
     s = choice_formatting_helper(s, ur'choose one \u2014', 1)
     s = choice_formatting_helper(s, ur'choose one \u2014 ', 1) # ty Promise of Power
     s = choice_formatting_helper(s, ur'choose two \u2014', 2)
+    s = choice_formatting_helper(s, ur'choose two \u2014 ', 2) # ty Profane Command
     s = choice_formatting_helper(s, ur'choose one or both \u2014', 0)
     s = choice_formatting_helper(s, ur'choose one or more \u2014', 0)
+    s = choice_formatting_helper(s, ur'choose khans or dragons.', 1)
+    # this is for 'an opponent chooses one', which will be a bit weird but still work out
+    s = choice_formatting_helper(s, ur'chooses one \u2014', 1)
 
     return s
 
@@ -388,3 +394,78 @@ def text_pass_9_newlines(s):
 
 def text_pass_10_symbols(s):
     return utils.to_symbols(s)
+
+
+# Text unpasses, for decoding. All assume the text inside a Manatext, so don't do anything
+# weird with the mana cost symbol.
+
+
+def text_unpass_1_choice(s, delimit = False):
+    choice_regex = (re.escape(choice_open_delimiter) + re.escape(unary_marker)
+                    + r'.*' + re.escape(bullet_marker) + r'.*' + re.escape(choice_close_delimiter))
+    choices = re.findall(choice_regex, s)
+    for choice in sorted(choices, lambda x,y: cmp(len(x), len(y)), reverse = True):
+        fragments = choice[1:-1].split(bullet_marker)
+        countfrag = fragments[0]
+        optfrags = fragments[1:]
+        choicecount = int(utils.from_unary(re.findall(utils.number_unary_regex, countfrag)[0]))
+        newchoice = ''
+
+        if choicecount == 0:
+            if len(countfrag) == 2:
+                newchoice += 'choose one or both '
+            else:
+                newchoice += 'choose one or more '
+        elif choicecount == 1:
+            newchoice += 'choose one '
+        elif choicecount == 2:
+            newchoice += 'choose two '
+        else:
+            newchoice += 'choose ' + utils.to_unary(str(choicecount)) + ' '
+        newchoice += dash_marker
+        
+        for option in optfrags:
+            option = option.strip()
+            if option:
+                newchoice += newline + bullet_marker + ' ' + option
+
+        if delimit:
+            s = s.replace(choice, choice_open_delimiter + newchoice + choice_close_delimiter)
+            s = s.replace('an opponent ' + choice_open_delimiter + 'choose ', 
+                          'an opponent ' + choice_open_delimiter + 'chooses ')
+        else:
+            s = s.replace(choice, newchoice)
+            s = s.replace('an opponent choose ', 'an opponent chooses ')
+    
+    return s
+
+
+def text_unpass_2_counters(s):
+    countertypes = re.findall(r'countertype ' + re.escape(counter_marker) 
+                              + r'[^' + re.escape(newline) + r']*' + re.escape(newline), s)
+    # lazier than using groups in the regex
+    countertypes += re.findall(r'countertype ' + re.escape(counter_marker) 
+                              + r'[^' + re.escape(newline) + r']*$', s)
+    if len(countertypes) > 0:
+        countertype = countertypes[0].replace('countertype ' + counter_marker, '')
+        countertype = countertype.replace(newline, '\n').strip()
+        s = s.replace(countertypes[0], '')
+        s = s.replace(counter_marker, countertype)
+    
+    return s
+
+
+def text_unpass_3_unary(s):
+    return utils.from_unary(s)
+    
+
+def text_unpass_4_cardname(s, name):
+    return s.replace(this_marker, name)
+
+
+def text_unpass_5_symbols(s, for_forum):
+    return utils.from_symbols(s, for_forum = for_forum)
+
+
+def text_unpass_6_newlines(s):
+    return s.replace(newline, '\n')

@@ -214,10 +214,12 @@ def fields_from_format(src_text, fmt_ordered, fmt_labeled, fieldsep):
         labels = {fmt_labeled[k] : k for k in fmt_labeled}
         field_label_regex = '[' + ''.join(labels.keys()) + ']'
     def addf(fields, fkey, fval):
-        if fkey in fields:
-            fields[fkey] += [fval]
-        else:
-            fields[fkey] = [fval]
+        # make sure you pass a pair
+        if fval and fval[1]:
+            if fkey in fields:
+                fields[fkey] += [fval]
+            else:
+                fields[fkey] = [fval]
 
     textfields = src_text.split(fieldsep)
     idx = 0
@@ -240,6 +242,7 @@ def fields_from_format(src_text, fmt_ordered, fmt_labeled, fieldsep):
             # use the first label if we saw any at all
             if len(labs) > 0:
                 lab = labs[0]
+                textfield = textfield.replace(lab, '', 1)
         # try to use the field label if we got one
         if lab and lab in labels:
             fname = labels[lab]
@@ -251,7 +254,7 @@ def fields_from_format(src_text, fmt_ordered, fmt_labeled, fieldsep):
             fname = field_other
             parsed = False
             valid = False
-        
+
         # specialized handling
         if fname in [field_cost]:
             fval = Manacost(textfield)
@@ -279,7 +282,7 @@ class Card:
     '''card representation with data'''
 
     def __init__(self, src, fmt_ordered = fmt_ordered_default, 
-                            fmt_labeled = None, 
+                            fmt_labeled = fmt_labeled_default, 
                             fieldsep = utils.fieldsep):
         # source fields, exactly one will be set
         self.json = None
@@ -464,5 +467,109 @@ class Card:
                                           randomize_fields = randomize_fields, 
                                           randomize_mana = randomize_mana,
                                           initial_sep = initial_sep, final_sep = final_sep))
+
+        return outstr
+
+    def format(self, gatherer = False, for_forum = False):
+        outstr = ''
+        if gatherer:
+            cardname = self.__dict__[field_name].title()
+            if for_forum:
+                outstr += '[b]'
+            outstr += cardname
+            if for_forum:
+                outstr += '[/b]'
+
+            outstr += ' ' + self.__dict__[field_cost].format(for_forum = for_forum)
+
+            if self.__dict__[field_rarity]:
+                outstr += '(' + self.__dict__[rarity] + ')'
+                
+            outstr += '\n'
+
+            outstr += ' '.join(self.__dict__[field_supertypes] + self.__dict__[field_types]).title()
+            if self.__dict__[field_subtypes]:
+                outstr += (' ' + utils.dash_marker + ' ' + 
+                           ' '.join(self.__dict__[field_subtypes]).title())
+
+            if self.__dict__[field_pt]:
+                outstr += ' (' + utils.from_unary(self.__dict__[field_pt]) + ')'
+
+            if self.__dict__[field_loyalty]:
+                outstr += ' ((' + utils.from_unary(self.__dict__[field_loyalty]) + '))'
+
+            outstr += '\n'
+
+            if self.__dict__[field_text].text:
+                mtext = self.__dict__[field_text].text
+                mtext = transforms.text_unpass_1_choice(mtext, delimit = False)
+                mtext = transforms.text_unpass_2_counters(mtext)
+                mtext = transforms.text_unpass_3_unary(mtext)
+                mtext = transforms.text_unpass_4_cardname(mtext, cardname)
+                mtext = transforms.text_unpass_5_symbols(mtext, for_forum)
+                mtext = transforms.text_unpass_6_newlines(mtext)
+                newtext = Manatext('')
+                newtext.text = mtext
+                newtext.costs = self.__dict__[field_text].costs
+                outstr += newtext.format(for_forum = for_forum)
+            
+                outstr += '\n'
+
+            if self.__dict__[field_other]:
+                if for_forum:
+                    outstr += '[i]'
+                else:
+                    outstr += utils.dash_marker * 2
+                    outstr += '\n'
+                for idx, value in self.__dict__[field_other]:
+                    outstr += '<' + str(idx) + '> ' + str(value)
+                    outstr += '\n'
+                if for_forum:
+                    outstr = outstr[:-1] # hack off the last newline
+                    outstr += '[/i]'
+                    outstr += '\n'
+
+        else:
+            cardname = self.__dict__[field_name]
+            outstr += cardname
+            if self.__dict__[field_rarity]:
+                outstr += '(' + self.__dict__[field_rarity] + ')'
+            outstr += '\n'
+            
+            outstr += self.__dict__[field_cost].format(for_forum = for_forum)
+            outstr += '\n'
+
+            outstr += ' '.join(self.__dict__[field_supertypes] + self.__dict__[field_types])
+            if self.__dict__[field_subtypes]:
+                outstr += ' ' + utils.dash_marker + ' ' + ' '.join(self.__dict__[field_subtypes])
+            outstr += '\n'
+            
+            if self.__dict__[field_text].text:
+                mtext = self.__dict__[field_text].text
+                mtext = transforms.text_unpass_1_choice(mtext, delimit = True)
+                #mtext = transforms.text_unpass_2_counters(mtext)
+                mtext = transforms.text_unpass_3_unary(mtext)
+                #mtext = transforms.text_unpass_4_cardname(mtext, cardname)
+                mtext = transforms.text_unpass_5_symbols(mtext, for_forum)
+                mtext = transforms.text_unpass_6_newlines(mtext)
+                newtext = Manatext('')
+                newtext.text = mtext
+                newtext.costs = self.__dict__[field_text].costs
+                outstr += newtext.format(for_forum = for_forum) + '\n'
+
+            if self.__dict__[field_pt]:
+                outstr += '(' + utils.from_unary(self.__dict__[field_pt]) + ')'
+                outstr += '\n'
+
+            if self.__dict__[field_loyalty]:
+                outstr += '((' + utils.from_unary(self.__dict__[field_loyalty]) + '))'
+                outstr += '\n'
+                
+            if self.__dict__[field_other]:
+                outstr += utils.dash_marker * 2
+                outstr += '\n'
+                for idx, value in self.__dict__[field_other]:
+                    outstr += '<' + str(idx) + '> ' + str(value)
+                    outstr += '\n'
 
         return outstr

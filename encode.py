@@ -46,7 +46,7 @@ def main(fname, oname = None, verbose = True, dupes = 0, encoding = 'std', stabl
             dupes = 10
         fmt_labeled = cardlib.fmt_labeled_default
         randomize_fields = True
-        randomize_mana = True
+        #randomize_mana = True
         final_sep = False
     else:
         raise ValueError('encode.py: unknown encoding: ' + encoding)
@@ -97,6 +97,7 @@ def main(fname, oname = None, verbose = True, dupes = 0, encoding = 'std', stabl
                     invalid += 1
                 else:
                     unparsed += 1
+
     # fall back to opening a normal encoded file
     else:
         if verbose:
