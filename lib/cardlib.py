@@ -366,50 +366,72 @@ class Card:
     # all be -1 if the card was parsed from (unordered) json.
 
     def set_field_default(self, field, values):
+        first = True
         for idx, value in values:
-            self.__dict__[field] = value
-            break # only use the first one...
+            if first:
+                first = False
+                self.__dict__[field] = value
+            else:
+                # stick it in other so we'll be know about it when we format the card
+                self.valid = False
+                self.__dict__[field_other] += [(idx, '<' + field + '> ' + str(value))]
 
     def _set_loyalty(self, values):
+        first = True
         for idx, value in values:
-            self.__dict__[field_loyalty] = value
-            try:
-                self.__dict__[field_loyalty + '_value'] = int(value)
-            except ValueError:
-                self.__dict__[field_loyalty + '_value'] = None
-                # Technically '*' could still be valid, but it's unlikely...
-            break # only use the first one...
-
-    def _set_pt(self, values):
-        for idx, value in values:
-            self.__dict__[field_pt] = value
-            p_t = value.split('/') # hardcoded
-            if len(p_t) == 2:
-                self.__dict__[field_pt + '_p'] = p_t[0]
+            if first:
+                first = False
+                self.__dict__[field_loyalty] = value
                 try:
-                    self.__dict__[field_pt + '_p_value'] = int(p_t[0])
+                    self.__dict__[field_loyalty + '_value'] = int(value)
                 except ValueError:
-                    self.__dict__[field_pt + '_p_value'] = None
-                self.__dict__[field_pt + '_t'] = p_t[1]
-                try:
-                    self.__dict__[field_pt + '_t_value'] = int(p_t[1])
-                except ValueError:
-                    self.__dict__[field_pt + '_t_value'] = None
+                    self.__dict__[field_loyalty + '_value'] = None
+                    # Technically '*' could still be valid, but it's unlikely...
             else:
                 self.valid = False
-            break # only use the first one...
+                self.__dict__[field_other] += [(idx, '<loyalty> ' + str(value))]
+
+    def _set_pt(self, values):
+        first = True
+        for idx, value in values:
+            if first:
+                first = False
+                self.__dict__[field_pt] = value
+                p_t = value.split('/') # hardcoded
+                if len(p_t) == 2:
+                    self.__dict__[field_pt + '_p'] = p_t[0]
+                    try:
+                        self.__dict__[field_pt + '_p_value'] = int(p_t[0])
+                    except ValueError:
+                        self.__dict__[field_pt + '_p_value'] = None
+                    self.__dict__[field_pt + '_t'] = p_t[1]
+                    try:
+                        self.__dict__[field_pt + '_t_value'] = int(p_t[1])
+                    except ValueError:
+                        self.__dict__[field_pt + '_t_value'] = None
+                else:
+                    self.valid = False
+            else:
+                self.valid = False
+                self.__dict__[field_other] += [(idx, '<pt> ' + str(value))]
     
     def _set_text(self, values):
+        first = True
         for idx, value in values:
-            mtext = value
-            self.__dict__[field_text] = mtext
-            fulltext = mtext.encode()
-            if fulltext:
-                self.__dict__[field_text + '_lines'] = map(Manatext, fulltext.split(utils.newline))
-                self.__dict__[field_text + '_words'] = re.sub(utils.unletters_regex, 
-                                                              ' ', 
-                                                              fulltext).split()
-            break # only use the first one...
+            if first:
+                first = False
+                mtext = value
+                self.__dict__[field_text] = mtext
+                fulltext = mtext.encode()
+                if fulltext:
+                    self.__dict__[field_text + '_lines'] = map(Manatext, 
+                                                               fulltext.split(utils.newline))
+                    self.__dict__[field_text + '_words'] = re.sub(utils.unletters_regex, 
+                                                                  ' ', 
+                                                                  fulltext).split()
+            else:
+                self.valid = False
+                self.__dict__[field_other] += [(idx, '<text> ' + str(value))]
         
     def _set_other(self, values):
         # just record these, we could do somthing unset valid if we really wanted
@@ -474,6 +496,8 @@ class Card:
         outstr = ''
         if gatherer:
             cardname = self.__dict__[field_name].title()
+            if not cardname:
+                cardname = '_NONAME_'
             if for_forum:
                 outstr += '[b]'
             outstr += cardname
@@ -492,7 +516,12 @@ class Card:
                 
             outstr += '\n'
 
-            outstr += ' '.join(self.__dict__[field_supertypes] + self.__dict__[field_types]).title()
+            basetypes = self.__dict__[field_types]
+            if len(basetypes) < 1:
+                basetypes = ['_NOTYPE_']
+            
+            outstr += ' '.join(self.__dict__[field_supertypes] + basetypes)
+
             if self.__dict__[field_subtypes]:
                 outstr += (' ' + utils.dash_marker + ' ' + 
                            ' '.join(self.__dict__[field_subtypes]).title())
@@ -510,8 +539,8 @@ class Card:
                 mtext = transforms.text_unpass_1_choice(mtext, delimit = False)
                 mtext = transforms.text_unpass_2_counters(mtext)
                 mtext = transforms.text_unpass_3_unary(mtext)
-                mtext = transforms.text_unpass_4_cardname(mtext, cardname)
-                mtext = transforms.text_unpass_5_symbols(mtext, for_forum)
+                mtext = transforms.text_unpass_4_symbols(mtext, for_forum)
+                mtext = transforms.text_unpass_5_cardname(mtext, cardname)
                 mtext = transforms.text_unpass_6_newlines(mtext)
                 newtext = Manatext('')
                 newtext.text = mtext
@@ -558,8 +587,8 @@ class Card:
                 mtext = transforms.text_unpass_1_choice(mtext, delimit = True)
                 #mtext = transforms.text_unpass_2_counters(mtext)
                 mtext = transforms.text_unpass_3_unary(mtext)
-                #mtext = transforms.text_unpass_4_cardname(mtext, cardname)
-                mtext = transforms.text_unpass_5_symbols(mtext, for_forum)
+                mtext = transforms.text_unpass_4_symbols(mtext, for_forum)
+                #mtext = transforms.text_unpass_5_cardname(mtext, cardname)
                 mtext = transforms.text_unpass_6_newlines(mtext)
                 newtext = Manatext('')
                 newtext.text = mtext

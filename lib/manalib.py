@@ -103,12 +103,17 @@ class Manacost:
         self.colors = self.get_colors()
 
     def __str__(self):
+        if self.none:
+            return '_NOCOST_'
         return utils.mana_untranslate(utils.mana_open_delimiter + ''.join(self.sequence)
                                       + utils.mana_close_delimiter)
 
     def format(self, for_forum = False):
-        return utils.mana_untranslate(utils.mana_open_delimiter + ''.join(self.sequence)
-                                      + utils.mana_close_delimiter, for_forum)
+        if self.none:
+            return '_NOCOST_'
+        else:
+            return utils.mana_untranslate(utils.mana_open_delimiter + ''.join(self.sequence)
+                                          + utils.mana_close_delimiter, for_forum)
 
     def encode(self, randomize = False):
         if self.none:

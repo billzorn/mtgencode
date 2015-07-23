@@ -457,14 +457,14 @@ def text_unpass_2_counters(s):
 
 def text_unpass_3_unary(s):
     return utils.from_unary(s)
-    
-
-def text_unpass_4_cardname(s, name):
-    return s.replace(this_marker, name)
 
 
-def text_unpass_5_symbols(s, for_forum):
+def text_unpass_4_symbols(s, for_forum):
     return utils.from_symbols(s, for_forum = for_forum)
+
+
+def text_unpass_5_cardname(s, name):
+    return s.replace(this_marker, name)
 
 
 def text_unpass_6_newlines(s):
