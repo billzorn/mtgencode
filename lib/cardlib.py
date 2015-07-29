@@ -6,6 +6,32 @@ import utils
 import transforms
 from manalib import Manacost, Manatext
 
+# Some text prettification stuff that people may not have installed
+try:
+    from titlecase import titlecase
+except ImportError:
+    def titlecase(s):
+        return s.title()
+
+try:
+    import textwrap
+    import nltk.data
+    sent_tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
+    # This crazy thing is actually invoked as an unpass, so newlines are still
+    # encoded.
+    def sentencecase(s):
+        s = s.replace(utils.x_marker, utils.reserved_marker)
+        lines = s.split(utils.newline)
+        clines = []
+        for line in lines:
+            if line:
+                sentences = sent_tokenizer.tokenize(line)
+                clines += [' '.join([sent.capitalize() for sent in sentences])]
+        return utils.newline.join(clines).replace(utils.reserved_marker, utils.x_marker)
+except ImportError:
+    def sentencecase(s):
+        return s
+
 # These are used later to determine what the fields of the Card object are called.
 # Define them here because they have nothing to do with the actual format.
 field_name = 'name'
@@ -495,7 +521,7 @@ class Card:
     def format(self, gatherer = False, for_forum = False):
         outstr = ''
         if gatherer:
-            cardname = self.__dict__[field_name].title()
+            cardname = titlecase(self.__dict__[field_name])
             if not cardname:
                 cardname = '_NONAME_'
             if for_forum:
@@ -516,11 +542,11 @@ class Card:
                 
             outstr += '\n'
 
-            basetypes = self.__dict__[field_types]
+            basetypes = map(str.capitalize, self.__dict__[field_types])
             if len(basetypes) < 1:
                 basetypes = ['_NOTYPE_']
             
-            outstr += ' '.join(self.__dict__[field_supertypes] + basetypes)
+            outstr += ' '.join(map(str.capitalize, self.__dict__[field_supertypes]) + basetypes)
 
             if self.__dict__[field_subtypes]:
                 outstr += (' ' + utils.dash_marker + ' ' + 
@@ -540,6 +566,7 @@ class Card:
                 mtext = transforms.text_unpass_2_counters(mtext)
                 mtext = transforms.text_unpass_3_unary(mtext)
                 mtext = transforms.text_unpass_4_symbols(mtext, for_forum)
+                mtext = sentencecase(mtext)
                 mtext = transforms.text_unpass_5_cardname(mtext, cardname)
                 mtext = transforms.text_unpass_6_newlines(mtext)
                 newtext = Manatext('')
@@ -615,3 +642,41 @@ class Card:
             outstr += self.bside.format(gatherer = gatherer, for_forum = for_forum)
 
         return outstr
+    
+    def vectorize(self):
+        ld = '('
+        rd = ')'
+        outstr = ''
+
+        if self.__dict__[field_rarity]:
+            outstr += ld + self.__dict__[field_rarity] + rd + ' '
+
+        coststr = self.__dict__[field_cost].vectorize(delimit = True)
+        if coststr:
+            outstr += coststr + ' '
+
+        typestr = ' '.join(map(lambda s: '(' + s + ')',
+                               self.__dict__[field_supertypes] + self.__dict__[field_types]))
+        if typestr:
+            outstr += typestr + ' '
+
+        if self.__dict__[field_subtypes]:
+            outstr += ' '.join(self.__dict__[field_subtypes]) + ' '
+
+        if self.__dict__[field_pt]:
+            outstr += ' '.join(map(lambda s: '(' + s + ')',
+                                   self.__dict__[field_pt].replace('/', '/ /').split()))
+            outstr += ' '
+        
+        if self.__dict__[field_loyalty]:
+            outstr += '((' + self.__dict__[field_loyalty] + ')) '
+            
+        outstr += self.__dict__[field_text].vectorize()
+
+        if self.bside:
+            outstr = '_ASIDE_ ' + outstr + '\n\n_BSIDE_ ' + self.bside.vectorize()
+
+        return outstr
+            
+
+        

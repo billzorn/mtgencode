@@ -126,6 +126,18 @@ class Manacost:
         else:
             return utils.mana_open_delimiter + ''.join(self.sequence) + utils.mana_close_delimiter
 
+    def vectorize(self, delimit = False):
+        if self.none:
+            return ''
+        elif delimit:
+            ld = '('
+            rd = ')'
+        else:
+            ld = ''
+            rd = ''
+        return ' '.join(map(lambda s: ld + s + rd, self.sequence))
+        
+
 class Manatext:
     '''text representation with embedded mana costs'''
     
@@ -176,3 +188,25 @@ class Manatext:
         for cost in self.costs:
             text = text.replace(utils.reserved_mana_marker, cost.encode(randomize = randomize), 1)
         return text
+
+    def vectorize(self):
+        text = self.text
+        special_chars = [utils.reserved_mana_marker,
+                         utils.dash_marker,
+                         utils.bullet_marker,
+                         utils.this_marker,
+                         utils.counter_marker,
+                         utils.choice_open_delimiter,
+                         utils.choice_close_delimiter,
+                         utils.newline,
+                         #utils.x_marker,
+                         utils.tap_marker,
+                         utils.untap_marker,
+                         utils.newline,
+                         ';', ':', '"', ',', '.']
+        for char in special_chars:
+            text = text.replace(char, ' ' + char + ' ')
+        text = text.replace('/', '/ /')
+        for cost in self.costs:
+            text = text.replace(utils.reserved_mana_marker, cost.vectorize(), 1)
+        return ' '.join(text.split())

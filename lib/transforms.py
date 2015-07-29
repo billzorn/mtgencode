@@ -121,6 +121,7 @@ def text_pass_4b_x(s):
     s = s.replace(' x ', ' ' + x_marker + ' ')
     s = s.replace('x:', x_marker + ':')
     s = s.replace('x~', x_marker + '~')
+    s = s.replace(u'x\u2014', x_marker + u'\u2014')
     s = s.replace('x.', x_marker + '.')
     s = s.replace('x,', x_marker + ',')
     s = s.replace('x/x', x_marker + '/' + x_marker)

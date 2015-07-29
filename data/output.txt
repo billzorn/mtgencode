@@ -6529,7 +6529,7 @@
 
 |sigil of the new dawn||enchantment||||{^^^WW}|whenever a creature is put into your graveyard from the battlefield, you may pay {^WW}. if you do, return that card to your hand.|
 
-|benalish commander||creature||human soldier|*/*|{^^^WW}|countertype % time\@'s power and toughness are each equal to the number of soldiers you control.\suspend x~{XXWWWW}. X can't be &. \whenever a % counter is removed from @ while it's exiled, put a &^/&^ white soldier creature token onto the battlefield.|
+|benalish commander||creature||human soldier|*/*|{^^^WW}|countertype % time\@'s power and toughness are each equal to the number of soldiers you control.\suspend X~{XXWWWW}. X can't be &. \whenever a % counter is removed from @ while it's exiled, put a &^/&^ white soldier creature token onto the battlefield.|
 
 |deluge||instant||||{^^UU}|tap all creatures without flying.|
 
@@ -8148,7 +8148,7 @@
 
 |ventifact bottle||artifact||||{^^^}|countertype % charge\{XX^}, T: put X % counters on @. activate this ability only any time you could cast a sorcery.\at the beginning of your precombat main phase, if @ has a % counter on it, tap it and remove all % counters from it. add {^} to your mana pool for each % counter removed this way.|
 
-|aeon chronicler||creature||avatar|*/*|{^^^UUUU}|countertype % time\@'s power and toughness are each equal to the number of cards in your hand.\suspend x~{XX^^^UU}. X can't be &.  \whenever a % counter is removed from @ while it's exiled, draw a card.|
+|aeon chronicler||creature||avatar|*/*|{^^^UUUU}|countertype % time\@'s power and toughness are each equal to the number of cards in your hand.\suspend X~{XX^^^UU}. X can't be &.  \whenever a % counter is removed from @ while it's exiled, draw a card.|
 
 |brine seer||creature||human wizard|&^/&^|{^^^UU}|{^^UU}, T: reveal any number of blue cards in your hand. uncast target spell unless its controller pays {^} for each card revealed this way.|
 
@@ -9290,7 +9290,7 @@
 
 |gaea's liege||creature||avatar|*/*|{^^^GGGGGG}|as long as @ isn't attacking, its power and toughness are each equal to the number of forests you control. as long as @ is attacking, its power and toughness are each equal to the number of forests defending player controls.\T: target land becomes a forest until @ leaves the battlefield.|
 
-|swell of courage||instant||||{^^^WWWW}|creatures you control get +&^^/+&^^ until end of turn.\reinforce x~{XXWWWW}|
+|swell of courage||instant||||{^^^WWWW}|creatures you control get +&^^/+&^^ until end of turn.\reinforce X~{XXWWWW}|
 
 |battlegrace angel||creature||angel|&^^^^/&^^^^|{^^^WWWW}|flying\exalted \whenever a creature you control attacks alone, it gains lifelink until end of turn.|
 
@@ -9919,7 +9919,7 @@
 
 |bellowing saddlebrute||creature||orc warrior|&^^^^/&^^^^^|{^^^BB}|raid ~ when @ enters the battlefield, you lose &^^^^ life unless you attacked with a creature this turn.|
 
-|detritivore||creature||lhurgoyf|*/*|{^^RRRR}|countertype % time\@'s power and toughness are each equal to the number of nonbasic land cards in your opponents' graveyards.\suspend x~{XX^^^RR}. X can't be &. \whenever a % counter is removed from @ while it's exiled, destroy target nonbasic land.|
+|detritivore||creature||lhurgoyf|*/*|{^^RRRR}|countertype % time\@'s power and toughness are each equal to the number of nonbasic land cards in your opponents' graveyards.\suspend X~{XX^^^RR}. X can't be &. \whenever a % counter is removed from @ while it's exiled, destroy target nonbasic land.|
 
 |gruul signet||artifact||||{^^}|{^}, T: add {RRGG} to your mana pool.|
 
@@ -17008,7 +17008,7 @@
 
 |viashino grappler||creature||viashino|&^^^/&^|{^^RR}|{GG}: @ gains trample until end of turn.|
 
-|fungal behemoth||creature||fungus|*/*|{^^^GG}|countertype % time\@'s power and toughness are each equal to the number of +&^/+&^ counters on creatures you control.\suspend x~{XXGGGG}. X can't be &. \whenever a % counter is removed from @ while it's exiled, you may put a +&^/+&^ counter on target creature.|
+|fungal behemoth||creature||fungus|*/*|{^^^GG}|countertype % time\@'s power and toughness are each equal to the number of +&^/+&^ counters on creatures you control.\suspend X~{XXGGGG}. X can't be &. \whenever a % counter is removed from @ while it's exiled, you may put a +&^/+&^ counter on target creature.|
 
 |defang||enchantment||aura||{^WW}|enchant creature\prevent all damage that would be dealt by enchanted creature.|
 
@@ -18757,7 +18757,7 @@
 
 |arcane lighthouse||land|||||T: add {^} to your mana pool.\{^}, T: until end of turn, creatures your opponents control lose hexproof and shroud and can't have hexproof or shroud.|
 
-|roiling horror||creature||horror|*/*|{^^^BBBB}|countertype % time\@'s power and toughness are each equal to your life total minus the life total of an opponent with the most life.\suspend x~{XXBBBBBB}. X can't be &. \whenever a % counter is removed from @ while it's exiled, target player loses &^ life and you gain &^ life.|
+|roiling horror||creature||horror|*/*|{^^^BBBB}|countertype % time\@'s power and toughness are each equal to your life total minus the life total of an opponent with the most life.\suspend X~{XXBBBBBB}. X can't be &. \whenever a % counter is removed from @ while it's exiled, target player loses &^ life and you gain &^ life.|
 
 |illusionary terrain||enchantment||||{UUUU}|cumulative upkeep {^^} \as @ enters the battlefield, choose two basic land types.\basic lands of the first chosen type are the second chosen type.|
 

@@ -7,8 +7,10 @@ sys.path.append(libdir)
 import utils
 import jdecode
 import cardlib
+from cbow import CBOW
 
-def main(fname, oname = None, verbose = True, gatherer = False, for_forum = False):
+def main(fname, oname = None, verbose = True, 
+         gatherer = False, for_forum = False, creativity = False):
     cards = []
     valid = 0
     invalid = 0
@@ -51,17 +53,28 @@ def main(fname, oname = None, verbose = True, gatherer = False, for_forum = Fals
         print (str(valid) + ' valid, ' + str(invalid) + ' invalid, ' 
                + str(unparsed) + ' failed to parse.')
 
+    if creativity:
+        cbow = CBOW()
+
+    def writecards(writer):
+        for card in cards:
+            writer.write((card.format(gatherer = gatherer, for_forum = for_forum)).encode('utf-8'))
+            if creativity:
+                writer.write('~~ closest cards ~~\n'.encode('utf-8'))
+                nearest = cbow.nearest(card)
+                for dist, cardname in nearest:
+                    if for_forum:
+                        cardname = '[card]' + cardname + '[/card]'
+                    writer.write((cardname + ': ' + str(dist) + '\n').encode('utf-8'))
+            writer.write('\n'.encode('utf-8'))
+
     if oname:
         if verbose:
             print 'Writing output to: ' + oname
         with open(oname, 'w') as ofile:
-            for card in cards:
-                ofile.write((card.format(gatherer = gatherer, for_forum = for_forum) 
-                            + '\n').encode('utf-8'))
+            writecards(ofile)
     else:
-        for card in cards:
-            sys.stdout.write((card.format(gatherer = gatherer, for_forum = for_forum) 
-                              + '\n').encode('utf-8'))
+        writecards(sys.stdout)
         sys.stdout.flush()
 
 
@@ -77,10 +90,12 @@ if __name__ == '__main__':
                         help='emulate Gatherer visual spoiler')
     parser.add_argument('-f', '--forum', action='store_true',
                         help='use pretty mana encoding for mtgsalvation forum')
+    parser.add_argument('-c', '--creativity', action='store_true',
+                        help='use CBOW fuzzy matching to check creativity of cards')
     parser.add_argument('-v', '--verbose', action='store_true', 
                         help='verbose output')
     
     args = parser.parse_args()
     main(args.infile, args.outfile, verbose = args.verbose, 
-         gatherer = args.gatherer, for_forum = args.forum)
+         gatherer = args.gatherer, for_forum = args.forum, creativity = args.creativity)
     exit(0)

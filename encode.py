@@ -29,7 +29,9 @@ def main(fname, oname = None, verbose = True, dupes = 0, encoding = 'std', stabl
     final_sep = True
 
     # set the properties of the encoding
-    if encoding in ['std']:
+    if encoding in ['vec']:
+        pass
+    elif encoding in ['std']:
         if dupes == 0:
             dupes = 1
     elif encoding in ['rmana']:
@@ -125,22 +127,12 @@ def main(fname, oname = None, verbose = True, dupes = 0, encoding = 'std', stabl
         random.seed(1371367)
         random.shuffle(cards)
 
-    if oname:
-        if verbose:
-            print 'Writing output to: ' + oname
-        with open(oname, 'w') as ofile:
-            for card in cards:
-                ofile.write(card.encode(fmt_ordered = fmt_ordered,
-                                        fmt_labeled = fmt_labeled,
-                                        fieldsep = fieldsep,
-                                        randomize_fields = randomize_fields,
-                                        randomize_mana = randomize_mana,
-                                        initial_sep = initial_sep,
-                                        final_sep = final_sep) 
-                            + utils.cardsep)
-    else:
+    def writecards(writer):
         for card in cards:
-            sys.stdout.write(card.encode(fmt_ordered = fmt_ordered,
+            if encoding in ['vec']:
+                writer.write(card.vectorize() + '\n\n')
+            else:
+                writer.write(card.encode(fmt_ordered = fmt_ordered,
                                          fmt_labeled = fmt_labeled,
                                          fieldsep = fieldsep,
                                          randomize_fields = randomize_fields,
@@ -148,6 +140,14 @@ def main(fname, oname = None, verbose = True, dupes = 0, encoding = 'std', stabl
                                          initial_sep = initial_sep,
                                          final_sep = final_sep) 
                              + utils.cardsep)
+
+    if oname:
+        if verbose:
+            print 'Writing output to: ' + oname
+        with open(oname, 'w') as ofile:
+            writecards(ofile)
+    else:
+        writecards(sys.stdout)
         sys.stdout.flush()
 
 
@@ -162,7 +162,7 @@ if __name__ == '__main__':
     parser.add_argument('-d', '--duplicate', metavar='N', type=int, default=0,
                         help='number of times to duplicate each card')
     parser.add_argument('-e', '--encoding', default='std',
-                        choices=['std', 'rmana', 'rmana_dual', 'rfields'])
+                        choices=['std', 'rmana', 'rmana_dual', 'rfields', 'vec'])
     parser.add_argument('-s', '--stable', action='store_true',
                         help="don't randomize the order of the cards")
     parser.add_argument('-v', '--verbose', action='store_true', 
