@@ -74,6 +74,7 @@ fmt_ordered_default = [
     field_types,
     field_loyalty,
     field_subtypes,
+    field_rarity,
     field_pt,
     field_cost,
     field_text,
@@ -191,21 +192,32 @@ def fields_from_json(src_json):
         fields[field_subtypes] = [(-1, map(lambda s: utils.to_ascii(s.lower()), 
                                            src_json['subtypes']))]
 
+    if 'rarity' in src_json:
+        if src_json['rarity'] in utils.json_rarity_map:
+            fields[field_rarity] = [(-1, utils.json_rarity_map[src_json['rarity']])]
+        else:
+            fields[field_rarity] = [(-1, src_json['rarity'])]
+            parsed = False
+    else:
+        parsed = False
+
     if 'loyalty' in src_json:
         fields[field_loyalty] = [(-1, utils.to_unary(str(src_json['loyalty'])))]
 
     p_t = ''
+    parsed_pt = True
     if 'power' in src_json:
         p_t = utils.to_ascii(utils.to_unary(src_json['power'])) + '/' # hardcoded
-        valid = False
+        parsed_pt = False
         if 'toughness' in src_json:
             p_t = p_t + utils.to_ascii(utils.to_unary(src_json['toughness']))
-            valid = True
+            parsed_pt = True
     elif 'toughness' in src_json:
         p_t = '/' + utils.to_ascii(utils.to_unary(src_json['toughness'])) # hardcoded
-        valid = False
+        parsed_pt = False
     if p_t:
         fields[field_pt] = [(-1, p_t)]
+    parsed = parsed and parsed_pt
         
     # similarly, return the actual Manatext object
     if 'text' in src_json:
@@ -533,7 +545,11 @@ class Card:
             outstr += ' ' + self.__dict__[field_cost].format(for_forum = for_forum)
 
             if self.__dict__[field_rarity]:
-                outstr += ' (' + self.__dict__[rarity] + ')'
+                if self.__dict__[field_rarity] in utils.json_rarity_unmap:
+                    rarity = utils.json_rarity_unmap[self.__dict__[field_rarity]]
+                else:
+                    rarity = self.__dict__[field_rarity]
+                outstr += ' (' + rarity + ')'
 
             if not self.parsed:
                 outstr += ' _UNPARSED_'
@@ -594,7 +610,11 @@ class Card:
             cardname = self.__dict__[field_name]
             outstr += cardname
             if self.__dict__[field_rarity]:
-                outstr += ' (' + self.__dict__[field_rarity] + ')'
+                if self.__dict__[field_rarity] in utils.json_rarity_unmap:
+                    rarity = utils.json_rarity_unmap[self.__dict__[field_rarity]]
+                else:
+                    rarity = self.__dict__[field_rarity]
+                outstr += ' (' + rarity.lower() + ')'
             if not self.parsed:
                 outstr += ' _UNPARSED_'
             if not self.valid:

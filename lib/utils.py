@@ -24,6 +24,22 @@ choice_close_delimiter = config.choice_close_delimiter
 x_marker = config.x_marker
 tap_marker = config.tap_marker
 untap_marker = config.untap_marker
+rarity_common_marker = config.rarity_common_marker
+rarity_uncommon_marker = config.rarity_uncommon_marker
+rarity_rare_marker = config.rarity_rare_marker
+rarity_mythic_marker = config.rarity_mythic_marker
+rarity_special_marker = config.rarity_special_marker
+rarity_basic_land_marker = config.rarity_basic_land_marker
+
+json_rarity_map = {
+    'Common' : rarity_common_marker,
+    'Uncommon' : rarity_uncommon_marker,
+    'Rare' : rarity_rare_marker,
+    'Mythic Rare' : rarity_mythic_marker,
+    'Special' : rarity_special_marker,
+    'Basic Land' : rarity_basic_land_marker,
+}
+json_rarity_unmap = {json_rarity_map[k] : k for k in json_rarity_map}
 
 # unambiguous synonyms
 counter_rename = config.counter_rename
@@ -458,4 +474,3 @@ def from_symbols(s, for_forum = False):
     return s
 
 unletters_regex = r"[^abcdefghijklmnopqrstuvwxyz']"
-

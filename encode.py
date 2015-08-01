@@ -36,16 +36,16 @@ def main(fname, oname = None, verbose = True, dupes = 0, encoding = 'std', stabl
             dupes = 1
     elif encoding in ['rmana']:
         if dupes == 0:
-            dupes = 3
+            dupes = 1
         randomize_mana = True
     elif encoding in ['rmana_dual']:
         if dupes == 0:
-            dupes = 3
+            dupes = 1
         fmt_ordered = fmt_ordered + [cardlib.field_cost]
         randomize_mana = True
     elif encoding in ['rfields']:
         if dupes == 0:
-            dupes = 10
+            dupes = 1
         fmt_labeled = cardlib.fmt_labeled_default
         randomize_fields = True
         #randomize_mana = True
@@ -79,11 +79,26 @@ def main(fname, oname = None, verbose = True, dupes = 0, encoding = 'std', stabl
         for json_cardname in sorted(json_srcs):
             if len(json_srcs[json_cardname]) > 0:
                 jcards = json_srcs[json_cardname]
-                card = cardlib.Card(json_srcs[json_cardname][0])
+
+                # look for a normal rarity version, in a set we can use
+                idx = 0
+                card = cardlib.Card(jcards[idx])
+                while (idx < len(jcards)
+                       and (card.rarity == utils.rarity_special_marker 
+                            or exclude_sets(jcards[idx][utils.json_field_set_name]))):
+                    idx += 1
+                    if idx < len(jcards):
+                        card = cardlib.Card(jcards[idx])
+                # if there isn't one, settle with index 0
+                if idx >= len(jcards):
+                    idx = 0
+                    card = cardlib.Card(jcards[idx])
+                # we could go back and look for a card satisfying one of the criteria,
+                # but eh
 
                 skip = False
-                if (exclude_sets(jcards[0][utils.json_field_set_name])
-                    or exclude_layouts(jcards[0]['layout'])):
+                if (exclude_sets(jcards[idx][utils.json_field_set_name])
+                    or exclude_layouts(jcards[idx]['layout'])):
                     skip = True                    
                 for cardtype in card.types:
                     if exclude_types(cardtype):
