@@ -8,6 +8,10 @@ import utils
 import jdecode
 import cardlib
 from cbow import CBOW
+from namediff import Namediff
+
+def exclude_sets(cardset):
+    return cardset == 'Unglued' or cardset == 'Unhinged' or cardset == 'Celebration'
 
 def main(fname, oname = None, verbose = True, 
          gatherer = False, for_forum = False, creativity = False, norarity = False):
@@ -38,7 +42,23 @@ def main(fname, oname = None, verbose = True,
         for json_cardname in sorted(json_srcs):
             if len(json_srcs[json_cardname]) > 0:
                 jcards = json_srcs[json_cardname]
-                card = cardlib.Card(json_srcs[json_cardname][0], fmt_ordered = decode_fields)
+
+                # look for a normal rarity version, in a set we can use
+                idx = 0
+                card = cardlib.Card(jcards[idx], fmt_ordered = decode_fields)
+                while (idx < len(jcards)
+                       and (card.rarity == utils.rarity_special_marker 
+                            or exclude_sets(jcards[idx][utils.json_field_set_name]))):
+                    idx += 1
+                    if idx < len(jcards):
+                        card = cardlib.Card(jcards[idx], fmt_ordered = decode_fields)
+                # if there isn't one, settle with index 0
+                if idx >= len(jcards):
+                    idx = 0
+                    card = cardlib.Card(jcards[idx], fmt_ordered = decode_fields)
+                # we could go back and look for a card satisfying one of the criteria,
+                # but eh
+
                 if card.valid:
                     valid += 1
                 elif card.parsed:
@@ -84,6 +104,7 @@ def main(fname, oname = None, verbose = True,
 
     if creativity:
         cbow = CBOW()
+        namediff = Namediff()
 
     def writecards(writer):
         for card in cards:
@@ -92,6 +113,14 @@ def main(fname, oname = None, verbose = True,
                 writer.write('~~ closest cards ~~\n'.encode('utf-8'))
                 nearest = cbow.nearest(card)
                 for dist, cardname in nearest:
+                    cardname = namediff.names[cardname]
+                    if for_forum:
+                        cardname = '[card]' + cardname + '[/card]'
+                    writer.write((cardname + ': ' + str(dist) + '\n').encode('utf-8'))
+                writer.write('~~ closest names ~~\n'.encode('utf-8'))
+                nearest = namediff.nearest(card.name)
+                for dist, cardname in nearest:
+                    cardname = namediff.names[cardname]
                     if for_forum:
                         cardname = '[card]' + cardname + '[/card]'
                     writer.write((cardname + ': ' + str(dist) + '\n').encode('utf-8'))
