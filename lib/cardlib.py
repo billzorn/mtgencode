@@ -141,7 +141,7 @@ def fields_check_valid(fields):
 # layout - string
 # rarity - string
 # flavor - string
-# artis - string
+# artist - string
 # number - string
 # multiverseid - number
 # variations - list
@@ -530,7 +530,7 @@ class Card:
 
         return outstr
 
-    def format(self, gatherer = False, for_forum = False):
+    def format(self, gatherer = False, for_forum = False, for_mse = False):
         outstr = ''
         if gatherer:
             cardname = titlecase(self.__dict__[field_name])
@@ -606,7 +606,7 @@ class Card:
                     outstr += '[/i]'
                     outstr += '\n'
 
-        else:
+        elif for_forum:
             cardname = self.__dict__[field_name]
             outstr += cardname
             if self.__dict__[field_rarity]:
@@ -657,7 +657,85 @@ class Card:
                     outstr += '<' + str(idx) + '> ' + str(value)
                     outstr += '\n'
 
-        if self.bside:
+
+        elif for_mse:
+            # need a 'card' string first
+            outstr += 'card:\n'
+            cardname = titlecase(self.__dict__[field_name])
+            outstr += '\tname: ' + cardname + '\n'
+            if self.__dict__[field_rarity]:
+                if self.__dict__[field_rarity] in utils.json_rarity_unmap:
+                    rarity = utils.json_rarity_unmap[self.__dict__[field_rarity]]
+                else:
+                    rarity = self.__dict__[field_rarity]
+                outstr += '\trarity: ' + rarity.lower() + '\n'
+            #if not self.parsed:
+            #    outstr += ' _UNPARSED_'
+            #if not self.valid:
+            #    outstr += ' _INVALID_'
+            
+            outstr += '\tcasting cost: ' + self.__dict__[field_cost].format(for_forum = for_forum).replace('{','').replace('}','')
+            outstr += '\n'
+
+            if "planeswalker" in str(self.__dict__[field_types]):
+                #print 'Walker detected! ' + cardname
+                outstr += '\tstylesheet: m15-planeswalker\n'
+                if self.__dict__[field_loyalty]:
+                    outstr += '\tloyalty: ' + utils.from_unary(self.__dict__[field_loyalty]) + '\n'
+
+            outstr += '\tsuper type: ' + ' '.join(self.__dict__[field_supertypes] + self.__dict__[field_types]).title() + '\n'
+            #outstr += 'sub type: ' + ' '.join(self.__dict__[field_types])
+            if self.__dict__[field_subtypes]:
+                outstr += '\tsub type: ' + ' '.join(self.__dict__[field_subtypes]).title()
+                outstr += '\n'
+            
+            if self.__dict__[field_text].text:
+                mtext = self.__dict__[field_text].text
+                mtext = transforms.text_unpass_1_choice(mtext, delimit = True)
+                mtext = transforms.text_unpass_2_counters(mtext)
+                mtext = transforms.text_unpass_3_unary(mtext)
+                mtext = transforms.text_unpass_4_symbols(mtext, for_forum)
+                mtext = transforms.text_unpass_5_cardname(mtext, cardname)
+                mtext = transforms.text_unpass_6_newlines(mtext)
+                newtext = Manatext('')
+                newtext.text = mtext
+                newtext.costs = self.__dict__[field_text].costs
+                newtext = newtext.format(for_forum = for_forum)
+                newtext = newtext.replace('@',cardname) # first let's put the cardname where all the @s are.
+                newtext = newtext.replace("uncast","counter") # now replace 'uncast' with 'counter'.
+                newtext = newtext.replace('{','<sym-auto>').replace('}','</sym-auto>') # now we encase mana/tap symbols with the correct tags for mse.
+                linecount = newtext.count('\n') + 1 # adding 1 because no newlines means 1 line, 1 newline means 2 lines etc.
+                # ok, let's capitalize every letter after a \n... 
+                # first let's find all indices of \n.
+                indices = [0] # initialise with 0, since we always want to capitalise the first letter.
+                for i in range (len(newtext)):
+                    if newtext[i] == '\n':
+                        indices.append(i + 1) # we want the index of the letter after the \n, so add one.
+                indexSet = set(indices) # convert it to a set for the next part; the capitalisation.
+                newtext = "".join(c.upper() if i in indexSet else c for i, c in enumerate(newtext))
+
+                # have to do special snowflake stuff for rule text with more than 1 line. 2 or more lines need to be double-indented...                
+                if linecount == 1:
+                    outstr += '\trule text: ' + newtext + '\n'
+                elif linecount > 1:
+                    newtext = newtext.replace('\n','\n\t\t')
+                    outstr += '\trule text:\n\t\t' + newtext + '\n'
+
+                # also uncast still exists at this point? weird. should be 'unpassed' apparently. until then, did a manual replace.
+
+            if self.__dict__[field_pt]:
+                ptstring = utils.from_unary(self.__dict__[field_pt]).split('/')
+                if (len(ptstring) > 1): #really don't want to be accessing anything nonexistent.
+                    outstr += '\tpower: ' + ptstring[0] + '\n'
+                    outstr += '\ttoughness: ' + ptstring[1] + '\n'
+                #outstr += '\n'
+
+            # now append all the other useless fields that the setfile expects.
+            outstr += '\thas styling: false\n\tnotes:\n\ttime created:2015-07-20 22:53:07\n\ttime modified:2015-07-20 22:53:08\n\textra data:\n\timage:\n\tcard code text:\n\tcopyright:\n\timage 2:\n\tcopyright 2: '
+
+            #print outstr
+
+        if self.bside and not for_mse:
             outstr += utils.dash_marker * 8 + '\n'
             outstr += self.bside.format(gatherer = gatherer, for_forum = for_forum)
 
