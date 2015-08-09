@@ -1,10 +1,12 @@
 # card representation
+# -*- coding: utf-8
 import re
 import random
 
 import utils
 import transforms
 from manalib import Manacost, Manatext
+from titlecase import titlecase
 
 # Some text prettification stuff that people may not have installed
 try:
@@ -108,6 +110,21 @@ def fields_check_valid(fields):
         return field_pt in fields
     else:
         return not field_pt in fields
+
+
+def uppercaseNewLineAndFullstop(string):
+    # ok, let's capitalize every letter after a full stop and newline. 
+    # first let's find all indices of '.' and '\n'
+    indices = [0] # initialise with 0, since we always want to capitalise the first letter.
+    newlineIndices = [0] # also need to keep track of pure newlines (for planeswalkers).
+    for i in range (len(string)):
+        if string[i] == '\n':
+            indices.append(i + 1) # we want the index of the letter after the \n, so add one.
+            newlineIndices.append(i + 1)
+        if string[i] == '.' or string[i] == "=": # also handle the choice bullets.
+            indices.append(i + 2) # we want the index of the letter after the ., so we need to count the space as well.
+    indexSet = set(indices) # convert it to a set for the next part; the capitalisation.
+    return "".join(c.upper() if i in indexSet else c for i, c in enumerate(string))
 
 # These functions take a bunch of source data in some format and turn
 # it into nicely labeled fields that we know how to initialize a card from.
@@ -674,14 +691,9 @@ class Card:
             #if not self.valid:
             #    outstr += ' _INVALID_'
             
-            outstr += '\tcasting cost: ' + self.__dict__[field_cost].format(for_forum = for_forum).replace('{','').replace('}','')
-            outstr += '\n'
-
-            if "planeswalker" in str(self.__dict__[field_types]):
-                #print 'Walker detected! ' + cardname
-                outstr += '\tstylesheet: m15-planeswalker\n'
-                if self.__dict__[field_loyalty]:
-                    outstr += '\tloyalty: ' + utils.from_unary(self.__dict__[field_loyalty]) + '\n'
+            if "land" not in self.__dict__[field_types]:            
+                outstr += '\tcasting cost: ' + self.__dict__[field_cost].format(for_forum = for_forum).replace('{','').replace('}','')
+                outstr += '\n'
 
             outstr += '\tsuper type: ' + ' '.join(self.__dict__[field_supertypes] + self.__dict__[field_types]).title() + '\n'
             #outstr += 'sub type: ' + ' '.join(self.__dict__[field_types])
@@ -691,7 +703,7 @@ class Card:
             
             if self.__dict__[field_text].text:
                 mtext = self.__dict__[field_text].text
-                mtext = transforms.text_unpass_1_choice(mtext, delimit = True)
+                mtext = transforms.text_unpass_1_choice(mtext, delimit = False)
                 mtext = transforms.text_unpass_2_counters(mtext)
                 mtext = transforms.text_unpass_3_unary(mtext)
                 mtext = transforms.text_unpass_4_symbols(mtext, for_forum)
@@ -701,18 +713,52 @@ class Card:
                 newtext.text = mtext
                 newtext.costs = self.__dict__[field_text].costs
                 newtext = newtext.format(for_forum = for_forum)
-                newtext = newtext.replace('@',cardname) # first let's put the cardname where all the @s are.
-                newtext = newtext.replace("uncast","counter") # now replace 'uncast' with 'counter'.
+                newtext = newtext.replace(utils.this_marker, cardname) # first let's put the cardname where all the @s are.
+                newtext = newtext.replace(utils.counter_rename + ".", "countered.") # then replace any 'uncast' at the end of a sentence with 'countered'.
+                newtext = newtext.replace(utils.dash_marker, "—") # also replace the ~ with a — for choices.
+                newtext = newtext.replace(utils.counter_rename, "counter") # then replace all the mid-sentence 'uncast' with 'counter'.
                 newtext = newtext.replace('{','<sym-auto>').replace('}','</sym-auto>') # now we encase mana/tap symbols with the correct tags for mse.
                 linecount = newtext.count('\n') + 1 # adding 1 because no newlines means 1 line, 1 newline means 2 lines etc.
-                # ok, let's capitalize every letter after a \n... 
-                # first let's find all indices of \n.
-                indices = [0] # initialise with 0, since we always want to capitalise the first letter.
+
+                newtext = uppercaseNewLineAndFullstop(newtext) # make all the things uppercase!
+
+                # done after uppercasing everything because string[i] == • doesn't work apparently.
+                newtext = newtext.replace(utils.bullet_marker, "•") # replace the = with a •. 
+
+                newlineIndices = [0] # also need to keep track of pure newlines (for planeswalkers).
                 for i in range (len(newtext)):
-                    if newtext[i] == '\n':
-                        indices.append(i + 1) # we want the index of the letter after the \n, so add one.
-                indexSet = set(indices) # convert it to a set for the next part; the capitalisation.
-                newtext = "".join(c.upper() if i in indexSet else c for i, c in enumerate(newtext))
+                    if  newtext[i] == '\n':
+                        newlineIndices.append(i + 1)
+
+                # need to do Special Things if it's a planeswalker.
+                if "planeswalker" in str(self.__dict__[field_types]): # for some reason this is in types, not supertypes...
+                    # can we rely on newlines being the sole indicator of walker ability number?
+                    # I think yes, because all existing WotC walkers have no newlines within abilities.
+                    outstr += '\tstylesheet: m15-planeswalker\n' # set the proper card style for a 3-line walker.
+
+                    # set up the loyalty cost fields.
+                    # also, remove the costs from the rules text... damn immutable strings means newtext has to be a list for now.
+                    newtextList = list(newtext)
+                    outstr += '\tloyalty cost 1: ' + newtext[newlineIndices[0]:newlineIndices[0]+2] + '\n'
+                    # use regex to find all loyalty costs.
+
+                    newtextList[newlineIndices[0]:newlineIndices[0]+4] = '' # dang thing won't work with double-wide costs (above 9)...
+                    # check that we won't have out of range indices; this handles partially-built walkers.
+                    if linecount >= 2:
+                        outstr += '\tloyalty cost 2: ' + newtext[newlineIndices[1]:newlineIndices[1]+2] + '\n'
+                        newtextList[newlineIndices[1]-4:newlineIndices[1]] = '' # decrease index count due to removing previous costs.
+                    if linecount >= 3:
+                        outstr += '\tloyalty cost 3: ' + newtext[newlineIndices[2]:newlineIndices[2]+2] + '\n' 
+                        newtextList[newlineIndices[2]-8:newlineIndices[2]-4] = ''
+                    if linecount >= 4:
+                        outstr += '\tloyalty cost 4: ' + newtext[newlineIndices[3]:newlineIndices[3]+2] + '\n'
+                        newtextList[newlineIndices[3]-12:newlineIndices[3]-8] = ''
+                    newtext = ''.join(newtextList) # turn list back into string.
+
+                    newtext = uppercaseNewLineAndFullstop(newtext) # we need to uppercase the rules; previous uppercase call didn't work due to loyalty costs being there.
+
+                    if self.__dict__[field_loyalty]:
+                        outstr += '\tloyalty: ' + utils.from_unary(self.__dict__[field_loyalty]) + '\n'
 
                 # have to do special snowflake stuff for rule text with more than 1 line. 2 or more lines need to be double-indented...                
                 if linecount == 1:

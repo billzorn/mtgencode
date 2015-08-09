@@ -116,7 +116,7 @@ def main(fname, oname = None, verbose = True,
             # have to prepend a massive chunk.
             writer.write(utils.mse_prepend)
         for card in cards:
-            writer.write((card.format(gatherer = gatherer, for_forum = for_forum, for_mse = for_mse)).encode('utf-8'))
+            writer.write((card.format(gatherer = gatherer, for_forum = for_forum, for_mse = for_mse)))
             if creativity and not for_mse: # this won't end well if mse mode is enabled.
                 writer.write('~~ closest cards ~~\n'.encode('utf-8'))
                 nearest = cbow.nearest(card)
