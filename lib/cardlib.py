@@ -732,30 +732,17 @@ class Card:
 
                 # need to do Special Things if it's a planeswalker.
                 if "planeswalker" in str(self.__dict__[field_types]): # for some reason this is in types, not supertypes...
-                    # can we rely on newlines being the sole indicator of walker ability number?
-                    # I think yes, because all existing WotC walkers have no newlines within abilities.
                     outstr += '\tstylesheet: m15-planeswalker\n' # set the proper card style for a 3-line walker.
 
-                    # set up the loyalty cost fields.
-                    # also, remove the costs from the rules text... damn immutable strings means newtext has to be a list for now.
-                    newtextList = list(newtext)
-                    outstr += '\tloyalty cost 1: ' + newtext[newlineIndices[0]:newlineIndices[0]+2] + '\n'
-                    # use regex to find all loyalty costs.
+                    # set up the loyalty cost fields using regex to find how many there are.
+                    i = 0
+                    for costs in re.findall('[-+]\d?\d: ', newtext): # regex handles 2-figure loyalty costs.
+                        i += 1
+                        outstr += '\tloyalty cost ' + str(i) + ': ' + costs + '\n'
+                    # sub out the loyalty costs.
+                    newtext = re.sub('[-+]\d?\d: ', '', newtext)
 
-                    newtextList[newlineIndices[0]:newlineIndices[0]+4] = '' # dang thing won't work with double-wide costs (above 9)...
-                    # check that we won't have out of range indices; this handles partially-built walkers.
-                    if linecount >= 2:
-                        outstr += '\tloyalty cost 2: ' + newtext[newlineIndices[1]:newlineIndices[1]+2] + '\n'
-                        newtextList[newlineIndices[1]-4:newlineIndices[1]] = '' # decrease index count due to removing previous costs.
-                    if linecount >= 3:
-                        outstr += '\tloyalty cost 3: ' + newtext[newlineIndices[2]:newlineIndices[2]+2] + '\n' 
-                        newtextList[newlineIndices[2]-8:newlineIndices[2]-4] = ''
-                    if linecount >= 4:
-                        outstr += '\tloyalty cost 4: ' + newtext[newlineIndices[3]:newlineIndices[3]+2] + '\n'
-                        newtextList[newlineIndices[3]-12:newlineIndices[3]-8] = ''
-                    newtext = ''.join(newtextList) # turn list back into string.
-
-                    newtext = uppercaseNewLineAndFullstop(newtext) # we need to uppercase the rules; previous uppercase call didn't work due to loyalty costs being there.
+                    newtext = uppercaseNewLineAndFullstop(newtext) # we need to uppercase again; previous uppercase call didn't work due to loyalty costs being there.
 
                     if self.__dict__[field_loyalty]:
                         outstr += '\tloyalty: ' + utils.from_unary(self.__dict__[field_loyalty]) + '\n'
