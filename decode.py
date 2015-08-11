@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 import sys
 import os
+import zipfile
+import shutil
 
 libdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'lib')
 sys.path.append(libdir)
@@ -14,7 +16,8 @@ def exclude_sets(cardset):
     return cardset == 'Unglued' or cardset == 'Unhinged' or cardset == 'Celebration'
 
 def main(fname, oname = None, verbose = True, 
-         gatherer = False, for_forum = False, creativity = False, norarity = False):
+         gatherer = False, for_forum = False, for_mse = False,
+         creativity = False, norarity = False):
     cards = []
     valid = 0
     invalid = 0
@@ -107,9 +110,19 @@ def main(fname, oname = None, verbose = True,
         namediff = Namediff()
 
     def writecards(writer):
+        if for_mse:
+            # have to prepend a massive chunk of formatting info
+            writer.write(utils.mse_prepend)
         for card in cards:
-            writer.write((card.format(gatherer = gatherer, for_forum = for_forum)).encode('utf-8'))
+            if for_mse:
+                 writer.write(card.to_mse().encode('utf-8'))
+            else:
+                writer.write(card.format(gatherer = gatherer, 
+                                         for_forum = for_forum).encode('utf-8'))
+
             if creativity:
+                if for_mse:
+                    writer.write('\tnotes:\n\t\t'.encode('utf-8'))
                 writer.write('~~ closest cards ~~\n'.encode('utf-8'))
                 nearest = cbow.nearest(card)
                 for dist, cardname in nearest:
@@ -126,11 +139,31 @@ def main(fname, oname = None, verbose = True,
                     writer.write((cardname + ': ' + str(dist) + '\n').encode('utf-8'))
             writer.write('\n'.encode('utf-8'))
 
+        if for_mse:
+            # more formatting info
+            writer.write('version control:\n\ttype: none\napprentice code: ')
+
     if oname:
         if verbose:
             print 'Writing output to: ' + oname
         with open(oname, 'w') as ofile:
             writecards(ofile)
+        if for_mse:
+            # Copy whatever output file is produced, name the copy 'set' (yes, no extension).
+            if os.path.isfile('set'):
+                print 'ERROR: tried to overwrite existing file "set" - aborting.'
+                return
+            shutil.copyfile(oname, 'set')
+            # Use the freaky mse extension instead of zip.
+            with zipfile.ZipFile(oname+'.mse-set', mode='w') as zf:
+                try:
+                    # Zip up the set file into oname.mse-set.
+                    zf.write('set') 
+                finally:
+                    if verbose:
+                        print 'Made an MSE set file called ' + oname + '.mse-set.'
+                    # The set file is useless outside the .mse-set, delete it.
+                    os.remove('set') 
     else:
         writecards(sys.stdout)
         sys.stdout.flush()
@@ -154,9 +187,10 @@ if __name__ == '__main__':
                         help='the card format has no rarity field; use for legacy input')
     parser.add_argument('-v', '--verbose', action='store_true', 
                         help='verbose output')
+    parser.add_argument('-mse', '--mse', action='store_true', help='use Magic Set Editor 2 encoding; will output as .mse-set file')
     
     args = parser.parse_args()
     main(args.infile, args.outfile, verbose = args.verbose, 
-         gatherer = args.gatherer, for_forum = args.forum, creativity = args.creativity,
-         norarity = args.norarity)
+         gatherer = args.gatherer, for_forum = args.forum, for_mse = args.mse,
+         creativity = args.creativity, norarity = args.norarity)
     exit(0)
