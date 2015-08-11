@@ -1,12 +1,10 @@
 # card representation
-# -*- coding: utf-8
 import re
 import random
 
 import utils
 import transforms
 from manalib import Manacost, Manatext
-from titlecase import titlecase
 
 # Some text prettification stuff that people may not have installed
 try:
@@ -19,6 +17,11 @@ try:
     import textwrap
     import nltk.data
     sent_tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
+    # This could me made smarter - MSE will capitalize for us after :,
+    # but we still need to capitalize the first english component of an activation
+    # cost that starts with symbols, such as {2U}, *R*emove a +1/+1 counter from @: etc.
+    def cap(s):
+        return s[:1].capitalize() + s[1:]
     # This crazy thing is actually invoked as an unpass, so newlines are still
     # encoded.
     def sentencecase(s):
@@ -28,11 +31,26 @@ try:
         for line in lines:
             if line:
                 sentences = sent_tokenizer.tokenize(line)
-                clines += [' '.join([sent.capitalize() for sent in sentences])]
+                clines += [' '.join([cap(sent) for sent in sentences])]
         return utils.newline.join(clines).replace(utils.reserved_marker, utils.x_marker)
 except ImportError:
+    # non-nltk implementation provided by PAK90
+    def uppercaseNewLineAndFullstop(string):
+        # ok, let's capitalize every letter after a full stop and newline. 
+        # first let's find all indices of '.' and '\n'
+        indices = [0] # initialise with 0, since we always want to capitalise the first letter.
+        newlineIndices = [0] # also need to keep track of pure newlines (for planeswalkers).
+        for i in range (len(string)):
+            if string[i] == '\\':
+                indices.append(i + 1) # we want the index of the letter after the \n, so add one.
+                newlineIndices.append(i + 1)
+            if string[i] == '.' or string[i] == "=": # also handle the choice bullets.
+                indices.append(i + 2) # we want the index of the letter after the ., so we need to count the space as well.
+        indexSet = set(indices) # convert it to a set for the next part; the capitalisation.
+        return "".join(c.upper() if i in indexSet else c for i, c in enumerate(string))
+
     def sentencecase(s):
-        return s
+        return uppercaseNewLineAndFullstop(s)
 
 # These are used later to determine what the fields of the Card object are called.
 # Define them here because they have nothing to do with the actual format.
@@ -111,20 +129,6 @@ def fields_check_valid(fields):
     else:
         return not field_pt in fields
 
-
-def uppercaseNewLineAndFullstop(string):
-    # ok, let's capitalize every letter after a full stop and newline. 
-    # first let's find all indices of '.' and '\n'
-    indices = [0] # initialise with 0, since we always want to capitalise the first letter.
-    newlineIndices = [0] # also need to keep track of pure newlines (for planeswalkers).
-    for i in range (len(string)):
-        if string[i] == '\n':
-            indices.append(i + 1) # we want the index of the letter after the \n, so add one.
-            newlineIndices.append(i + 1)
-        if string[i] == '.' or string[i] == "=": # also handle the choice bullets.
-            indices.append(i + 2) # we want the index of the letter after the ., so we need to count the space as well.
-    indexSet = set(indices) # convert it to a set for the next part; the capitalisation.
-    return "".join(c.upper() if i in indexSet else c for i, c in enumerate(string))
 
 # These functions take a bunch of source data in some format and turn
 # it into nicely labeled fields that we know how to initialize a card from.
@@ -623,7 +627,7 @@ class Card:
                     outstr += '[/i]'
                     outstr += '\n'
 
-        elif for_forum:
+        else:
             cardname = self.__dict__[field_name]
             outstr += cardname
             if self.__dict__[field_rarity]:
@@ -674,106 +678,117 @@ class Card:
                     outstr += '<' + str(idx) + '> ' + str(value)
                     outstr += '\n'
 
-
-        elif for_mse:
-            # need a 'card' string first
-            outstr += 'card:\n'
-            cardname = titlecase(self.__dict__[field_name])
-            outstr += '\tname: ' + cardname + '\n'
-            if self.__dict__[field_rarity]:
-                if self.__dict__[field_rarity] in utils.json_rarity_unmap:
-                    rarity = utils.json_rarity_unmap[self.__dict__[field_rarity]]
-                else:
-                    rarity = self.__dict__[field_rarity]
-                outstr += '\trarity: ' + rarity.lower() + '\n'
-            #if not self.parsed:
-            #    outstr += ' _UNPARSED_'
-            #if not self.valid:
-            #    outstr += ' _INVALID_'
-            
-            if "land" not in self.__dict__[field_types]:            
-                outstr += '\tcasting cost: ' + self.__dict__[field_cost].format(for_forum = for_forum).replace('{','').replace('}','')
-                outstr += '\n'
-
-            outstr += '\tsuper type: ' + ' '.join(self.__dict__[field_supertypes] + self.__dict__[field_types]).title() + '\n'
-            #outstr += 'sub type: ' + ' '.join(self.__dict__[field_types])
-            if self.__dict__[field_subtypes]:
-                outstr += '\tsub type: ' + ' '.join(self.__dict__[field_subtypes]).title()
-                outstr += '\n'
-            
-            if self.__dict__[field_text].text:
-                mtext = self.__dict__[field_text].text
-                mtext = transforms.text_unpass_1_choice(mtext, delimit = False)
-                mtext = transforms.text_unpass_2_counters(mtext)
-                mtext = transforms.text_unpass_3_unary(mtext)
-                mtext = transforms.text_unpass_4_symbols(mtext, for_forum)
-                mtext = transforms.text_unpass_5_cardname(mtext, cardname)
-                mtext = transforms.text_unpass_6_newlines(mtext)
-                newtext = Manatext('')
-                newtext.text = mtext
-                newtext.costs = self.__dict__[field_text].costs
-                newtext = newtext.format(for_forum = for_forum)
-                newtext = newtext.replace(utils.this_marker, cardname) # first let's put the cardname where all the @s are.
-                newtext = newtext.replace(utils.counter_rename + ".", "countered.") # then replace any 'uncast' at the end of a sentence with 'countered'.
-                newtext = newtext.replace(utils.dash_marker, "—") # also replace the ~ with a — for choices.
-                newtext = newtext.replace(utils.counter_rename, "counter") # then replace all the mid-sentence 'uncast' with 'counter'.
-                newtext = newtext.replace('{','<sym-auto>').replace('}','</sym-auto>') # now we encase mana/tap symbols with the correct tags for mse.
-                linecount = newtext.count('\n') + 1 # adding 1 because no newlines means 1 line, 1 newline means 2 lines etc.
-
-                newtext = uppercaseNewLineAndFullstop(newtext) # make all the things uppercase!
-
-                # done after uppercasing everything because string[i] == • doesn't work apparently.
-                newtext = newtext.replace(utils.bullet_marker, "•") # replace the = with a •. 
-
-                newlineIndices = [0] # also need to keep track of pure newlines (for planeswalkers).
-                for i in range (len(newtext)):
-                    if  newtext[i] == '\n':
-                        newlineIndices.append(i + 1)
-
-                # need to do Special Things if it's a planeswalker.
-                if "planeswalker" in str(self.__dict__[field_types]): # for some reason this is in types, not supertypes...
-                    outstr += '\tstylesheet: m15-planeswalker\n' # set the proper card style for a 3-line walker.
-
-                    # set up the loyalty cost fields using regex to find how many there are.
-                    i = 0
-                    for costs in re.findall('[-+]\d?\d: ', newtext): # regex handles 2-figure loyalty costs.
-                        i += 1
-                        outstr += '\tloyalty cost ' + str(i) + ': ' + costs + '\n'
-                    # sub out the loyalty costs.
-                    newtext = re.sub('[-+]\d?\d: ', '', newtext)
-
-                    newtext = uppercaseNewLineAndFullstop(newtext) # we need to uppercase again; previous uppercase call didn't work due to loyalty costs being there.
-
-                    if self.__dict__[field_loyalty]:
-                        outstr += '\tloyalty: ' + utils.from_unary(self.__dict__[field_loyalty]) + '\n'
-
-                # have to do special snowflake stuff for rule text with more than 1 line. 2 or more lines need to be double-indented...                
-                if linecount == 1:
-                    outstr += '\trule text: ' + newtext + '\n'
-                elif linecount > 1:
-                    newtext = newtext.replace('\n','\n\t\t')
-                    outstr += '\trule text:\n\t\t' + newtext + '\n'
-
-                # also uncast still exists at this point? weird. should be 'unpassed' apparently. until then, did a manual replace.
-
-            if self.__dict__[field_pt]:
-                ptstring = utils.from_unary(self.__dict__[field_pt]).split('/')
-                if (len(ptstring) > 1): #really don't want to be accessing anything nonexistent.
-                    outstr += '\tpower: ' + ptstring[0] + '\n'
-                    outstr += '\ttoughness: ' + ptstring[1] + '\n'
-                #outstr += '\n'
-
-            # now append all the other useless fields that the setfile expects.
-            outstr += '\thas styling: false\n\tnotes:\n\ttime created:2015-07-20 22:53:07\n\ttime modified:2015-07-20 22:53:08\n\textra data:\n\timage:\n\tcard code text:\n\tcopyright:\n\timage 2:\n\tcopyright 2: '
-
-            #print outstr
-
-        if self.bside and not for_mse:
+        if self.bside:
             outstr += utils.dash_marker * 8 + '\n'
             outstr += self.bside.format(gatherer = gatherer, for_forum = for_forum)
 
         return outstr
     
+    def to_mse(self):
+        outstr = ''
+
+        # need a 'card' string first
+        outstr += 'card:\n'
+
+        cardname = titlecase(self.__dict__[field_name])
+        outstr += '\tname: ' + cardname + '\n'
+
+        if self.__dict__[field_rarity]:
+            if self.__dict__[field_rarity] in utils.json_rarity_unmap:
+                rarity = utils.json_rarity_unmap[self.__dict__[field_rarity]]
+            else:
+                rarity = self.__dict__[field_rarity]
+            outstr += '\trarity: ' + rarity.lower() + '\n'
+        #if not self.parsed:
+        #    outstr += ' _UNPARSED_'
+        #if not self.valid:
+        #    outstr += ' _INVALID_'
+
+        if not self.__dict__[field_cost].none:            
+            outstr += '\tcasting cost: ' + self.__dict__[field_cost].format().replace('{','').replace('}','')
+            outstr += '\n'
+
+        outstr += '\tsuper type: ' + ' '.join(self.__dict__[field_supertypes] 
+                                              + self.__dict__[field_types]).title() + '\n'
+        if self.__dict__[field_subtypes]:
+            outstr += '\tsub type: ' + ' '.join(self.__dict__[field_subtypes]).title() + '\n'
+
+        if self.__dict__[field_text].text:
+            mtext = self.__dict__[field_text].text
+            mtext = transforms.text_unpass_1_choice(mtext, delimit = False)
+            mtext = transforms.text_unpass_2_counters(mtext)
+            mtext = transforms.text_unpass_3_unary(mtext)
+            mtext = transforms.text_unpass_4_symbols(mtext, False)
+            mtext = sentencecase(mtext)
+            # I don't really want these MSE specific passes in transforms,
+            # but they could be pulled out separately somewhere else in here.
+            mtext = mtext.replace(utils.this_marker, '<atom-cardname><nospellcheck>'
+                                  + utils.this_marker + '</nospellcheck></atom-cardname>')
+            mtext = transforms.text_unpass_5_cardname(mtext, cardname)
+            mtext = transforms.text_unpass_6_newlines(mtext)
+            newtext = Manatext('')
+            newtext.text = mtext
+            newtext.costs = self.__dict__[field_text].costs
+            newtext = newtext.format()
+
+            #NOT NEEDED newtext = newtext.replace(utils.this_marker, cardname) # first let's put the cardname where all the @s are.
+
+
+            # newtext = newtext.replace(utils.counter_rename + ".", "countered.") # then replace any 'uncast' at the end of a sentence with 'countered'.
+            # newtext = newtext.replace(utils.dash_marker, u'\u2014') # also replace the ~ with a u2014 for choices.
+            # newtext = newtext.replace(utils.counter_rename, "counter") # then replace all the mid-sentence 'uncast' with 'counter'.
+            # newtext = newtext.replace('{','<sym-auto>').replace('}','</sym-auto>') # now we encase mana/tap symbols with the correct tags for mse.
+            # linecount = newtext.count('\n') + 1 # adding 1 because no newlines means 1 line, 1 newline means 2 lines etc.
+
+            # newtext = sentencecase(newtext) # make all the things uppercase!
+
+            # # done after uppercasing everything because string[i] == u2022 doesn't work apparently.
+            # newtext = newtext.replace(utils.bullet_marker, u'\u2022') # replace the = with a u2022. 
+
+            # used later
+            linecount = newtext.count('\n') + 1 # adding 1 because no newlines means 1 line, 1 newline means 2 lines etc.
+
+            # actually really important
+            newtext = newtext.replace('{','<sym-auto>').replace('}','</sym-auto>') # now we encase mana/tap symbols with the correct tags for mse.
+
+            newlineIndices = [0] # also need to keep track of pure newlines (for planeswalkers).
+            for i in range (len(newtext)):
+                if  newtext[i] == '\n':
+                    newlineIndices.append(i + 1)
+
+            # need to do Special Things if it's a planeswalker.
+            if "planeswalker" in str(self.__dict__[field_types]): # for some reason this is in types, not supertypes...
+                outstr += '\tstylesheet: m15-planeswalker\n' # set the proper card style for a 3-line walker.
+
+                # set up the loyalty cost fields using regex to find how many there are.
+                i = 0
+                lcost_regex = r'[-+]?\d+: ' # 1+ figures, might be 0.
+                for costs in re.findall(lcost_regex, newtext):
+                    i += 1
+                    outstr += '\tloyalty cost ' + str(i) + ': ' + costs + '\n'
+                # sub out the loyalty costs.
+                newtext = re.sub(lcost_regex, '', newtext)
+
+                #newtext = sentencecase(newtext) # we need to uppercase again; previous uppercase call didn't work due to loyalty costs being there.
+
+                if self.__dict__[field_loyalty]:
+                    outstr += '\tloyalty: ' + utils.from_unary(self.__dict__[field_loyalty]) + '\n'
+
+            newtext = newtext.replace('\n','\n\t\t')
+            outstr += '\trule text:\n\t\t' + newtext + '\n'
+
+        if self.__dict__[field_pt]:
+            ptstring = utils.from_unary(self.__dict__[field_pt]).split('/')
+            if (len(ptstring) > 1): #really don't want to be accessing anything nonexistent.
+                outstr += '\tpower: ' + ptstring[0] + '\n'
+                outstr += '\ttoughness: ' + ptstring[1] + '\n'
+            #outstr += '\n'
+
+        # now append all the other useless fields that the setfile expects.
+        outstr += '\thas styling: false\n\tnotes:\n\ttime created:2015-07-20 22:53:07\n\ttime modified:2015-07-20 22:53:08\n\textra data:\n\timage:\n\tcard code text:\n\tcopyright:\n\timage 2:\n\tcopyright 2: '
+
+        return outstr
+
     def vectorize(self):
         ld = '('
         rd = ')'
