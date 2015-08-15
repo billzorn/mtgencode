@@ -17,7 +17,7 @@ def exclude_sets(cardset):
 
 def main(fname, oname = None, verbose = True, 
          gatherer = False, for_forum = False, for_mse = False,
-         creativity = False, norarity = False):
+         creativity = False, norarity = False, vdump = False):
     cards = []
     valid = 0
     invalid = 0
@@ -115,28 +115,41 @@ def main(fname, oname = None, verbose = True,
             writer.write(utils.mse_prepend)
         for card in cards:
             if for_mse:
-                 writer.write(card.to_mse().encode('utf-8'))
+                writer.write(card.to_mse().encode('utf-8'))
+                fstring = ''
+                if card.json:
+                    fstring += 'JSON:\n' + card.json + '\n'
+                if card.raw: 
+                    fstring += 'raw:\n' + card.raw + '\n'
+                fstring += '\n'
+                fstring += card.format(gatherer = gatherer, for_forum = for_forum,
+                                       vdump = vdump)
+                fstring = fstring.replace('<', '(').replace('>', ')')
+                writer.write(('\n' + fstring[:-1]).replace('\n', '\n\t\t'))
             else:
-                writer.write(card.format(gatherer = gatherer, 
-                                         for_forum = for_forum).encode('utf-8'))
+                writer.write(card.format(gatherer = gatherer, for_forum = for_forum,
+                                         vdump = vdump).encode('utf-8'))
 
             if creativity:
-                if for_mse:
-                    writer.write('\tnotes:\n\t\t'.encode('utf-8'))
-                writer.write('~~ closest cards ~~\n'.encode('utf-8'))
+                cstring = '~~ closest cards ~~\n'
                 nearest = cbow.nearest(card)
                 for dist, cardname in nearest:
                     cardname = namediff.names[cardname]
                     if for_forum:
                         cardname = '[card]' + cardname + '[/card]'
-                    writer.write((cardname + ': ' + str(dist) + '\n').encode('utf-8'))
-                writer.write('~~ closest names ~~\n'.encode('utf-8'))
+                    cstring += cardname + ': ' + str(dist) + '\n'
+                cstring += '~~ closest names ~~\n'
                 nearest = namediff.nearest(card.name)
                 for dist, cardname in nearest:
                     cardname = namediff.names[cardname]
                     if for_forum:
                         cardname = '[card]' + cardname + '[/card]'
-                    writer.write((cardname + ': ' + str(dist) + '\n').encode('utf-8'))
+                    cstring += cardname + ': ' + str(dist) + '\n'
+                if for_mse:
+                    cstring = cstring.replace('<', '(').replace('>', ')')
+                    cstring = ('\n\n' + cstring[:-1]).replace('\n', '\n\t\t')
+                writer.write(cstring.encode('utf-8'))
+
             writer.write('\n'.encode('utf-8'))
 
         if for_mse:
@@ -183,6 +196,8 @@ if __name__ == '__main__':
                         help='use pretty mana encoding for mtgsalvation forum')
     parser.add_argument('-c', '--creativity', action='store_true',
                         help='use CBOW fuzzy matching to check creativity of cards')
+    parser.add_argument('-d', '--dump', action='store_true',
+                        help='dump out lots of information about invalid cards')
     parser.add_argument('--norarity', action='store_true',
                         help='the card format has no rarity field; use for legacy input')
     parser.add_argument('-v', '--verbose', action='store_true', 
@@ -192,5 +207,5 @@ if __name__ == '__main__':
     args = parser.parse_args()
     main(args.infile, args.outfile, verbose = args.verbose, 
          gatherer = args.gatherer, for_forum = args.forum, for_mse = args.mse,
-         creativity = args.creativity, norarity = args.norarity)
+         creativity = args.creativity, norarity = args.norarity, vdump = args.dump)
     exit(0)

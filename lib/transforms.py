@@ -38,6 +38,15 @@ def name_pass_1_sanitize(s):
     return s
 
 
+# Name unpasses.
+
+
+# particularly helpful if you want to call text_unpass_8_unicode later
+# and NOT have it stick unicode long dashes into names.
+def name_unpass_1_dashes(s):
+    return s.replace(dash_marker, '-')
+
+
 # Text Passes.
 
 
@@ -300,8 +309,8 @@ def text_pass_6_uncast(s):
     s = s.replace('counter all ', counter_rename + ' all ')
     # counters a
     s = s.replace('counters a ', counter_rename + 's a ')
-    # countered (this could get weird in terms of englishing the word)
-    s = s.replace('countered', counter_rename)
+    # countered (this could get weird in terms of englishing the word; lets just go for hilarious)
+    s = s.replace('countered', counter_rename + 'ed')
     # counter that
     s = s.replace('counter that ', counter_rename + ' that ')
     # counter @
@@ -456,17 +465,27 @@ def text_unpass_2_counters(s):
     return s
 
 
-def text_unpass_3_unary(s):
+def text_unpass_3_uncast(s):
+    return s.replace(counter_rename, 'counter')
+
+
+def text_unpass_4_unary(s):
     return utils.from_unary(s)
 
 
-def text_unpass_4_symbols(s, for_forum):
+def text_unpass_5_symbols(s, for_forum):
     return utils.from_symbols(s, for_forum = for_forum)
 
 
-def text_unpass_5_cardname(s, name):
+def text_unpass_6_cardname(s, name):
     return s.replace(this_marker, name)
 
 
-def text_unpass_6_newlines(s):
+def text_unpass_7_newlines(s):
     return s.replace(newline, '\n')
+
+
+def text_unpass_8_unicode(s):
+    s = s.replace(dash_marker, u'\u2014')
+    s = s.replace(bullet_marker, u'\u2022')
+    return s

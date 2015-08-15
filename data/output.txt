@@ -44,7 +44,7 @@
 
 |etherwrought page||artifact|||N||{^WWUUBB}|at the beginning of your upkeep, [&^ = you gain &^^ life. = look at the top card of your library. you may put that card into your graveyard. = each opponent loses &^ life.]|
 
-|assert authority||instant|||N||{^^^^^UUUU}|affinity for artifacts \uncast target spell. if that spell is uncast this way, exile it instead of putting it into its owner's graveyard.|
+|assert authority||instant|||N||{^^^^^UUUU}|affinity for artifacts \uncast target spell. if that spell is uncasted this way, exile it instead of putting it into its owner's graveyard.|
 
 |carnophage||creature||zombie|O|&^^/&^^|{BB}|at the beginning of your upkeep, tap @ unless you pay &^ life.|
 
@@ -104,7 +104,7 @@
 
 |golgari longlegs||creature||insect|O|&^^^^^/&^^^^|{^^^BGBG}||
 
-|lapse of certainty||instant|||O||{^^WW}|uncast target spell. if that spell is uncast this way, put it on top of its owner's library instead of into that player's graveyard.|
+|lapse of certainty||instant|||O||{^^WW}|uncast target spell. if that spell is uncasted this way, put it on top of its owner's library instead of into that player's graveyard.|
 
 |star compass||artifact|||N||{^^}|@ enters the battlefield tapped.\T: add to your mana pool one mana of any color that a basic land you control could produce.|
 
@@ -162,7 +162,7 @@
 
 |perish||sorcery|||N||{^^BB}|destroy all green creatures. they can't be regenerated.|
 
-|isao, enlightened bushi|legendary|creature||human samurai|A|&^^/&^|{^^GG}|@ can't be uncast.\bushido &^^ \{^^}: regenerate target samurai.|
+|isao, enlightened bushi|legendary|creature||human samurai|A|&^^/&^|{^^GG}|@ can't be uncasted.\bushido &^^ \{^^}: regenerate target samurai.|
 
 |painful memories||sorcery|||N||{^BB}|look at target opponent's hand and choose a card from it. put that card on top of that player's library.|
 
@@ -174,11 +174,11 @@
 
 |ayesha tanaka|legendary|creature||human artificer|A|&^^/&^^|{WWWWUUUU}|banding \T: uncast target activated ability from an artifact source unless that ability's controller pays {WW}.|
 
-|great sable stag||creature||elk|A|&^^^/&^^^|{^GGGG}|@ can't be uncast.\protection from blue and from black|
+|great sable stag||creature||elk|A|&^^^/&^^^|{^GGGG}|@ can't be uncasted.\protection from blue and from black|
 
 |chapel geist||creature||spirit|O|&^^/&^^^|{^WWWW}|flying|
 
-|insist||sorcery|||A||{GG}|the next creature spell you cast this turn can't be uncast by spells or abilities.\draw a card.|
+|insist||sorcery|||A||{GG}|the next creature spell you cast this turn can't be uncasted by spells or abilities.\draw a card.|
 
 |lazav, dimir mastermind|legendary|creature||shapeshifter|Y|&^^^/&^^^|{UUUUBBBB}|hexproof\whenever a creature card is put into an opponent's graveyard from anywhere, you may have @ become a copy of that card except its name is still @, it's legendary in addition to its other types, and it gains hexproof and this ability.|
 
@@ -966,7 +966,7 @@
 
 |venser's diffusion||instant|||O||{^^UU}|return target nonland permanent or suspended card to its owner's hand.|
 
-|volcanic fallout||instant|||N||{^RRRR}|@ can't be uncast.\@ deals &^^ damage to each creature and each player.|
+|volcanic fallout||instant|||N||{^RRRR}|@ can't be uncasted.\@ deals &^^ damage to each creature and each player.|
 
 |forget||sorcery|||A||{UUUU}|target player discards two cards, then draws as many cards as he or she discarded this way.|
 
@@ -1345,7 +1345,7 @@
 
 |fathom trawl||sorcery|||A||{^^^UUUU}|reveal cards from the top of your library until you reveal three nonland cards. put the nonland cards revealed this way into your hand, then put the rest of the revealed cards on the bottom of your library in any order.|
 
-|wreak havoc||sorcery|||N||{^^RRGG}|@ can't be uncast by spells or abilities.\destroy target artifact or land.|
+|wreak havoc||sorcery|||N||{^^RRGG}|@ can't be uncasted by spells or abilities.\destroy target artifact or land.|
 
 |homura, human ascendant|legendary|creature||human monk|A|&^^^^/&^^^^|{^^^^RRRR}|@ can't block.\when @ dies, return it to the battlefield flipped.|
 |homura's essence|legendary|enchantment|||A||{^^^^RRRR}|creatures you control get +&^^/+&^^ and have flying and "{RR}: this creature gets +&^/+& until end of turn."|
@@ -1662,7 +1662,7 @@
 
 |heir of the wilds||creature||human warrior|N|&^^/&^^|{^GG}|deathtouch\ferocious ~ whenever @ attacks, if you control a creature with power &^^^^ or greater, @ gets +&^/+&^ until end of turn.|
 
-|mistcutter hydra||creature||hydra|A|&/&|{XXGG}|@ can't be uncast.\haste, protection from blue\@ enters the battlefield with X +&^/+&^ counters on it.|
+|mistcutter hydra||creature||hydra|A|&/&|{XXGG}|@ can't be uncasted.\haste, protection from blue\@ enters the battlefield with X +&^/+&^ counters on it.|
 
 |toil to renown||sorcery|||O||{^GG}|you gain &^ life for each tapped artifact, creature, and land you control.|
 
@@ -3795,7 +3795,7 @@
 
 |chaoslace||instant|||A||{RR}|target spell or permanent becomes red.|
 
-|rending volley||instant|||N||{RR}|@ can't be uncast by spells or abilities.\@ deals &^^^^ damage to target white or blue creature.|
+|rending volley||instant|||N||{RR}|@ can't be uncasted by spells or abilities.\@ deals &^^^^ damage to target white or blue creature.|
 
 |emrakul's hatcher||creature||eldrazi drone|O|&^^^/&^^^|{^^^^RR}|when @ enters the battlefield, put three &/&^ colorless eldrazi spawn creature tokens onto the battlefield. they have "sacrifice this creature: add {^} to your mana pool."|
 
@@ -4569,7 +4569,7 @@
 
 |magma phoenix||creature||phoenix|A|&^^^/&^^^|{^^^RRRR}|flying\when @ dies, it deals &^^^ damage to each creature and each player.\{^^^RRRR}: return @ from your graveyard to your hand.|
 
-|gaea's herald||creature||elf|A|&^/&^|{^GG}|creature spells can't be uncast.|
+|gaea's herald||creature||elf|A|&^/&^|{^GG}|creature spells can't be uncasted.|
 
 |loxodon mystic||creature||elephant cleric|O|&^^^/&^^^|{^^^WWWW}|{WW}, T: tap target creature.|
 
@@ -4659,7 +4659,7 @@
 
 |hissing miasma||enchantment|||N||{^BBBB}|whenever a creature attacks you, its controller loses &^ life.|
 
-|skylasher||creature||insect|A|&^^/&^^|{^GG}|flash\@ can't be uncast.\reach, protection from blue|
+|skylasher||creature||insect|A|&^^/&^^|{^GG}|flash\@ can't be uncasted.\reach, protection from blue|
 
 |deftblade elite||creature||human soldier|O|&^/&^|{WW}|provoke \{^WW}: prevent all combat damage that would be dealt to and dealt by @ this turn.|
 
@@ -5807,7 +5807,7 @@
 
 |false dawn||sorcery|||A||{^WW}|until end of turn, spells and abilities you control that would add colored mana to your mana pool add that much white mana instead. until end of turn, you may spend white mana as though it were mana of any color.\draw a card.|
 
-|vexing beetle||creature||insect|A|&^^^/&^^^|{^^^^GG}|@ can't be uncast.\@ gets +&^^^/+&^^^ as long as no opponent controls a creature.|
+|vexing beetle||creature||insect|A|&^^^/&^^^|{^^^^GG}|@ can't be uncasted.\@ gets +&^^^/+&^^^ as long as no opponent controls a creature.|
 
 |slitherhead||creature||plant zombie|N|&^/&^|{BG}|scavenge {}|
 
@@ -6038,7 +6038,7 @@
 
 |geothermal crevice||land|||O|||@ enters the battlefield tapped.\T: add {RR} to your mana pool.\T, sacrifice @: add {BBGG} to your mana pool.|
 
-|trickbind||instant|||A||{^UU}|split second \uncast target activated or triggered ability. if a permanent's ability is uncast this way, activated abilities of that permanent can't be activated this turn.|
+|trickbind||instant|||A||{^UU}|split second \uncast target activated or triggered ability. if a permanent's ability is uncasted this way, activated abilities of that permanent can't be activated this turn.|
 
 |sunspear shikari||creature||cat soldier|O|&^^/&^^|{^WW}|as long as @ is equipped, it has first strike and lifelink.|
 
@@ -6615,7 +6615,7 @@
 
 |black poplar shaman||creature||treefolk shaman|O|&^/&^^^|{^^BB}|{^^BB}: regenerate target treefolk.|
 
-|emrakul, the aeons torn|legendary|creature||eldrazi|Y|&^^^^^^^^^^^^^^^/&^^^^^^^^^^^^^^^|{^^^^^^^^^^^^^^^}|@ can't be uncast.\when you cast @, take an extra turn after this one.\flying, protection from colored spells, annihilator &^^^^^^\when @ is put into a graveyard from anywhere, its owner shuffles his or her graveyard into his or her library.|
+|emrakul, the aeons torn|legendary|creature||eldrazi|Y|&^^^^^^^^^^^^^^^/&^^^^^^^^^^^^^^^|{^^^^^^^^^^^^^^^}|@ can't be uncasted.\when you cast @, take an extra turn after this one.\flying, protection from colored spells, annihilator &^^^^^^\when @ is put into a graveyard from anywhere, its owner shuffles his or her graveyard into his or her library.|
 
 |illusion||instant|||N||{UU}|target spell or permanent becomes the color of your choice until end of turn.|
 |reality||instant|||N||{^^GG}|destroy target artifact.|
@@ -6954,7 +6954,7 @@
 
 |festering evil||enchantment|||N||{^^^BBBB}|at the beginning of your upkeep, @ deals &^ damage to each creature and each player.\{BBBB}, sacrifice @: @ deals &^^^ damage to each creature and each player.|
 
-|spellbreaker behemoth||creature||beast|A|&^^^^^/&^^^^^|{^RRGGGG}|@ can't be uncast.\creature spells you control with power &^^^^^ or greater can't be uncast.|
+|spellbreaker behemoth||creature||beast|A|&^^^^^/&^^^^^|{^RRGGGG}|@ can't be uncasted.\creature spells you control with power &^^^^^ or greater can't be uncasted.|
 
 |tower of the magistrate||land|||A|||T: add {^} to your mana pool.\{^}, T: target creature gains protection from artifacts until end of turn.|
 
@@ -7740,7 +7740,7 @@
 
 |pheres~band tromper||creature||centaur warrior|O|&^^^/&^^^|{^^^GG}|inspired ~ whenever @ becomes untapped, put a +&^/+&^ counter on it.|
 
-|dragonlord dromoka|legendary|creature||elder dragon|Y|&^^^^^/&^^^^^^^|{^^^^GGWW}|@ can't be uncast.\flying, lifelink\your opponents can't cast spells during your turn.|
+|dragonlord dromoka|legendary|creature||elder dragon|Y|&^^^^^/&^^^^^^^|{^^^^GGWW}|@ can't be uncasted.\flying, lifelink\your opponents can't cast spells during your turn.|
 
 |veteran's sidearm||artifact||equipment|O||{^^}|equip {^}\equipped creature gets +&^/+&^.|
 
@@ -9318,7 +9318,7 @@
 
 |rasputin dreamweaver|legendary|creature||human wizard|A|&^^^^/&^|{^^^^WWUU}|countertype % dream\@ enters the battlefield with seven % counters on it.\remove a % counter from @: add {^} to your mana pool.\remove a % counter from @: prevent the next &^ damage that would be dealt to @ this turn.\at the beginning of your upkeep, if @ started the turn untapped, put a % counter on it.\@ can't have more than seven % counters on it.|
 
-|exquisite firecraft||sorcery|||A||{^RRRR}|@ deals &^^^^ damage to target creature or player.\spell mastery ~ if there are two or more instant and/or sorcery cards in your graveyard, @ can't be uncast by spells or abilities.|
+|exquisite firecraft||sorcery|||A||{^RRRR}|@ deals &^^^^ damage to target creature or player.\spell mastery ~ if there are two or more instant and/or sorcery cards in your graveyard, @ can't be uncasted by spells or abilities.|
 
 |spined thopter||artifact creature||thopter|O|&^^/&^|{^^UP}|\flying|
 
@@ -11706,7 +11706,7 @@
 
 |traumatic visions||instant|||O||{^^^UUUU}|uncast target spell.\basic landcycling {^UU}|
 
-|dissipate||instant|||N||{^UUUU}|uncast target spell. if that spell is uncast this way, exile it instead of putting it into its owner's graveyard.|
+|dissipate||instant|||N||{^UUUU}|uncast target spell. if that spell is uncasted this way, exile it instead of putting it into its owner's graveyard.|
 
 |primal cocoon||enchantment||aura|O||{GG}|enchant creature\at the beginning of your upkeep, put a +&^/+&^ counter on enchanted creature.\when enchanted creature attacks or blocks, sacrifice @.|
 
@@ -11895,7 +11895,7 @@
 
 |tangle asp||creature||snake|O|&^/&^^|{^GG}|whenever @ blocks or becomes blocked by a creature, destroy that creature at end of combat.|
 
-|pearl lake ancient||creature||leviathan|Y|&^^^^^^/&^^^^^^^|{^^^^^UUUU}|flash\@ can't be uncast.\prowess \return three lands you control to their owner's hand: return @ to its owner's hand.|
+|pearl lake ancient||creature||leviathan|Y|&^^^^^^/&^^^^^^^|{^^^^^UUUU}|flash\@ can't be uncasted.\prowess \return three lands you control to their owner's hand: return @ to its owner's hand.|
 
 |thought hemorrhage||sorcery|||A||{^^BBRR}|name a nonland card. target player reveals his or her hand. @ deals &^^^ damage to that player for each card with that name revealed this way. search that player's graveyard, hand, and library for all cards with that name and exile them. then that player shuffles his or her library.|
 
@@ -12067,7 +12067,7 @@
 
 |eternal dominion||sorcery|||A||{^^^^^^^UUUUUU}|search target opponent's library for an artifact, creature, enchantment, or land card. put that card onto the battlefield under your control. then that player shuffles his or her library.\epic|
 
-|scragnoth||creature||beast|N|&^^^/&^^^^|{^^^^GG}|@ can't be uncast.\protection from blue|
+|scragnoth||creature||beast|N|&^^^/&^^^^|{^^^^GG}|@ can't be uncasted.\protection from blue|
 
 |goblin spelunkers||creature||goblin warrior|O|&^^/&^^|{^^RR}|mountainwalk|
 
@@ -12283,7 +12283,7 @@
 
 |exhaustion||sorcery|||A||{^^UU}|creatures and lands target opponent controls don't untap during his or her next untap step.|
 
-|savage summoning||instant|||A||{GG}|@ can't be uncast.\the next creature card you cast this turn can be cast as though it had flash. that spell can't be uncast. that creature enters the battlefield with an additional +&^/+&^ counter on it.|
+|savage summoning||instant|||A||{GG}|@ can't be uncasted.\the next creature card you cast this turn can be cast as though it had flash. that spell can't be uncasted. that creature enters the battlefield with an additional +&^/+&^ counter on it.|
 
 |karma||enchantment|||N||{^^WWWW}|at the beginning of each player's upkeep, @ deals damage to that player equal to the number of swamps he or she controls.|
 
@@ -13552,7 +13552,7 @@
 |rejuvenate||sorcery|||O||{^^^GG}|you gain &^^^^^^ life.\cycling {^^}|
 
 |bound||instant|||A||{^^^BBGG}|sacrifice a creature. return up to X cards from your graveyard to your hand, where X is the number of colors that creature was. exile this card.|
-|determined||instant|||A||{GGUU}|other spells you control can't be uncast by spells or abilities this turn.\draw a card.|
+|determined||instant|||A||{GGUU}|other spells you control can't be uncasted by spells or abilities this turn.\draw a card.|
 
 |wishmonger||creature||unicorn monger|N|&^^^/&^^^|{^^^WW}|{^^}: target creature gains protection from the color of its controller's choice until end of turn. any player may activate this ability.|
 
@@ -13566,7 +13566,7 @@
 
 |crash||instant|||O||{^^RR}|you may sacrifice a mountain rather than pay @'s mana cost.\destroy target artifact.|
 
-|terra stomper||creature||beast|A|&^^^^^^^^/&^^^^^^^^|{^^^GGGGGG}|@ can't be uncast.\trample|
+|terra stomper||creature||beast|A|&^^^^^^^^/&^^^^^^^^|{^^^GGGGGG}|@ can't be uncasted.\trample|
 
 |mercadia's downfall||instant|||N||{^^RR}|each attacking creature gets +&^/+& until end of turn for each nonbasic land defending player controls.|
 
@@ -13592,7 +13592,7 @@
 
 |garruk's packleader||creature||beast|N|&^^^^/&^^^^|{^^^^GG}|whenever another creature with power &^^^ or greater enters the battlefield under your control, you may draw a card.|
 
-|autumn's veil||instant|||N||{GG}|spells you control can't be uncast by blue or black spells this turn, and creatures you control can't be the targets of blue or black spells this turn.|
+|autumn's veil||instant|||N||{GG}|spells you control can't be uncasted by blue or black spells this turn, and creatures you control can't be the targets of blue or black spells this turn.|
 
 |lavafume invoker||creature||goblin shaman|O|&^^/&^^|{^^RR}|{^^^^^^^^}: creatures you control get +&^^^/+& until end of turn.|
 
@@ -13671,7 +13671,7 @@
 
 |halo hunter||creature||demon|A|&^^^^^^/&^^^|{^^BBBBBB}|intimidate \when @ enters the battlefield, destroy target angel.|
 
-|urza's rage||instant|||Y||{^^RR}|kicker {^^^^^^^^RR} \@ can't be uncast by spells or abilities.\@ deals &^^^ damage to target creature or player. if @ was kicked, instead it deals &^^^^^^^^^^ damage to that creature or player and the damage can't be prevented.|
+|urza's rage||instant|||Y||{^^RR}|kicker {^^^^^^^^RR} \@ can't be uncasted by spells or abilities.\@ deals &^^^ damage to target creature or player. if @ was kicked, instead it deals &^^^^^^^^^^ damage to that creature or player and the damage can't be prevented.|
 
 |sigil of sleep||enchantment||aura|O||{UU}|enchant creature\whenever enchanted creature deals damage to a player, return target creature that player controls to its owner's hand.|
 
@@ -13870,7 +13870,7 @@
 
 |tel~jilad outrider||creature||elf warrior|O|&^^^/&^|{^^^GG}|protection from artifacts|
 
-|teferi's response||instant|||A||{^UU}|uncast target spell or ability an opponent controls that targets a land you control. if a permanent's ability is uncast this way, destroy that permanent.\draw two cards.|
+|teferi's response||instant|||A||{^UU}|uncast target spell or ability an opponent controls that targets a land you control. if a permanent's ability is uncasted this way, destroy that permanent.\draw two cards.|
 
 |gorilla war cry||instant|||O||{^RR}|cast @ only during combat before blockers are declared.\all creatures gain menace until end of turn. \draw a card at the beginning of the next turn's upkeep.|
 
@@ -14086,7 +14086,7 @@
 
 |umezawa's jitte|legendary|artifact||equipment|A||{^^}|equip {^^}\countertype % charge\whenever equipped creature deals combat damage, put two % counters on @.\remove a % counter from @: [&^ = equipped creature gets +&^^/+&^^ until end of turn. = target creature gets -&^/-&^ until end of turn. = you gain &^^ life.]|
 
-|vexing shusher||creature||goblin shaman|A|&^^/&^^|{RGRG}|@ can't be uncast.\{RG}: target spell can't be uncast by spells or abilities.|
+|vexing shusher||creature||goblin shaman|A|&^^/&^^|{RGRG}|@ can't be uncasted.\{RG}: target spell can't be uncasted by spells or abilities.|
 
 |aven fleetwing||creature||bird soldier|O|&^^/&^^|{^^^UU}|flying\hexproof|
 
@@ -14326,7 +14326,7 @@
 
 |battlegrowth||instant|||O||{GG}|put a +&^/+&^ counter on target creature.|
 
-|surrak dragonclaw|legendary|creature||human warrior|Y|&^^^^^^/&^^^^^^|{^^GGUURR}|flash\@ can't be uncast.\creature spells you control can't be uncast.\other creatures you control have trample.|
+|surrak dragonclaw|legendary|creature||human warrior|Y|&^^^^^^/&^^^^^^|{^^GGUURR}|flash\@ can't be uncasted.\creature spells you control can't be uncasted.\other creatures you control have trample.|
 
 |shrink||instant|||O||{GG}|target creature gets -&^^^^^/-& until end of turn.|
 
@@ -14437,7 +14437,7 @@
 
 |dryad sophisticate||creature||dryad|N|&^^/&^|{^GG}|nonbasic landwalk|
 
-|boseiju, who shelters all|legendary|land|||A|||@ enters the battlefield tapped.\T, pay &^^ life: add {^} to your mana pool. if that mana is spent on an instant or sorcery spell, that spell can't be uncast by spells or abilities.|
+|boseiju, who shelters all|legendary|land|||A|||@ enters the battlefield tapped.\T, pay &^^ life: add {^} to your mana pool. if that mana is spent on an instant or sorcery spell, that spell can't be uncasted by spells or abilities.|
 
 |scuttlemutt||artifact creature||scarecrow|O|&^^/&^^|{^^^}|T: add one mana of any color to your mana pool.\T: target creature becomes the color or colors of your choice until end of turn.|
 
@@ -14514,7 +14514,7 @@
 
 |floodwater dam||artifact|||A||{^^^}|{XXXX^}, T: tap X target lands.|
 
-|spell crumple||instant|||N||{^UUUU}|uncast target spell. if that spell is uncast this way, put it on the bottom of its owner's library instead of into that player's graveyard. put @ on the bottom of its owner's library.|
+|spell crumple||instant|||N||{^UUUU}|uncast target spell. if that spell is uncasted this way, put it on the bottom of its owner's library instead of into that player's graveyard. put @ on the bottom of its owner's library.|
 
 |gnarled scarhide||enchantment creature||minotaur|N|&^^/&^|{BB}|bestow {^^^BB} \@ can't block.\enchanted creature gets +&^^/+&^ and can't block.|
 
@@ -14823,7 +14823,7 @@
 
 |domineer||enchantment||aura|N||{^UUUU}|enchant artifact creature\you control enchanted artifact creature.|
 
-|akroma, angel of fury|legendary|creature||angel|A|&^^^^^^/&^^^^^^|{^^^^^RRRRRR}|@ can't be uncast.\flying, trample, protection from white and from blue\{RR}: @ gets +&^/+& until end of turn.\morph {^^^RRRRRR}|
+|akroma, angel of fury|legendary|creature||angel|A|&^^^^^^/&^^^^^^|{^^^^^RRRRRR}|@ can't be uncasted.\flying, trample, protection from white and from blue\{RR}: @ gets +&^/+& until end of turn.\morph {^^^RRRRRR}|
 
 |desert||land||desert|Y|||T: add {^} to your mana pool.\T: @ deals &^ damage to target attacking creature. activate this ability only during the end of combat step.|
 
@@ -15208,7 +15208,7 @@
 
 |test of faith||instant|||N||{^WW}|prevent the next &^^^ damage that would be dealt to target creature this turn. for each &^ damage prevented this way, put a +&^/+&^ counter on that creature.|
 
-|dragonlord's prerogative||instant|||A||{^^^^UUUU}|as an additional cost to cast @, you may reveal a dragon card from your hand.\if you revealed a dragon card or controlled a dragon as you cast @, @ can't be uncast.\draw four cards.|
+|dragonlord's prerogative||instant|||A||{^^^^UUUU}|as an additional cost to cast @, you may reveal a dragon card from your hand.\if you revealed a dragon card or controlled a dragon as you cast @, @ can't be uncasted.\draw four cards.|
 
 |darklit gargoyle||artifact creature||gargoyle|O|&^/&^^|{^WW}|flying\{BB}: @ gets +&^^/-&^ until end of turn.|
 
@@ -15304,7 +15304,7 @@
 
 |mangara of corondor|legendary|creature||human wizard|A|&^/&^|{^WWWW}|T: exile @ and target permanent.|
 
-|overmaster||sorcery|||A||{RR}|the next instant or sorcery spell you cast this turn can't be uncast by spells or abilities.\draw a card.|
+|overmaster||sorcery|||A||{RR}|the next instant or sorcery spell you cast this turn can't be uncasted by spells or abilities.\draw a card.|
 
 |tower of fortunes||artifact|||A||{^^^^}|{^^^^^^^^}, T: draw four cards.|
 
@@ -15394,7 +15394,7 @@
 
 |ravaging blaze||instant|||N||{XXRRRR}|@ deals X damage to target creature. \spell mastery ~ if there are two or more instant and/or sorcery cards in your graveyard, @ also deals X damage to that creature's controller.|
 
-|remand||instant|||N||{^UU}|uncast target spell. if that spell is uncast this way, put it into its owner's hand instead of into that player's graveyard.\draw a card.|
+|remand||instant|||N||{^UU}|uncast target spell. if that spell is uncasted this way, put it into its owner's hand instead of into that player's graveyard.\draw a card.|
 
 |toxic iguanar||creature||lizard|O|&^/&^|{RR}|@ has deathtouch as long as you control a green permanent.|
 
@@ -15527,7 +15527,7 @@
 
 |thunderclap wyvern||creature||drake|N|&^^/&^^^|{^^WWUU}|flash \flying\other creatures you control with flying get +&^/+&^.|
 
-|loxodon smiter||creature||elephant soldier|A|&^^^^/&^^^^|{^GGWW}|@ can't be uncast.\if a spell or ability an opponent controls causes you to discard @, put it onto the battlefield instead of putting it into your graveyard.|
+|loxodon smiter||creature||elephant soldier|A|&^^^^/&^^^^|{^GGWW}|@ can't be uncasted.\if a spell or ability an opponent controls causes you to discard @, put it onto the battlefield instead of putting it into your graveyard.|
 
 |curse of the cabal||sorcery|||A||{^^^^^^^^^BB}|countertype % time\target player sacrifices half the permanents he or she controls, rounded down.\suspend &^^~{^^BBBB} \at the beginning of each player's upkeep, if @ is suspended, that player may sacrifice a permanent. if he or she does, put two % counters on @.|
 
@@ -16373,7 +16373,7 @@
 
 |hagra diabolist||creature||ogre shaman ally|N|&^^^/&^^|{^^^^BB}|whenever @ or another ally enters the battlefield under your control, you may have target player lose life equal to the number of allies you control.|
 
-|liquify||instant|||O||{^^UU}|uncast target spell with converted mana cost &^^^ or less. if that spell is uncast this way, exile it instead of putting it into its owner's graveyard.|
+|liquify||instant|||O||{^^UU}|uncast target spell with converted mana cost &^^^ or less. if that spell is uncasted this way, exile it instead of putting it into its owner's graveyard.|
 
 |siege of towers||sorcery|||A||{^RR}|replicate {^RR} \target mountain becomes a &^^^/&^ creature. it's still a land.|
 
@@ -16797,7 +16797,7 @@
 
 |ulasht, the hate seed|legendary|creature||hellion hydra|A|&/&|{^^RRGG}|@ enters the battlefield with a +&^/+&^ counter on it for each other red creature you control and a +&^/+&^ counter on it for each other green creature you control.\{^}, remove a +&^/+&^ counter from @: [&^ = @ deals &^ damage to target creature. = put a &^/&^ green saproling creature token onto the battlefield.]|
 
-|gilded drake||creature||drake|A|&^^^/&^^^|{^UU}|flying\when @ enters the battlefield, exchange control of @ and up to one target creature an opponent controls. if you don't make an exchange, sacrifice @. this ability can't be uncast except by spells and abilities.|
+|gilded drake||creature||drake|A|&^^^/&^^^|{^UU}|flying\when @ enters the battlefield, exchange control of @ and up to one target creature an opponent controls. if you don't make an exchange, sacrifice @. this ability can't be uncasted except by spells and abilities.|
 
 |giant strength||enchantment||aura|O||{RRRR}|enchant creature\enchanted creature gets +&^^/+&^^.|
 
@@ -17649,7 +17649,7 @@
 
 |youthful knight||creature||human knight|O|&^^/&^|{^WW}|first strike|
 
-|cavern of souls||land|||A|||as @ enters the battlefield, choose a creature type.\T: add {^} to your mana pool.\T: add one mana of any color to your mana pool. spend this mana only to cast a creature spell of the chosen type, and that spell can't be uncast.|
+|cavern of souls||land|||A|||as @ enters the battlefield, choose a creature type.\T: add {^} to your mana pool.\T: add one mana of any color to your mana pool. spend this mana only to cast a creature spell of the chosen type, and that spell can't be uncasted.|
 
 |necropolis regent||creature||vampire|Y|&^^^^^^/&^^^^^|{^^^BBBBBB}|flying\whenever a creature you control deals combat damage to a player, put that many +&^/+&^ counters on it.|
 
@@ -17992,7 +17992,7 @@
 
 |floating shield||enchantment||aura|O||{^^WW}|enchant creature\as @ enters the battlefield, choose a color.\enchanted creature has protection from the chosen color. this effect doesn't remove @.\sacrifice @: target creature gains protection from the chosen color until end of turn.|
 
-|psychic rebuttal||instant|||N||{^UU}|uncast target instant or sorcery spell that targets you.\spell mastery ~ if there are two or more instant and/or sorcery cards in your graveyard, you may copy the spell uncast this way. you may choose new targets for the copy.|
+|psychic rebuttal||instant|||N||{^UU}|uncast target instant or sorcery spell that targets you.\spell mastery ~ if there are two or more instant and/or sorcery cards in your graveyard, you may copy the spell uncasted this way. you may choose new targets for the copy.|
 
 |llanowar reborn||land|||N|||@ enters the battlefield tapped.\T: add {GG} to your mana pool.\graft &^|
 
@@ -18483,7 +18483,7 @@
 
 |in garruk's wake||sorcery|||A||{^^^^^^^BBBB}|destroy all creatures you don't control and all planeswalkers you don't control.|
 
-|root sliver||creature||sliver|N|&^^/&^^|{^^^GG}|@ can't be uncast.\sliver spells can't be uncast by spells or abilities.|
+|root sliver||creature||sliver|N|&^^/&^^|{^^^GG}|@ can't be uncasted.\sliver spells can't be uncasted by spells or abilities.|
 
 |brace for impact||instant|||N||{^^^^WW}|prevent all damage that would be dealt to target multicolored creature this turn. for each &^ damage prevented this way, put a +&^/+&^ counter on that creature.|
 
@@ -18933,7 +18933,7 @@
 
 |vengeful dead||creature||zombie|O|&^^^/&^^|{^^^BB}|whenever @ or another zombie dies, each opponent loses &^ life.|
 
-|desertion||instant|||A||{^^^UUUU}|uncast target spell. if an artifact or creature spell is uncast this way, put that card onto the battlefield under your control instead of into its owner's graveyard.|
+|desertion||instant|||A||{^^^UUUU}|uncast target spell. if an artifact or creature spell is uncasted this way, put that card onto the battlefield under your control instead of into its owner's graveyard.|
 
 |shrieking mogg||creature||goblin|A|&^/&^|{^RR}|haste\when @ enters the battlefield, tap all other creatures.|
 
@@ -18997,7 +18997,7 @@
 
 |thundermare||creature||elemental horse|A|&^^^^^/&^^^^^|{^^^^^RR}|haste \when @ enters the battlefield, tap all other creatures.|
 
-|combust||instant|||N||{^RR}|@ can't be uncast by spells or abilities.\@ deals &^^^^^ damage to target white or blue creature. the damage can't be prevented.|
+|combust||instant|||N||{^RR}|@ can't be uncasted by spells or abilities.\@ deals &^^^^^ damage to target white or blue creature. the damage can't be prevented.|
 
 |drift of phantasms||creature||spirit|O|&/&^^^^^|{^^UU}|defender \flying\transmute {^UUUU}|
 
@@ -19781,7 +19781,7 @@
 
 |smolder initiate||creature||elemental shaman|O|&^/&^|{BB}|whenever a player casts a black spell, you may pay {^}. if you do, target player loses &^ life.|
 
-|last word||instant|||A||{^^UUUU}|@ can't be uncast by spells or abilities.\uncast target spell.|
+|last word||instant|||A||{^^UUUU}|@ can't be uncasted by spells or abilities.\uncast target spell.|
 
 |ronom serpent|snow|creature||serpent|O|&^^^^^/&^^^^^^|{^^^^^UU}|@ can't attack unless defending player controls a snow land.\when you control no snow lands, sacrifice @.|
 
@@ -21794,7 +21794,7 @@
 
 |scar||instant|||O||{BR}|put a -&^/-&^ counter on target creature.|
 
-|kavu chameleon||creature||kavu|N|&^^^^/&^^^^|{^^^GGGG}|@ can't be uncast.\{GG}: @ becomes the color of your choice until end of turn.|
+|kavu chameleon||creature||kavu|N|&^^^^/&^^^^|{^^^GGGG}|@ can't be uncasted.\{GG}: @ becomes the color of your choice until end of turn.|
 
 |curse of stalked prey||enchantment||aura curse|A||{^RR}|enchant player\whenever a creature deals combat damage to enchanted player, put a +&^/+&^ counter on that creature.|
 
@@ -21945,7 +21945,7 @@
 
 |skittering invasion||tribal sorcery||eldrazi|N||{^^^^^^^}|put five &/&^ colorless eldrazi spawn creature tokens onto the battlefield. they have "sacrifice this creature: add {^} to your mana pool."|
 
-|petrified wood~kin||creature||elemental warrior|A|&^^^/&^^^|{^^^^^^GG}|@ can't be uncast.\bloodthirst X \protection from instants|
+|petrified wood~kin||creature||elemental warrior|A|&^^^/&^^^|{^^^^^^GG}|@ can't be uncasted.\bloodthirst X \protection from instants|
 
 |sleeper agent||creature||minion|A|&^^^/&^^^|{BB}|when @ enters the battlefield, target opponent gains control of it.\at the beginning of your upkeep, @ deals &^^ damage to you.|
 
@@ -22161,7 +22161,7 @@
 
 |goblin war strike||sorcery|||O||{RR}|@ deals damage equal to the number of goblins you control to target player.|
 
-|banefire||sorcery|||A||{XXRR}|@ deals X damage to target creature or player.\if X is &^^^^^ or more, @ can't be uncast by spells or abilities and the damage can't be prevented.|
+|banefire||sorcery|||A||{XXRR}|@ deals X damage to target creature or player.\if X is &^^^^^ or more, @ can't be uncasted by spells or abilities and the damage can't be prevented.|
 
 |loxodon gatekeeper||creature||elephant soldier|A|&^^/&^^^|{^^WWWW}|artifacts, creatures, and lands your opponents control enter the battlefield tapped.|
 
@@ -22199,13 +22199,13 @@
 
 |frost walker||creature||elemental|N|&^^^^/&^|{^UU}|when @ becomes the target of a spell or ability, sacrifice it.|
 
-|syncopate||instant|||N||{XXUU}|uncast target spell unless its controller pays {XX}. if that spell is uncast this way, exile it instead of putting it into its owner's graveyard.|
+|syncopate||instant|||N||{XXUU}|uncast target spell unless its controller pays {XX}. if that spell is uncasted this way, exile it instead of putting it into its owner's graveyard.|
 
 |delirium||instant|||N||{^BBRR}|cast @ only during an opponent's turn.\tap target creature that player controls. that creature deals damage equal to its power to the player. prevent all combat damage that would be dealt to and dealt by the creature this turn.|
 
 |wipe away||instant|||N||{^UUUU}|split second \return target permanent to its owner's hand.|
 
-|memory lapse||instant|||O||{^UU}|uncast target spell. if that spell is uncast this way, put it on top of its owner's library instead of into that player's graveyard.|
+|memory lapse||instant|||O||{^UU}|uncast target spell. if that spell is uncasted this way, put it on top of its owner's library instead of into that player's graveyard.|
 
 |telim'tor's darts||artifact|||N||{^^}|{^^}, T: @ deals &^ damage to target player.|
 
@@ -22418,7 +22418,7 @@
 
 |restoration angel||creature||angel|A|&^^^/&^^^^|{^^^WW}|flash\flying\when @ enters the battlefield, you may exile target non~angel creature you control, then return that card to the battlefield under your control.|
 
-|leyline of lifeforce||enchantment|||A||{^^GGGG}|if @ is in your opening hand, you may begin the game with it on the battlefield.\creature spells can't be uncast.|
+|leyline of lifeforce||enchantment|||A||{^^GGGG}|if @ is in your opening hand, you may begin the game with it on the battlefield.\creature spells can't be uncasted.|
 
 |viashino bladescout||creature||viashino scout|O|&^^/&^|{^RRRR}|flash \when @ enters the battlefield, target creature gains first strike until end of turn.|
 
@@ -22531,7 +22531,7 @@
 
 |hopping automaton||artifact creature||construct|N|&^^/&^^|{^^^}|{}: @ gets -&^/-&^ and gains flying until end of turn.|
 
-|demonfire||sorcery|||A||{XXRR}|@ deals X damage to target creature or player. if a creature dealt damage this way would die this turn, exile it instead.\hellbent ~ if you have no cards in hand, @ can't be uncast by spells or abilities and the damage can't be prevented.|
+|demonfire||sorcery|||A||{XXRR}|@ deals X damage to target creature or player. if a creature dealt damage this way would die this turn, exile it instead.\hellbent ~ if you have no cards in hand, @ can't be uncasted by spells or abilities and the damage can't be prevented.|
 
 |carbonize||instant|||N||{^^RR}|@ deals &^^^ damage to target creature or player. that creature can't be regenerated this turn. if the creature would die this turn, exile it instead.|
 
@@ -23347,7 +23347,7 @@
 
 |dark confidant||creature||human wizard|A|&^^/&^|{^BB}|at the beginning of your upkeep, reveal the top card of your library and put that card into your hand. you lose life equal to its converted mana cost.|
 
-|fold into aether||instant|||N||{^^UUUU}|uncast target spell. if that spell is uncast this way, its controller may put a creature card from his or her hand onto the battlefield.|
+|fold into aether||instant|||N||{^^UUUU}|uncast target spell. if that spell is uncasted this way, its controller may put a creature card from his or her hand onto the battlefield.|
 
 |coffin queen||creature||zombie wizard|A|&^/&^|{^^BB}|you may choose not to untap @ during your untap step.\{^^BB}, T: put target creature card from a graveyard onto the battlefield under your control. when @ becomes untapped or you lose control of @, exile that creature.|
 
@@ -24164,7 +24164,7 @@
 
 |firewild borderpost||artifact|||O||{^RRGG}|you may pay {^} and return a basic land you control to its owner's hand rather than pay @'s mana cost.\@ enters the battlefield tapped.\T: add {RR} or {GG} to your mana pool.|
 
-|kheru spellsnatcher||creature||naga wizard|A|&^^^/&^^^|{^^^UU}|morph {^^^^UUUU} \when @ is turned face up, uncast target spell. if that spell is uncast this way, exile it instead of putting it into its owner's graveyard. you may cast that card without paying its mana cost for as long as it remains exiled.|
+|kheru spellsnatcher||creature||naga wizard|A|&^^^/&^^^|{^^^UU}|morph {^^^^UUUU} \when @ is turned face up, uncast target spell. if that spell is uncasted this way, exile it instead of putting it into its owner's graveyard. you may cast that card without paying its mana cost for as long as it remains exiled.|
 
 |zodiac ox||creature||ox|N|&^^^/&^^^|{^^^GG}|swampwalk|
 
@@ -24339,7 +24339,7 @@
 
 |myr propagator||artifact creature||myr|A|&^/&^|{^^^}|{^^^}, T: put a token that's a copy of @ onto the battlefield.|
 
-|delay||instant|||N||{^UU}|countertype % time\uncast target spell. if the spell is uncast this way, exile it with three % counters on it instead of putting it into its owner's graveyard. if it doesn't have suspend, it gains suspend.|
+|delay||instant|||N||{^UU}|countertype % time\uncast target spell. if the spell is uncasted this way, exile it with three % counters on it instead of putting it into its owner's graveyard. if it doesn't have suspend, it gains suspend.|
 
 |ricochet trap||instant||trap|N||{^^^RR}|if an opponent cast a blue spell this turn, you may pay {RR} rather than pay @'s mana cost.\change the target of target spell with a single target.|
 
@@ -24756,7 +24756,7 @@
 
 |mogis's warhound||enchantment creature||hound|N|&^^/&^^|{^RR}|bestow {^^RR} \@ attacks each turn if able.\enchanted creature gets +&^^/+&^^ and attacks each turn if able.|
 
-|hinder||instant|||N||{^UUUU}|uncast target spell. if that spell is uncast this way, put that card on the top or bottom of its owner's library instead of into that player's graveyard.|
+|hinder||instant|||N||{^UUUU}|uncast target spell. if that spell is uncasted this way, put that card on the top or bottom of its owner's library instead of into that player's graveyard.|
 
 |vanquish||instant|||N||{^^WW}|destroy target blocking creature.|
 
@@ -24951,7 +24951,7 @@
 
 |torpor orb||artifact|||A||{^^}|creatures entering the battlefield don't cause abilities to trigger.|
 
-|thrun, the last troll|legendary|creature||troll shaman|Y|&^^^^/&^^^^|{^^GGGG}|@ can't be uncast.\hexproof \{^GG}: regenerate @.|
+|thrun, the last troll|legendary|creature||troll shaman|Y|&^^^^/&^^^^|{^^GGGG}|@ can't be uncasted.\hexproof \{^GG}: regenerate @.|
 
 |silverclaw griffin||creature||griffin|O|&^^^/&^^|{^^^WWWW}|flying, first strike|
 
@@ -25017,7 +25017,7 @@
 
 |ragnar|legendary|creature||human cleric|N|&^^/&^^|{GGWWUU}|{GGWWUU}, T: regenerate target creature.|
 
-|faerie trickery||tribal instant||faerie|O||{^UUUU}|uncast target non~faerie spell. if that spell is uncast this way, exile it instead of putting it into its owner's graveyard.|
+|faerie trickery||tribal instant||faerie|O||{^UUUU}|uncast target non~faerie spell. if that spell is uncasted this way, exile it instead of putting it into its owner's graveyard.|
 
 |venerable kumo||creature||spirit|O|&^^/&^^^|{^^^^GG}|reach \soulshift &^^^^|
 
@@ -25192,7 +25192,7 @@
 
 |plated pegasus||creature||pegasus|N|&^/&^^|{^^WW}|flash \flying\if a spell would deal damage to a creature or player, prevent &^ damage that spell would deal to that creature or player.|
 
-|blurred mongoose||creature||mongoose|A|&^^/&^|{^GG}|@ can't be uncast.\shroud|
+|blurred mongoose||creature||mongoose|A|&^^/&^|{^GG}|@ can't be uncasted.\shroud|
 
 |mountain titan||creature||giant|A|&^^/&^^|{^^BBRR}|{^RRRR}: until end of turn, whenever you cast a black spell, put a +&^/+&^ counter on @.|
 
@@ -25984,7 +25984,7 @@
 
 |farhaven elf||creature||elf druid|O|&^/&^|{^^GG}|when @ enters the battlefield, you may search your library for a basic land card and put it onto the battlefield tapped. if you do, shuffle your library.|
 
-|supreme verdict||sorcery|||A||{^WWWWUU}|@ can't be uncast.\destroy all creatures.|
+|supreme verdict||sorcery|||A||{^WWWWUU}|@ can't be uncasted.\destroy all creatures.|
 
 |solarion||artifact creature||construct|A|&/&|{^^^^^^^}|sunburst \T: double the number of +&^/+&^ counters on @.|
 
@@ -26731,7 +26731,7 @@
 
 |goblin war drums||enchantment|||O||{^^RR}|creatures you control have menace.|
 
-|obliterate||sorcery|||A||{^^^^^^RRRR}|@ can't be uncast.\destroy all artifacts, creatures, and lands. they can't be regenerated.|
+|obliterate||sorcery|||A||{^^^^^^RRRR}|@ can't be uncasted.\destroy all artifacts, creatures, and lands. they can't be regenerated.|
 
 |wall of tombstones||creature||wall|N|&/&^|{^BB}|defender \at the beginning of your upkeep, change @'s base toughness to &^ plus the number of creature cards in your graveyard.|
 
@@ -27259,7 +27259,7 @@
 
 |consign to dust||instant|||N||{^^GG}|strive ~ @ costs {^^GG} more to cast for each target beyond the first.\destroy any number of target artifacts and/or enchantments.|
 
-|multani's presence||enchantment|||N||{GG}|whenever a spell you've cast is uncast, draw a card.|
+|multani's presence||enchantment|||N||{GG}|whenever a spell you've cast is uncasted, draw a card.|
 
 |monastery loremaster||creature||djinn wizard|O|&^^^/&^^|{^^^UU}|megamorph {^^^^^UU} \when @ is turned face up, return target noncreature, nonland card from your graveyard to your hand.|
 
@@ -27281,7 +27281,7 @@
 
 |cruel revival||instant|||N||{^^^^BB}|destroy target non~zombie creature. it can't be regenerated. return up to one target zombie card from your graveyard to your hand.|
 
-|summoning trap||instant||trap|A||{^^^^GGGG}|if a creature spell you cast this turn was uncast by a spell or ability an opponent controlled, you may pay {} rather than pay @'s mana cost.\look at the top seven cards of your library. you may put a creature card from among them onto the battlefield. put the rest on the bottom of your library in any order.|
+|summoning trap||instant||trap|A||{^^^^GGGG}|if a creature spell you cast this turn was uncasted by a spell or ability an opponent controlled, you may pay {} rather than pay @'s mana cost.\look at the top seven cards of your library. you may put a creature card from among them onto the battlefield. put the rest on the bottom of your library in any order.|
 
 |straw soldiers||creature||scarecrow soldier|O|&^/&^^^|{^UU}||
 
@@ -27307,7 +27307,7 @@
 
 |chandra ablaze||planeswalker|&^^^^^|chandra|Y||{^^^^RRRR}|+&^: discard a card. if a red card is discarded this way, @ deals &^^^^ damage to target creature or player.\-&^^: each player discards his or her hand, then draws three cards.\-&^^^^^^^: cast any number of red instant and/or sorcery cards from your graveyard without paying their mana costs.|
 
-|counterflux||instant|||A||{UUUURR}|@ can't be uncast by spells or abilities.\uncast target spell you don't control.\overload {^UUUURR}|
+|counterflux||instant|||A||{UUUURR}|@ can't be uncasted by spells or abilities.\uncast target spell you don't control.\overload {^UUUURR}|
 
 |fiery bombardment||enchantment|||A||{^RR}|chroma ~ {^^}, sacrifice a creature: @ deals damage to target creature or player equal to the number of red mana symbols in the sacrificed creature's mana cost.|
 
@@ -27932,7 +27932,7 @@
 
 |seething song||instant|||O||{^^RR}|add {RRRRRRRRRR} to your mana pool.|
 
-|swift silence||instant|||A||{^^WWUUUU}|uncast all other spells. draw a card for each spell uncast this way.|
+|swift silence||instant|||A||{^^WWUUUU}|uncast all other spells. draw a card for each spell uncasted this way.|
 
 |premature burial||sorcery|||N||{^BB}|destroy target nonblack creature that entered the battlefield since your last turn ended.|
 
@@ -28887,7 +28887,7 @@
 
 |pinecrest ridge||land|||N|||T: add {^} to your mana pool.\T: add {RR} or {GG} to your mana pool. @ doesn't untap during your next untap step.|
 
-|spelljack||instant|||A||{^^^UUUUUU}|uncast target spell. if that spell is uncast this way, exile it instead of putting it into its owner's graveyard. you may play it without paying its mana cost for as long as it remains exiled.|
+|spelljack||instant|||A||{^^^UUUUUU}|uncast target spell. if that spell is uncasted this way, exile it instead of putting it into its owner's graveyard. you may play it without paying its mana cost for as long as it remains exiled.|
 
 |anchor to the aether||sorcery|||N||{^^UU}|put target creature on top of its owner's library. scry &^.|
 
@@ -29064,7 +29064,7 @@
 
 |exhume||sorcery|||O||{^BB}|each player puts a creature card from his or her graveyard onto the battlefield.|
 
-|abrupt decay||instant|||A||{BBGG}|@ can't be uncast by spells or abilities.\destroy target nonland permanent with converted mana cost &^^^ or less.|
+|abrupt decay||instant|||A||{BBGG}|@ can't be uncasted by spells or abilities.\destroy target nonland permanent with converted mana cost &^^^ or less.|
 
 |faerie harbinger||creature||faerie wizard|N|&^^/&^^|{^^^UU}|flash\flying\when @ enters the battlefield, you may search your library for a faerie card, reveal it, then shuffle your library and put that card on top of it.|
 
@@ -29209,7 +29209,7 @@
 
 |roon of the hidden realm|legendary|creature||rhino soldier|Y|&^^^^/&^^^^|{^^GGWWUU}|vigilance, trample\{^^}, T: exile another target creature. return that card to the battlefield under its owner's control at the beginning of the next end step.|
 
-|gaea's revenge||creature||elemental|Y|&^^^^^^^^/&^^^^^|{^^^^^GGGG}|@ can't be uncast.\haste\@ can't be the target of nongreen spells or abilities from nongreen sources.|
+|gaea's revenge||creature||elemental|Y|&^^^^^^^^/&^^^^^|{^^^^^GGGG}|@ can't be uncasted.\haste\@ can't be the target of nongreen spells or abilities from nongreen sources.|
 
 |karador, ghost chieftain|legendary|creature||centaur spirit|Y|&^^^/&^^^^|{^^^^^BBGGWW}|@ costs {^} less to cast for each creature card in your graveyard.\during each of your turns, you may cast one creature card from your graveyard.|
 
@@ -29677,7 +29677,7 @@
 
 |culling dais||artifact|||N||{^^}|countertype % charge\T, sacrifice a creature: put a % counter on @.\{^}, sacrifice @: draw a card for each % counter on @.|
 
-|slaughter games||sorcery|||A||{^^BBRR}|@ can't be uncast by spells or abilities.\name a nonland card. search target opponent's graveyard, hand, and library for any number of cards with that name and exile them. then that player shuffles his or her library.|
+|slaughter games||sorcery|||A||{^^BBRR}|@ can't be uncasted by spells or abilities.\name a nonland card. search target opponent's graveyard, hand, and library for any number of cards with that name and exile them. then that player shuffles his or her library.|
 
 |goblin lore||sorcery|||N||{^RR}|draw four cards, then discard three cards at random.|
 
