@@ -1,7 +1,7 @@
 Dependencies
 ======
 
-# mtgjson
+## mtgjson
 
 First, you'll need the json corpus of Magic the Gathering cards, which can be found at:
 
@@ -11,7 +11,7 @@ You probably want the file AllSets.json, which you should also be able to downlo
 
 http://mtgjson.com/json/AllSets.json
 
-# Python packages
+## Python packages
 
 mtgencode uses a few additional Python packages which you should be able to install with Pip, Python's package manager. They aren'y mission critical, but they provide better capitalization of names and text in human-readable output formats. If they aren't installed, mtgencode will silently fall back to less effective workarounds.
 
@@ -45,7 +45,7 @@ This will launch an absolutely massive compilation process for all of the numpy 
 
 Some additional packages will be needed for multithreading, but that doesn't work yet, so no worries.
 
-# word2vec
+## word2vec
 
 The creativity analysis is done using vector models produced by this tool:
 
@@ -64,7 +64,7 @@ make
 
 That should create some files, among them a binary called word2vec. Add this to your path somehow, and you'll be able to invoke cbow.sh from within the data/ subdirectory to recompile the vector model (cbow.bin) from whatever text representation was last produced (cbow.txt).
 
-# Rebuilding the data files
+## Rebuilding the data files
 
 The standard procedure to produce the derived data files from AllSets.json is the following:
 
@@ -77,7 +77,7 @@ cd data
 
 This of course assumes that you have AllSets.json in data/, and that you start from the root of the repo, in the same directory as encode.py.
 
-# Generating cards with neural nets
+## Generating cards with neural nets
 
 This repo is just a bunch of formatting and analysis support code; to do anything interesting you're going to need to train a neural net.
 
