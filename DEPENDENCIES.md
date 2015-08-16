@@ -116,6 +116,7 @@ Once MSE2 is installed with Wine, you should be able to just click on the templa
 Some additional system fonts are required, specifically Beleren Bold, Beleren Small Caps Bold, and Relay Medium. Those can be found here:
 
 http://www.slightlymagic.net/forum/viewtopic.php?f=15&t=14730
+
 http://www.azfonts.net/download/relay-medium/ttf.html
 
 Open them in Font Viewer and click install; you might then have to clear the caches so MSE2 can see them:
