@@ -87,6 +87,43 @@ https://github.com/karpathy/char-rnn
 
 A customized version is also available here, with modifications specifically to support this format:
 
-https://github.com/billzorn/mtg-rnn
+https://github.com/billzorn/mtg-rnn 
 
 Consult the documentation of those projects about how to install and use them. Generally, output files produced by encode.py are intended for use as training input; for example, the file called data/output.py here is also included in mtg-rnn as data/mtgencode-std/input.txt.
+
+## Magic Set Editor 2
+
+MSE2 is a tool for creating and viewing custom magic cards:
+
+http://magicseteditor.sourceforge.net/
+
+Set files, with the extension .mse-set, can be produced by decode.py using the -mse option and then viewed in MSE2.
+
+Unfortunately, getting MSE2 to run on Linux can be tricky. Both Wine 1.6 and 1.7 have been reported to work on Ubuntu; instructions for 1.7 can be found here:
+
+https://www.winehq.org/download/ubuntu
+
+To install MSE with Wine, download the standard Windows installer and open it with Wine. Everything should just work. You will need some additional card styles:
+
+http://sourceforge.net/projects/msetemps/files/Magic%20-%20Recently%20Printed%20Styles.mse-installer/download
+
+And possibly this:
+
+http://sourceforge.net/projects/msetemps/files/Magic%20-%20M15%20Extra.mse-installer/download
+
+Once MSE2 is installed with Wine, you should be able to just click on the template installers and MSE2 will know what to do with them.
+
+Some additional system fonts are required, specifically Beleren Bold, Beleren Small Caps Bold, and Relay Medium. Those can be found here:
+
+http://www.slightlymagic.net/forum/viewtopic.php?f=15&t=14730
+http://www.azfonts.net/download/relay-medium/ttf.html
+
+Open them in Font Viewer and click install; you might then have to clear the caches so MSE2 can see them:
+
+```
+sudo fc-cache -fv
+```
+
+If you're running a Linux distro other than Ubuntu, then a similar procedure will probably work. If you're on Windows, then it should work fine as is without messing around with Wine. You'll still need the additional styles.
+
+I tried to build MSE2 from source on 64-bit Ubuntu. After hacking up some of the files, I did get a working binary, but I was unable to set up the data files it needs in such a way that I could actually open a set. If you manage to get this to work, please explain how, and I will be very grateful.
