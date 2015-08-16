@@ -77,20 +77,6 @@ cd data
 
 This of course assumes that you have AllSets.json in data/, and that you start from the root of the repo, in the same directory as encode.py.
 
-## Generating cards with neural nets
-
-This repo is just a bunch of formatting and analysis support code; to do anything interesting you're going to need to train a neural net.
-
-All this work is based on the implementation provided here:
-
-https://github.com/karpathy/char-rnn
-
-A customized version is also available here, with modifications specifically to support this format:
-
-https://github.com/billzorn/mtg-rnn 
-
-Consult the documentation of those projects about how to install and use them. Generally, output files produced by encode.py are intended for use as training input; for example, the file called data/output.py here is also included in mtg-rnn as data/mtgencode-std/input.txt.
-
 ## Magic Set Editor 2
 
 MSE2 is a tool for creating and viewing custom magic cards:
