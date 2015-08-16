@@ -117,6 +117,8 @@ If you do decide to go the virtual machine route:
 2. Download a Linux operating system. I recommend [Ubuntu](http://www.ubuntu.com/download/desktop).
 3. [Create a virtual machine, and install the operating system on it](https://help.ubuntu.com/community/VirtualBox/FirstVM).
 
+IMPORTANT NOTE: Training neural nets is extremely CPU intensive, and rather memory intensive as well. If you don't want training to take multiple weeks, it's a very good idea to give your virtual machine as many processor cores and as much memory as you can spare, and to monitor system performance with the 'top' command to make sure you aren't [swapping](https://help.ubuntu.com/community/SwapFaq), as that will degrade performance immensely.
+
 You should be able to boot up the virtual machine and use whatever operating system you installed. If you're new to Linux, you might want to familiarize yourself with it a little. For my own sanity, I'm going to assume at least basic familiarity. Most of what we'll be doing will be in terminals; if the instructions say to do something and then provide some code in a block quote, it probably means to type that into a terminal, on line at a time.
 
 ### Set up the neural net code
@@ -152,7 +154,7 @@ cd ~/mtg-rnn
 th train.lua --help
 ```
 
-A large usage message should be printed. If you get an error, then check to make sure torch is working. As always, Google is your best friend when anything goes wrong.
+A large usage message should be printed. If you get an error, then check to make sure Torch is working. As always, Google is your best friend when anything goes wrong.
 
 ### Set up mtgencode
 
@@ -188,7 +190,7 @@ instead of running the script directly.
 
 ### Generating an encoded corpus for training
 
-If you just want to train with the default corpus, you can skip this step, as it already exists in mtg-rnn.
+If you just want to train with the default corpus, you can skip this step, as it already exists in mtg-rnn. Just replace all instances of 'custom_encoding' with 'mtgencode-std'.
 
 To generate an encoded corpus, you'll first need to download AllSets.json from [mtgjson.com](http://mtgjson.com/) to data/AllSets.json. Then to encode it:
 
@@ -196,7 +198,7 @@ To generate an encoded corpus, you'll first need to download AllSets.json from [
 ./encode.py -v data/AllSets.json data/custom_encoding.txt
 ```
 
-This will create a the file data/custom_encoding.txt with your encoding in it. You can add some options to create a different encoding; consult the usage of encode.py.
+This will create a the file data/custom_encoding.txt with your encoding in it. You can add some options to create a different encoding; consult the usage of [encode.py](https://github.com/billzorn/mtgencode#encodepy).
 
 Now copy this encoded corpus over to mtg-rnn:
 
@@ -220,7 +222,7 @@ A sample training command might like this:
 th train.lua -gpuid -1 -rnn_size 256 -num_layers 3 -seq_length 200 -data_dir data/custom_encoding -checkpoint_dir cv/custom_format-256/ -eval_val_every 1000 -seed 7767
 ```
 
-This tells the neural network to train using the corpus in data/custom_encoding/, and to output periodic checkpoints to the directory cv/custom_format-256/. The option "-gpuid -1" means to use the CPU, not a GPU (which won't be possible in VirtualBox anyway). The final options, -eval_val_every and -seed aren't necessary, but I like to specify them. The seed will be set to a fixed 123 if you don't specify one yourself. If you're generating too many checkpoints and filling up your disk, you can increase the number of iterations between saving them by increasing the argument to -eval_val_every.
+This tells the neural network to train using the corpus in data/custom_encoding/, and to output periodic checkpoints to the directory cv/custom_format-256/. The option "-gpuid -1" means to use the CPU, not a GPU (which won't be possible in VirtualBox anyway). The final options, -eval_val_every and -seed, aren't necessary, but I like to specify them. The seed will be set to a fixed 123 if you don't specify one yourself. If you're generating too many checkpoints and filling up your disk, you can increase the number of iterations between saving them by increasing the argument to -eval_val_every.
 
 If all goes well, you should see the neural net code do some stuff and then start training, reporting training loss and batch times as it goes:
 
@@ -251,7 +253,7 @@ Once you're ready, go the the mtg-rnn repo. A typical sampling command might loo
 th sample.lua cv/custom_format-256/lm_lstm_epochXX.XX_X.XXXX.t7 -gpuid -1 -temperature 0.9 -length 2000 | tee cards.txt
 ```
 
-Replace the Xs in the checkpoint name with the numbers in the name of an actual checkpoint; tab completion is your friend. This command will sample 2000 characters, which is probably something like 20 cards, and both print them to the terminal and write them to a file called cards.txt. The intersting options here are the temperature and the length. Temperature controls how cautious the network is; lower values produce more probable output, while higher values make it wilder and more creative. Somewhere in the range of 0.7-1.0 usually works best.
+Replace the Xs in the checkpoint name with the numbers in the name of an actual checkpoint; tab completion is your friend. This command will sample 2000 characters, which is probably something like 20 cards, and both print them to the terminal and write them to a file called cards.txt. The interesting options here are the temperature and the length. Temperature controls how cautious the network is; lower values produce more probable output, while higher values make it wilder and more creative. Somewhere in the range of 0.7-1.0 usually works best. Length is just how many characters to generate. You can also specify a seed with -seed, exactly as for training, which is a particularly good idea if you just generated a few million characters and would like to see something new. The default seed is fixed at 123, again exactly as for training.
 
 You can read the output yourself, but it might be painful, especially if you're using randomly ordered fields.
 
@@ -265,7 +267,7 @@ Go back to mtgencode, and run something like:
 ./decode.py -v ~/mtg-rnn/cards.txt cards.pretty.txt -d
 ```
 
-This should create a text file cald cards.pretty.txt with a text spoiler in it that's actually designed for human consumption. Open it in your favorite text editor and enjoy!
+This should create a file called cards.pretty.txt with a text spoiler in it that's actually designed for human consumption. Open it in your favorite text editor and enjoy!
 
 The -d option ensures you'll still be able to see anything that went wrong with the cards. You can change the formatting with -f and -g, and produce a set file for MSE2 with -mse. The -c option produces some intersting comparisons to existing cards, but it's slow, so be prepared to wait a long time if you use it on a large dump.
 
@@ -277,11 +279,11 @@ All decimal numbers are in represented in unary, with numbers over 20 special-ca
 
 Mana costs are specially encoded between braces {}. I use the unary counter to encode the colorless part, and then special two-character symbols for everything else. So, {3}{W}{W} becomes {^^^WWWW}, {U/B}{U/B} becomes {UBUB}, and {X}{X}{X} becomes {XXXXXX}. The details are controlled in lib/utils.py, and handled with the Manacost and Manatext objects in lib/manalib.py.
 
-The name of the card becomes @ in the text. I try to handle all the stupid special cases correctly. For example, Crovax the Cursed is referred to in his text box as simply 'Crovax.' Yuch.
+The name of the card becomes @ in the text. I try to handle all the stupid special cases correctly. For example, Crovax the Cursed is referred to in his text box as simply 'Crovax'. Yuch.
 
 The names of counters are similarly replaced with %, and then a speial line of text is added to tell what kind of counter % refers to. Fun fact: there's more than a hundred different kinds used in real cards.
 
-Several ambiguous words are resolved. Most directly, the word 'counter' as in 'counter target spell' is replaced with 'uncast.' This should prevent confusion with +&^/+&^ counters and % counters.
+Several ambiguous words are resolved. Most directly, the word 'counter' as in 'counter target spell' is replaced with 'uncast'. This should prevent confusion with +&^/+&^ counters and % counters.
 
 I also reformat cards that choose between multiple things by removing the choice clause itself and instead having a delimited list of options prefixed by a number. If you could choose different numbers of things (one or both, one or more - turns out the latter is valid in all existing cases) then the number is 0, otherwise it's however many things you'd get to choose. So, 'choose one -\= effect x\= effect y' (the \ is a newline) becomes [&^ = effect x = effect y].
 
