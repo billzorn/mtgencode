@@ -84,17 +84,17 @@ def main(fname, oname = None, verbose = True, encoding = 'std',
 
                 # look for a normal rarity version, in a set we can use
                 idx = 0
-                card = cardlib.Card(jcards[idx])
+                card = cardlib.Card(jcards[idx], linetrans = line_transformations)
                 while (idx < len(jcards)
                        and (card.rarity == utils.rarity_special_marker 
                             or exclude_sets(jcards[idx][utils.json_field_set_name]))):
                     idx += 1
                     if idx < len(jcards):
-                        card = cardlib.Card(jcards[idx])
+                        card = cardlib.Card(jcards[idx], linetrans = line_transformations)
                 # if there isn't one, settle with index 0
                 if idx >= len(jcards):
                     idx = 0
-                    card = cardlib.Card(jcards[idx])
+                    card = cardlib.Card(jcards[idx], linetrans = line_transformations)
                 # we could go back and look for a card satisfying one of the criteria,
                 # but eh
 

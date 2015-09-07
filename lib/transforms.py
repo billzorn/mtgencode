@@ -399,11 +399,54 @@ def text_pass_8_equip(s):
 
 
 def text_pass_9_newlines(s):
-    return s.replace('\n', '\\')
+    return s.replace('\n', utils.newline)
 
 
 def text_pass_10_symbols(s):
     return utils.to_symbols(s)
+
+
+# reorder the lines of text into a canonical form:
+# first enchant and equip
+# then other keywords, one per line (things with no period on the end)
+# then other abilities
+# then kicker and countertype last of all
+def text_pass_11_linetrans(s):
+    # let's just not deal with level up
+    if 'level up' in s:
+        return s
+
+    prelines = []
+    keylines = []
+    mainlines = []
+    postlines = []
+
+    lines = s.split(utils.newline)
+    for line in lines:
+        if not '.' in line:
+            # because this is inconsistent
+            line = line.replace(';', ',')
+            sublines = line.split(',')
+            for subline in sublines:
+                if 'equip' in subline or 'enchant' in subline:
+                    prelines += [subline]
+                elif 'countertype' or 'kicker' in subline:
+                    postlines += [subline]
+                else:
+                    keylines += [subline]
+        elif u'\u2014' in line and not u' \u2014 ' in line:
+            if 'equip' in line or 'enchant' in line:
+                prelines += [line]
+            elif 'countertype' or 'kicker' in line:
+                postlines += [line]
+            else:
+                keylines += [line]
+        else:
+            mainlines += [line]
+            print line.encode('utf-8')
+
+    alllines = prelines + keylines + mainlines + postlines
+    return utils.newline.join(alllines)
 
 
 # Text unpasses, for decoding. All assume the text inside a Manatext, so don't do anything

@@ -223,7 +223,7 @@ def fields_check_valid(fields):
 # releaseDate - string
 # starter - boolean
 
-def fields_from_json(src_json):
+def fields_from_json(src_json, linetrans = True):
     parsed = True
     valid = True
     fields = {}
@@ -301,6 +301,8 @@ def fields_from_json(src_json):
         text_val = transforms.text_pass_8_equip(text_val)
         text_val = transforms.text_pass_9_newlines(text_val)
         text_val = transforms.text_pass_10_symbols(text_val)
+        if linetrans:
+            text_val = transforms.text_pass_11_linetrans(text_val)
         text_val = utils.to_ascii(text_val)
         text_val = text_val.strip()
         mtext = Manatext(text_val, fmt = 'json')
@@ -389,7 +391,7 @@ class Card:
 
     def __init__(self, src, fmt_ordered = fmt_ordered_default, 
                             fmt_labeled = fmt_labeled_default, 
-                            fieldsep = utils.fieldsep):
+                            fieldsep = utils.fieldsep, linetrans = True):
         # source fields, exactly one will be set
         self.json = None
         self.raw = None
@@ -425,8 +427,9 @@ class Card:
                 self.bside = Card(src[utils.json_field_bside],
                                   fmt_ordered = fmt_ordered,
                                   fmt_labeled = fmt_labeled,
-                                  fieldsep = fieldsep)
-            p_success, v_success, parsed_fields = fields_from_json(src)
+                                  fieldsep = fieldsep,
+                                  linetrans = linetrans)
+            p_success, v_success, parsed_fields = fields_from_json(src, linetrans = linetrans)
             self.parsed = p_success
             self.valid = v_success
             self.fields = parsed_fields
@@ -438,7 +441,8 @@ class Card:
                 self.bside = Card(utils.bsidesep.join(sides[1:]), 
                                   fmt_ordered = fmt_ordered,
                                   fmt_labeled = fmt_labeled,
-                                  fieldsep = fieldsep)
+                                  fieldsep = fieldsep,
+                                  linetrans = linetrans)
             p_success, v_success, parsed_fields = fields_from_format(sides[0], fmt_ordered, 
                                                                      fmt_labeled,  fieldsep)
             self.parsed = p_success
