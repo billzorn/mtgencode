@@ -19,51 +19,53 @@ def exclude_types(cardtype):
 def exclude_layouts(layout):
     return layout in ['token', 'plane', 'scheme', 'phenomenon', 'vanguard']
 
-def main(fname, oname = None, verbose = True, dupes = 0, encoding = 'std', stable = False):
+def main(fname, oname = None, verbose = True, encoding = 'std', 
+         nolinetrans = False, randomize = False, nolabel = False, stable = False):
     fmt_ordered = cardlib.fmt_ordered_default
-    fmt_labeled = None
+    fmt_labeled = None if nolabel else cardlib.fmt_labeled_default
     fieldsep = utils.fieldsep
+    line_transformations = not nolinetrans
     randomize_fields = False
-    randomize_mana = False
+    randomize_mana = randomize
     initial_sep = True
     final_sep = True
 
     # set the properties of the encoding
-    if encoding in ['vec']:
+
+    if encoding in ['std']:
         pass
-    elif encoding in ['std']:
-        if dupes == 0:
-            dupes = 1
-    elif encoding in ['rmana']:
-        if dupes == 0:
-            dupes = 1
-        randomize_mana = True
-    elif encoding in ['rmana_dual']:
-        if dupes == 0:
-            dupes = 1
-        fmt_ordered = fmt_ordered + [cardlib.field_cost]
-        randomize_mana = True
+    elif encoding in ['named']:
+        fmt_ordered = cardlib.fmt_ordered_named
+    elif encoding in ['noname']:
+        fmt_ordered = cardlib.fmt_ordered_noname
     elif encoding in ['rfields']:
-        if dupes == 0:
-            dupes = 1
-        fmt_labeled = cardlib.fmt_labeled_default
         randomize_fields = True
-        #randomize_mana = True
         final_sep = False
+    elif encoding in ['old']:
+        fmt_ordered = cardlib.fmt_ordered_old
+    elif encoding in ['norarity']:
+        fmt_ordered = cardlib.fmt_ordered_norarity
+    elif encoding in ['vec']:
+        pass
+    elif encoding in ['custom']:
+        ## put custom format decisions here ##########################
+        
+        ## end of custom format ######################################
+        pass
     else:
         raise ValueError('encode.py: unknown encoding: ' + encoding)
-
-    if dupes <= 0:
-        dupes = 1 
 
     if verbose:
         print 'Preparing to encode:'
         print '  Using encoding ' + repr(encoding)
-        if dupes > 1:
-            print '  Duplicating each card ' + str(dupes) + ' times.'
         if stable:
             print '  NOT randomizing order of cards.'
-            
+        if randomize_mana:
+            print '  Randomizing order of symobls in manacosts.'
+        if not fmt_labeled:
+            print '  NOT labeling fields for this run (may be harder to decode).'
+        if not line_transformations:
+            print '  NOT using line reordering transformations'
 
     cards = []
     valid = 0
@@ -109,7 +111,7 @@ def main(fname, oname = None, verbose = True, dupes = 0, encoding = 'std', stabl
                 
                 if card.valid:
                     valid += 1
-                    cards += [card] * dupes
+                    cards += [card]
                 elif card.parsed:
                     invalid += 1
                 else:
@@ -126,7 +128,7 @@ def main(fname, oname = None, verbose = True, dupes = 0, encoding = 'std', stabl
                 card = cardlib.Card(card_src)
                 if card.valid:
                     valid += 1
-                    cards += [card] * dupes
+                    cards += [card]
                 elif card.parsed:
                     invalid += 1
                 else:
@@ -174,17 +176,23 @@ if __name__ == '__main__':
                         help='encoded card file or json corpus to encode')
     parser.add_argument('outfile', nargs='?', default=None,
                         help='output file, defaults to stdout')
-    parser.add_argument('-d', '--duplicate', metavar='N', type=int, default=0,
-                        help='number of times to duplicate each card')
-    parser.add_argument('-e', '--encoding', default='std',
-                        choices=['std', 'rmana', 'rmana_dual', 'rfields', 'vec'])
+    parser.add_argument('-e', '--encoding', default='std', choices=utils.formats,
+                        #help='{' + ','.join(formats) + '}',
+                        help='encoding format to use',
+    )
+    parser.add_argument('-r', '--randomize', action='store_true',
+                        help='randomize the order of symbols in mana costs')
+    parser.add_argument('--nolinetrans', action='store_true',
+                        help="don't reorder lines of card text")
+    parser.add_argument('--nolabel', action='store_true',
+                        help="don't label fields")
     parser.add_argument('-s', '--stable', action='store_true',
                         help="don't randomize the order of the cards")
     parser.add_argument('-v', '--verbose', action='store_true', 
                         help='verbose output')
     
     args = parser.parse_args()
-    main(args.infile, args.outfile, verbose = args.verbose, dupes = args.duplicate,
-         encoding = args.encoding, stable = args.stable)
+    main(args.infile, args.outfile, verbose = args.verbose, encoding = args.encoding, 
+         nolinetrans = args.nolinetrans, randomize = args.randomize, nolabel = args.nolabel, 
+         stable = args.stable)
     exit(0)
-

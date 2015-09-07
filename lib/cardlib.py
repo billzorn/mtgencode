@@ -88,7 +88,8 @@ fieldnames = [
     field_text,
 ]
 
-fmt_ordered_default = [
+# legacy
+fmt_ordered_old = [
     field_name,
     field_supertypes,
     field_types,
@@ -98,6 +99,52 @@ fmt_ordered_default = [
     field_pt,
     field_cost,
     field_text,
+]
+fmt_ordered_norarity = [
+    field_name,
+    field_supertypes,
+    field_types,
+    field_loyalty,
+    field_subtypes,
+    field_pt,
+    field_cost,
+    field_text,
+]
+
+# standard
+fmt_ordered_default = [
+    field_types,
+    field_supertypes,
+    field_subtypes,
+    field_loyalty,
+    field_pt,
+    field_text,
+    field_cost,
+    field_rarity,
+    field_name,
+]
+
+# minor variations
+fmt_ordered_noname = [
+    field_types,
+    field_supertypes,
+    field_subtypes,
+    field_loyalty,
+    field_pt,
+    field_text,
+    field_cost,
+    field_rarity,
+]
+fmt_ordered_named = [
+    field_name,
+    field_types,
+    field_supertypes,
+    field_subtypes,
+    field_loyalty,
+    field_pt,
+    field_text,
+    field_cost,
+    field_rarity,
 ]
 
 fmt_labeled_default = {

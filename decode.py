@@ -15,28 +15,38 @@ from namediff import Namediff
 def exclude_sets(cardset):
     return cardset == 'Unglued' or cardset == 'Unhinged' or cardset == 'Celebration'
 
-def main(fname, oname = None, verbose = True, 
+def main(fname, oname = None, verbose = True, encoding = 'std',
          gatherer = False, for_forum = False, for_mse = False,
-         creativity = False, norarity = False, vdump = False):
+         creativity = False, vdump = False):
+
+    fmt_ordered = cardlib.fmt_ordered_default
+
+    if encoding in ['std']:
+        pass
+    elif encoding in ['named']:
+        fmt_ordered = cardlib.fmt_ordered_named
+    elif encoding in ['noname']:
+        fmt_ordered = cardlib.fmt_ordered_noname
+    elif encoding in ['rfields']:
+        pass
+    elif encoding in ['old']:
+        fmt_ordered = cardlib.fmt_ordered_old
+    elif encoding in ['norarity']:
+        fmt_ordered = cardlib.fmt_ordered_norarity
+    elif encoding in ['vec']:
+        pass
+    elif encoding in ['custom']:
+        ## put custom format decisions here ##########################
+        
+        ## end of custom format ######################################
+        pass
+    else:
+        raise ValueError('encode.py: unknown encoding: ' + encoding)
+
     cards = []
     valid = 0
     invalid = 0
     unparsed = 0
-
-    if norarity:
-        decode_fields = [
-            cardlib.field_name,
-            cardlib.field_supertypes,
-            cardlib.field_types,
-            cardlib.field_loyalty,
-            cardlib.field_subtypes,
-            #cardlib.field_rarity,
-            cardlib.field_pt,
-            cardlib.field_cost,
-            cardlib.field_text,
-        ]
-    else:
-        decode_fields = cardlib.fmt_ordered_default
 
     if fname[-5:] == '.json':
         if verbose:
@@ -48,17 +58,17 @@ def main(fname, oname = None, verbose = True,
 
                 # look for a normal rarity version, in a set we can use
                 idx = 0
-                card = cardlib.Card(jcards[idx], fmt_ordered = decode_fields)
+                card = cardlib.Card(jcards[idx], fmt_ordered = fmt_ordered)
                 while (idx < len(jcards)
                        and (card.rarity == utils.rarity_special_marker 
                             or exclude_sets(jcards[idx][utils.json_field_set_name]))):
                     idx += 1
                     if idx < len(jcards):
-                        card = cardlib.Card(jcards[idx], fmt_ordered = decode_fields)
+                        card = cardlib.Card(jcards[idx], fmt_ordered = fmt_ordered)
                 # if there isn't one, settle with index 0
                 if idx >= len(jcards):
                     idx = 0
-                    card = cardlib.Card(jcards[idx], fmt_ordered = decode_fields)
+                    card = cardlib.Card(jcards[idx], fmt_ordered = fmt_ordered)
                 # we could go back and look for a card satisfying one of the criteria,
                 # but eh
 
@@ -78,7 +88,7 @@ def main(fname, oname = None, verbose = True,
             text = f.read()
         for card_src in text.split(utils.cardsep):
             if card_src:
-                card = cardlib.Card(card_src, fmt_ordered = decode_fields)
+                card = cardlib.Card(card_src, fmt_ordered = fmt_ordered)
                 if card.valid:
                     valid += 1
                 elif card.parsed:
@@ -96,14 +106,16 @@ def main(fname, oname = None, verbose = True,
     for card in cards:
         if not card.parsed and not card.text.text:
             bad_count += 1
+        elif len(card.name) > 50 or len(card.rarity) > 3:
+            bad_count += 1
         else:
             good_count += 1
         if good_count + bad_count > 15: 
             break
     # random heuristic
     if bad_count > 10:
-        print 'Saw a bunch of unparsed cards with no text:'
-        print 'If this is a legacy format, try rerunning with --norarity'
+        print 'WARNING: Saw a bunch of unparsed cards:'
+        print '         If this is a legacy format, try rerunning with "-e old" or "-e norarity"'
 
     if creativity:
         cbow = CBOW()
@@ -190,6 +202,10 @@ if __name__ == '__main__':
                         help='encoded card file or json corpus to encode')
     parser.add_argument('outfile', nargs='?', default=None,
                         help='output file, defaults to stdout')
+    parser.add_argument('-e', '--encoding', default='std', choices=utils.formats,
+                        #help='{' + ','.join(formats) + '}',
+                        help='encoding format to use',
+    )
     parser.add_argument('-g', '--gatherer', action='store_true',
                         help='emulate Gatherer visual spoiler')
     parser.add_argument('-f', '--forum', action='store_true',
@@ -198,14 +214,12 @@ if __name__ == '__main__':
                         help='use CBOW fuzzy matching to check creativity of cards')
     parser.add_argument('-d', '--dump', action='store_true',
                         help='dump out lots of information about invalid cards')
-    parser.add_argument('--norarity', action='store_true',
-                        help='the card format has no rarity field; use for legacy input')
     parser.add_argument('-v', '--verbose', action='store_true', 
                         help='verbose output')
     parser.add_argument('-mse', '--mse', action='store_true', help='use Magic Set Editor 2 encoding; will output as .mse-set file')
     
     args = parser.parse_args()
-    main(args.infile, args.outfile, verbose = args.verbose, 
+    main(args.infile, args.outfile, verbose = args.verbose, encoding = args.encoding,
          gatherer = args.gatherer, for_forum = args.forum, for_mse = args.mse,
-         creativity = args.creativity, norarity = args.norarity, vdump = args.dump)
+         creativity = args.creativity, vdump = args.dump)
     exit(0)
