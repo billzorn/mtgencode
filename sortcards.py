@@ -91,10 +91,10 @@ def sortcards(cards):
 
         # color classes need to find the mana cost
         fields = card.split('|')
-        if len(fields) != 10:
+        if len(fields) != 11:
             classes['unknown color'] += [card]
         else:
-            cost = fields[7]
+            cost = fields[8]
             color_count = 0
             if 'W' in cost or 'U' in cost or 'B' in cost or 'R' in cost or 'G' in cost:
                 if 'W' in cost:
