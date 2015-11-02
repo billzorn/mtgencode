@@ -44,4 +44,4 @@ for folder in $( ls cv); do
         done
 done
 # rsync to remote storage device
-rsync -hruv -e 'ssh -p 2022' $output_home/mtgencode/cards/ host@ip:/mtgencode/cards
+rsync -hruv -e 'ssh -p 2022' $output_home host@ip:/mtgencode/cards
