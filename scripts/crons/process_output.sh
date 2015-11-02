@@ -9,6 +9,7 @@ for folder in $(ls); do
 	for sub in ${ ls ${folder} };do 
 		if [ ! -d $folder/$sub ]; then
 			continue
+		fi
 		if [ ! -e $folder/$sub/summary.txt ]; then
 			./scritps/summarize.py -a -v $folder/$sub/output.txt > summary.txt
 		fi
