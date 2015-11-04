@@ -638,25 +638,26 @@ class Card:
             outstr += '<div class="card-text">'
             cardname = self.__dict__[field_name]
             #cardname = transforms.name_unpass_1_dashes(self.__dict__[field_name])
-            outstr += "<h5>" + cardname + "</h5>"
+            outstr +=  cardname 
+            
+            # I need the simple formatting with '{'
+            coststr = self.__dict__[field_cost].format()
+            if vdump or not coststr == '_NOCOST_':
+                outstr += coststr.replace("/","-").replace("{",'<img src="/~/mtgencode/Icons/' ).replace("}",'-mana;.png" >')
+                outstr += '\n'
+                
             if self.__dict__[field_rarity]:
                 if self.__dict__[field_rarity] in utils.json_rarity_unmap:
                     rarity = utils.json_rarity_unmap[self.__dict__[field_rarity]]
                 else:
                     rarity = self.__dict__[field_rarity]
-                outstr += ' (<b>' + rarity.lower() + '</b>)'
+                outstr += ' (' + rarity.lower() + ') '
             outstr += '\n'
-            
-            # I need the simple formatting with '{'
-            coststr = self.__dict__[field_cost].format()
-            if vdump or not coststr == '_NOCOST_':
-                outstr += coststr.replace("/","-").replace("{",'<img src="~/mtgencode/Icons/' ).replace("}",'-mana;.png" >')
-                outstr += '\n'
 
-            outstr += ' <b>'.join(self.__dict__[field_supertypes] + self.__dict__[field_types])
+            outstr += ' <hr><b>'.join(self.__dict__[field_supertypes] + self.__dict__[field_types])
             if self.__dict__[field_subtypes]:
                 outstr += ' ' + utils.dash_marker + ' ' + ' '.join(self.__dict__[field_subtypes])
-            outstr += '</b>\n'
+            outstr += '</b><hr>\n'
             
             if self.__dict__[field_text].text:
                 mtext = self.__dict__[field_text].text
@@ -671,7 +672,7 @@ class Card:
                 newtext = Manatext('')
                 newtext.text = mtext
                 newtext.costs = self.__dict__[field_text].costs
-                outstr += newtext.format().replace("/","-").replace("{",'<img src="~/mtgencode/Icons/' ).replace("}",'-mana;.png" >') + '\n'
+                outstr += newtext.format().replace("/","-").replace("{",'<img src="/~/mtgencode/Icons/' ).replace("}",'-mana;.png" >') + '\n'
 
             if self.__dict__[field_pt]:
                 outstr += '(' + utils.from_unary(self.__dict__[field_pt]) + ')'
