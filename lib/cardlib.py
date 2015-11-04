@@ -750,11 +750,12 @@ class Card:
 
         if self.bside:
             if for_html:
-                outstr += "<hr>\n"
+                outstr += "<hr><hr>\n"
             else:
                 outstr += utils.dash_marker * 8 + '\n'
             outstr += self.bside.format(gatherer = gatherer, for_forum = for_forum)
-
+	if for_html:
+		outstr += "</div>"
         return outstr
     
     def to_mse(self, print_raw = False, vdump = False):
