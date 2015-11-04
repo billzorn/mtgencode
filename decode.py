@@ -186,7 +186,7 @@ def main(fname, oname = None, verbose = True,
                         print 'Made an MSE set file called ' + oname + '.mse-set.'
                     # The set file is useless outside the .mse-set, delete it.
                     os.remove('set') 
-        if for_html:
+#        if for_html:
                 ## not sure what to put here
     else:
         writecards(sys.stdout)
