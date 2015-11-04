@@ -643,7 +643,7 @@ class Card:
             # I need the simple formatting with '{'
             coststr = self.__dict__[field_cost].format()
             if vdump or not coststr == '_NOCOST_':
-                outstr += coststr.replace("/","-").replace("{",'<img src="/~/mtgencode/Icons/' ).replace("}",'-mana;.png" >')
+                outstr += coststr.replace("/","-").replace("{",'<img src="/~/mtgencode/Icons/' ).replace("}",'-mana.png" >')
                 outstr += '\n'
                 
             if self.__dict__[field_rarity]:
@@ -672,7 +672,7 @@ class Card:
                 newtext = Manatext('')
                 newtext.text = mtext
                 newtext.costs = self.__dict__[field_text].costs
-                outstr += newtext.format().replace("/","-").replace("{",'<img src="/~/mtgencode/Icons/' ).replace("}",'-mana;.png" >') + '\n'
+                outstr += newtext.format().replace("/","-").replace("{",'<img src="/~/mtgencode/Icons/' ).replace("}",'-mana.png" >') + '\n'
 
             if self.__dict__[field_pt]:
                 outstr += '(' + utils.from_unary(self.__dict__[field_pt]) + ')'
