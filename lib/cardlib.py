@@ -553,7 +553,7 @@ class Card:
 
         return outstr
 
-    def format(self, gatherer = False, for_forum = False, for_mse = False, vdump = False):
+    def format(self, gatherer = False, for_forum = False, for_mse = False, vdump = False, for_html = False):
         outstr = ''
         if gatherer:
             cardname = titlecase(transforms.name_unpass_1_dashes(self.__dict__[field_name]))
@@ -634,6 +634,62 @@ class Card:
                     outstr += '[/i]'
                     outstr += '\n'
 
+        elif for_html:
+            outstr += '<div class="card-text">'
+            cardname = self.__dict__[field_name]
+            #cardname = transforms.name_unpass_1_dashes(self.__dict__[field_name])
+            outstr +=  cardname 
+	    outstr += " "
+            
+            # I need the simple formatting with '{'
+            coststr = self.__dict__[field_cost].format()
+            if vdump or not coststr == '_NOCOST_':
+                outstr += coststr.replace("/","-").replace("{",'<img src="Icons/' ).replace("}",'-mana.png" >')
+                outstr += '\n'
+                
+            if self.__dict__[field_rarity]:
+                if self.__dict__[field_rarity] in utils.json_rarity_unmap:
+                    rarity = utils.json_rarity_unmap[self.__dict__[field_rarity]]
+                else:
+                    rarity = self.__dict__[field_rarity]
+                outstr += ' (' + rarity.lower() + ') '
+            outstr += '\n<hr><b>'
+
+            outstr += ' '.join(self.__dict__[field_supertypes] + self.__dict__[field_types])
+            if self.__dict__[field_subtypes]:
+                outstr += ' ' + utils.dash_marker + ' ' + ' '.join(self.__dict__[field_subtypes])
+            outstr += '</b><hr>\n'
+            
+            if self.__dict__[field_text].text:
+                mtext = self.__dict__[field_text].text
+                mtext = transforms.text_unpass_1_choice(mtext, delimit = True)
+                #mtext = transforms.text_unpass_2_counters(mtext)
+                #mtext = transforms.text_unpass_3_uncast(mtext)
+                mtext = transforms.text_unpass_4_unary(mtext)
+                mtext = transforms.text_unpass_5_symbols(mtext, for_forum)
+                #mtext = transforms.text_unpass_6_cardname(mtext, cardname)
+                mtext = transforms.text_unpass_7_newlines(mtext).replace("\n", "<br>")
+                #mtext = transforms.text_unpass_8_unicode(mtext)
+                newtext = Manatext('')
+                newtext.text = mtext
+                newtext.costs = self.__dict__[field_text].costs
+                outstr += newtext.format().replace("/","-").replace("{",'<img src="Icons/' ).replace("}",'-mana.png" >') + '\n'
+
+            if self.__dict__[field_pt]:
+                outstr += '<br>(' + utils.from_unary(self.__dict__[field_pt]) + ')<br>'
+                outstr += '\n'
+
+            if self.__dict__[field_loyalty]:
+                outstr += '((' + utils.from_unary(self.__dict__[field_loyalty]) + '))'
+                outstr += '\n'
+                
+            if vdump and self.__dict__[field_other]:
+                outstr += utils.dash_marker * 2
+                outstr += '\n'
+                for idx, value in self.__dict__[field_other]:
+                    outstr += '<' + str(idx) + '> ' + str(value)
+                    outstr += '\n'
+        
         else:
             cardname = self.__dict__[field_name]
             #cardname = transforms.name_unpass_1_dashes(self.__dict__[field_name])
@@ -694,9 +750,13 @@ class Card:
                     outstr += '\n'
 
         if self.bside:
-            outstr += utils.dash_marker * 8 + '\n'
-            outstr += self.bside.format(gatherer = gatherer, for_forum = for_forum)
-
+            if for_html:
+                outstr += "<hr><hr>\n"
+            else:
+                outstr += utils.dash_marker * 8 + '\n'
+            outstr += self.bside.format(gatherer = gatherer, for_forum = for_forum, for_html = for_html)
+	if for_html:
+		outstr += "</div>"
         return outstr
     
     def to_mse(self, print_raw = False, vdump = False):

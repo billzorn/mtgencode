@@ -17,7 +17,7 @@ def exclude_sets(cardset):
 
 def main(fname, oname = None, verbose = True, 
          gatherer = False, for_forum = False, for_mse = False,
-         creativity = False, norarity = False, vdump = False):
+         creativity = False, norarity = False, vdump = False, for_html = False):
     cards = []
     valid = 0
     invalid = 0
@@ -113,6 +113,11 @@ def main(fname, oname = None, verbose = True,
         if for_mse:
             # have to prepend a massive chunk of formatting info
             writer.write(utils.mse_prepend)
+            
+        if for_html:
+            # have to preapend html info
+            writer.write(utils.html_preapend)
+            
         for card in cards:
             if for_mse:
                 writer.write(card.to_mse().encode('utf-8'))
@@ -123,12 +128,12 @@ def main(fname, oname = None, verbose = True,
                     fstring += 'raw:\n' + card.raw + '\n'
                 fstring += '\n'
                 fstring += card.format(gatherer = gatherer, for_forum = for_forum,
-                                       vdump = vdump)
+                                       vdump = vdump, for_html = for_html)
                 fstring = fstring.replace('<', '(').replace('>', ')')
                 writer.write(('\n' + fstring[:-1]).replace('\n', '\n\t\t'))
             else:
                 writer.write(card.format(gatherer = gatherer, for_forum = for_forum,
-                                         vdump = vdump).encode('utf-8'))
+                                         vdump = vdump, for_html = for_html).encode('utf-8'))
 
             if creativity:
                 cstring = '~~ closest cards ~~\n'
@@ -155,6 +160,10 @@ def main(fname, oname = None, verbose = True,
         if for_mse:
             # more formatting info
             writer.write('version control:\n\ttype: none\napprentice code: ')
+            
+        if for_html:
+            # closing the html file
+            writer.write(utils.html_postapend)
 
     if oname:
         if verbose:
@@ -177,6 +186,8 @@ def main(fname, oname = None, verbose = True,
                         print 'Made an MSE set file called ' + oname + '.mse-set.'
                     # The set file is useless outside the .mse-set, delete it.
                     os.remove('set') 
+#        if for_html:
+                ## not sure what to put here
     else:
         writecards(sys.stdout)
         sys.stdout.flush()
@@ -202,10 +213,12 @@ if __name__ == '__main__':
                         help='the card format has no rarity field; use for legacy input')
     parser.add_argument('-v', '--verbose', action='store_true', 
                         help='verbose output')
-    parser.add_argument('-mse', '--mse', action='store_true', help='use Magic Set Editor 2 encoding; will output as .mse-set file')
+    parser.add_argument('-mse', '--mse', action='store_true',
+                        help='use Magic Set Editor 2 encoding; will output as .mse-set file')
+    parser.add_argument('-html', '--html', action='store_true', help='create a .html file with pretty forum formatting')
     
     args = parser.parse_args()
     main(args.infile, args.outfile, verbose = args.verbose, 
          gatherer = args.gatherer, for_forum = args.forum, for_mse = args.mse,
-         creativity = args.creativity, norarity = args.norarity, vdump = args.dump)
+         creativity = args.creativity, norarity = args.norarity, vdump = args.dump, for_html = args.for_html)
     exit(0)
