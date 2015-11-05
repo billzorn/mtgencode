@@ -11,7 +11,7 @@ mse_prepend = 'mse version: 0.3.8\ngame: magic\nstylesheet: m15\nset info:\n\tsy
 
 # special chunk of text to start an HTML document.
 box_height = 400
-html_preapend = "<!DOCTYPE html>\n<html>\n<head>\n<style>\n.card-text{\tdisplay:inline-block;width:"+str(box_height)+"px;\nmargin: 8px\npadding:5px;}\n </style></head><body>"
+html_preapend = "<!DOCTYPE html>\n<html>\n<head>\n<style>\n.card-text{\tdisplay:inline-block;width:"+str(box_height)+"px;\nmargin: 8px;\npadding:5px;border: 3px solid \x238AC007;}\n </style></head><body>"
 html_postapend = "</body></html>"
 
 # separators
