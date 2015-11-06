@@ -295,6 +295,8 @@ Several ambiguous words are resolved. Most directly, the word 'counter' as in 'c
 
 I also reformat cards that choose between multiple things by removing the choice clause itself and instead having a delimited list of options prefixed by a number. If you could choose different numbers of things (one or both, one or more - turns out the latter is valid in all existing cases) then the number is 0, otherwise it's however many things you'd get to choose. So, 'choose one -\= effect x\= effect y' (the \ is a newline) becomes [&^ = effect x = effect y].
 
+Finally, some postprocessing is done to put the lines of a card's ability text into a standardized, canonical form. Lines with multiple keywords are split, and then we put all of the simple keywords first, followed by things like static or activated abilities. A few things always go first (such as equip and enchant) and a few other things always go last (such as kicker and countertype). There are various reasons for doing this transformation, and some proper science could probably come up with a better specific procedure. One of the primary motivations for putting abilities onto individual lines is that it should simplify the process of adding back in reminder text. It should be noted somewhere that the definition of a simple keyword ability vs. some other line of text is that a simple keyword won't contain a period, and we can split a line with multiple of them by looking for commas and semicolons.
+
 ======
 
 Here's an attempt at a list of all the things I do:
@@ -326,3 +328,5 @@ Here's an attempt at a list of all the things I do:
 * Replace acutal newline characters with \ so that we can use those to separate cards
 
 * Clean all the unicode junk like accents and unicode minus signs out of the text so there are fewer characters
+
+* Split composite text lines (i.e. "flying, first strike" -> "flying\first strike") and put the lines into canonical order
