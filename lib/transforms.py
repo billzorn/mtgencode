@@ -429,21 +429,20 @@ def text_pass_11_linetrans(s):
             sublines = line.split(',')
             for subline in sublines:
                 if 'equip' in subline or 'enchant' in subline:
-                    prelines += [subline]
-                elif 'countertype' or 'kicker' in subline:
-                    postlines += [subline]
+                    prelines += [subline.strip()]
+                elif 'countertype' in subline or 'kicker' in subline:
+                    postlines += [subline.strip()]
                 else:
-                    keylines += [subline]
+                    keylines += [subline.strip()]
         elif u'\u2014' in line and not u' \u2014 ' in line:
             if 'equip' in line or 'enchant' in line:
-                prelines += [line]
-            elif 'countertype' or 'kicker' in line:
-                postlines += [line]
+                prelines += [line.strip()]
+            elif 'countertype' in line or 'kicker' in line:
+                postlines += [line.strip()]
             else:
-                keylines += [line]
+                keylines += [line.strip()]
         else:
-            mainlines += [line]
-            print line.encode('utf-8')
+            mainlines += [line.strip()]
 
     alllines = prelines + keylines + mainlines + postlines
     return utils.newline.join(alllines)
