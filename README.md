@@ -21,7 +21,8 @@ Functionality is provided by two main driver scripts: encode.py and decode.py. L
 ### encode.py
 
 ```
-usage: encode.py [-h] [-d N] [-e {std,rmana,rmana_dual,rfields,vec}] [-s] [-v]
+usage: encode.py [-h] [-e {std,named,noname,rfields,old,norarity,vec,custom}]
+                 [-r] [--nolinetrans] [--nolabel] [-s] [-v]
                  infile [outfile]
 
 positional arguments:
@@ -30,43 +31,50 @@ positional arguments:
 
 optional arguments:
   -h, --help            show this help message and exit
-  -d N, --duplicate N   number of times to duplicate each card
-  -e {std,rmana,rmana_dual,rfields,vec}, --encoding {std,rmana,rmana_dual,rfields,vec}
+  -e {std,named,noname,rfields,old,norarity,vec,custom}, --encoding {std,named,noname,rfields,old,norarity,vec,custom}
+                        encoding format to use
+  -r, --randomize       randomize the order of symbols in mana costs
+  --nolinetrans         don't reorder lines of card text
+  --nolabel             don't label fields
   -s, --stable          don't randomize the order of the cards
   -v, --verbose         verbose output
-
 ```
 
 The supported encodings are:
 
 Argument   | Description
 -----------|------------
-std        | standard format: |name|supertypes|types|loyalty|subtypes|rarity|pt|cost|text|
-rmana      | randomized mana: as standard, but symbols in mana costs will be mixed: {^^UUUU} -> {UU^^UU}
-rmana_dual | as rmana, but with a second mana cost field after the text field
-rfields    | randomize the order of the fields, and use a label to distinguish which field is which
-vec        | produce a content vector for each card; used with [word2vec](https://code.google.com/p/word2vec/)
+std        | Standard format: `|type|supertype|subtype|loyalty|pt|text|cost|rarity|name|`.
+named      | Name first: `|name|type|supertype|subtype|loyalty|pt|text|cost|rarity|`.
+noname     | No name field at all: `|type|supertype|subtype|loyalty|pt|text|cost|rarity|`.
+rfields    | Randomize the order of the fields, using only the label to distinguish which field is which.
+old        | Legacy format: `|name|supertype|type|loyalty|subtype|rarity|pt|cost|text|`. No field labels.
+norarity   | Older legacy format: `|name|supertype|type|loyalty|subtype|rarity|pt|cost|text|`. No field labels.
+vec        | Produce a content vector for each card; used with [word2vec](https://code.google.com/p/word2vec/).
+custom     | Blank format slot, inteded to help users add their own formats to the python source.
 
 ### decode.py
 
 ```
-usage: decode.py [-h] [-g] [-f] [-c] [-d] [--norarity] [-v] [-mse]
+usage: decode.py [-h] [-e {std,named,noname,rfields,old,norarity,vec,custom}]
+                 [-g] [-f] [-c] [-d] [-v] [-mse]
                  infile [outfile]
 
 positional arguments:
-  infile            encoded card file or json corpus to encode
-  outfile           output file, defaults to stdout
+  infile                encoded card file or json corpus to encode
+  outfile               output file, defaults to stdout
 
 optional arguments:
-  -h, --help        show this help message and exit
-  -g, --gatherer    emulate Gatherer visual spoiler
-  -f, --forum       use pretty mana encoding for mtgsalvation forum
-  -c, --creativity  use CBOW fuzzy matching to check creativity of cards
-  -d, --dump        dump out lots of information about invalid cards
-  --norarity        the card format has no rarity field; use for legacy input
-  -v, --verbose     verbose output
-  -mse, --mse       use Magic Set Editor 2 encoding; will output as .mse-set
-                    file
+  -h, --help            show this help message and exit
+  -e {std,named,noname,rfields,old,norarity,vec,custom}, --encoding {std,named,noname,rfields,old,norarity,vec,custom}
+                        encoding format to use
+  -g, --gatherer        emulate Gatherer visual spoiler
+  -f, --forum           use pretty mana encoding for mtgsalvation forum
+  -c, --creativity      use CBOW fuzzy matching to check creativity of cards
+  -d, --dump            dump out lots of information about invalid cards
+  -v, --verbose         verbose output
+  -mse, --mse           use Magic Set Editor 2 encoding; will output as .mse-
+                        set file
 ```
 
 The default output is a text spoiler which modifies the output of the neural net as little as possible while making it human readable. Specifying the -g option will produce a prettier, Gatherer-inspired text spoiler with heavier-weight transformations applied to the text, such as capitalization. The -f option encodes mana symbols in the format used by the mtgsalvation forum; this is useful if you want to cut and paste your spoiler into a post to share it.
