@@ -10,15 +10,6 @@ import utils
 import jdecode
 import cardlib
 
-def exclude_sets(cardset):
-    return cardset == 'Unglued' or cardset == 'Unhinged' or cardset == 'Celebration'
-
-def exclude_types(cardtype):
-    return cardtype in ['conspiracy']
-
-def exclude_layouts(layout):
-    return layout in ['token', 'plane', 'scheme', 'phenomenon', 'vanguard']
-
 def main(fname, oname = None, verbose = True, encoding = 'std', 
          nolinetrans = False, randomize = False, nolabel = False, stable = False):
     fmt_ordered = cardlib.fmt_ordered_default
@@ -67,76 +58,7 @@ def main(fname, oname = None, verbose = True, encoding = 'std',
         if not line_transformations:
             print '  NOT using line reordering transformations'
 
-    cards = []
-    valid = 0
-    skipped = 0
-    invalid = 0
-    unparsed = 0
-
-    if fname[-5:] == '.json':
-        if verbose:
-            print 'This looks like a json file: ' + fname
-        json_srcs = jdecode.mtg_open_json(fname, verbose)
-        # don't worry we randomize later
-        for json_cardname in sorted(json_srcs):
-            if len(json_srcs[json_cardname]) > 0:
-                jcards = json_srcs[json_cardname]
-
-                # look for a normal rarity version, in a set we can use
-                idx = 0
-                card = cardlib.Card(jcards[idx], linetrans = line_transformations)
-                while (idx < len(jcards)
-                       and (card.rarity == utils.rarity_special_marker 
-                            or exclude_sets(jcards[idx][utils.json_field_set_name]))):
-                    idx += 1
-                    if idx < len(jcards):
-                        card = cardlib.Card(jcards[idx], linetrans = line_transformations)
-                # if there isn't one, settle with index 0
-                if idx >= len(jcards):
-                    idx = 0
-                    card = cardlib.Card(jcards[idx], linetrans = line_transformations)
-                # we could go back and look for a card satisfying one of the criteria,
-                # but eh
-
-                skip = False
-                if (exclude_sets(jcards[idx][utils.json_field_set_name])
-                    or exclude_layouts(jcards[idx]['layout'])):
-                    skip = True                    
-                for cardtype in card.types:
-                    if exclude_types(cardtype):
-                        skip = True
-                if skip:
-                    skipped += 1
-                    continue
-                
-                if card.valid:
-                    valid += 1
-                    cards += [card]
-                elif card.parsed:
-                    invalid += 1
-                else:
-                    unparsed += 1
-
-    # fall back to opening a normal encoded file
-    else:
-        if verbose:
-            print 'Opening encoded card file: ' + fname
-        with open(fname, 'rt') as f:
-            text = f.read()
-        for card_src in text.split(utils.cardsep):
-            if card_src:
-                card = cardlib.Card(card_src)
-                if card.valid:
-                    valid += 1
-                    cards += [card]
-                elif card.parsed:
-                    invalid += 1
-                else:
-                    unparsed += 1
-
-    if verbose:
-        print (str(valid) + ' valid, ' + str(skipped) + ' skipped, ' 
-               + str(invalid) + ' invalid, ' + str(unparsed) + ' failed to parse.')
+    cards = jdecode.mtg_open_file(fname, verbose=verbose, linetrans=line_transformations)
 
     # This should give a random but consistent ordering, to make comparing changes
     # between the output of different versions easier.
