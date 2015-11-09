@@ -88,7 +88,8 @@ fieldnames = [
     field_text,
 ]
 
-fmt_ordered_default = [
+# legacy
+fmt_ordered_old = [
     field_name,
     field_supertypes,
     field_types,
@@ -98,6 +99,52 @@ fmt_ordered_default = [
     field_pt,
     field_cost,
     field_text,
+]
+fmt_ordered_norarity = [
+    field_name,
+    field_supertypes,
+    field_types,
+    field_loyalty,
+    field_subtypes,
+    field_pt,
+    field_cost,
+    field_text,
+]
+
+# standard
+fmt_ordered_default = [
+    field_types,
+    field_supertypes,
+    field_subtypes,
+    field_loyalty,
+    field_pt,
+    field_text,
+    field_cost,
+    field_rarity,
+    field_name,
+]
+
+# minor variations
+fmt_ordered_noname = [
+    field_types,
+    field_supertypes,
+    field_subtypes,
+    field_loyalty,
+    field_pt,
+    field_text,
+    field_cost,
+    field_rarity,
+]
+fmt_ordered_named = [
+    field_name,
+    field_types,
+    field_supertypes,
+    field_subtypes,
+    field_loyalty,
+    field_pt,
+    field_text,
+    field_cost,
+    field_rarity,
 ]
 
 fmt_labeled_default = {
@@ -176,7 +223,7 @@ def fields_check_valid(fields):
 # releaseDate - string
 # starter - boolean
 
-def fields_from_json(src_json):
+def fields_from_json(src_json, linetrans = True):
     parsed = True
     valid = True
     fields = {}
@@ -254,6 +301,8 @@ def fields_from_json(src_json):
         text_val = transforms.text_pass_8_equip(text_val)
         text_val = transforms.text_pass_9_newlines(text_val)
         text_val = transforms.text_pass_10_symbols(text_val)
+        if linetrans:
+            text_val = transforms.text_pass_11_linetrans(text_val)
         text_val = utils.to_ascii(text_val)
         text_val = text_val.strip()
         mtext = Manatext(text_val, fmt = 'json')
@@ -340,9 +389,7 @@ def fields_from_format(src_text, fmt_ordered, fmt_labeled, fieldsep):
 class Card:
     '''card representation with data'''
 
-    def __init__(self, src, fmt_ordered = fmt_ordered_default, 
-                            fmt_labeled = fmt_labeled_default, 
-                            fieldsep = utils.fieldsep):
+    def __init__(self, src, fmt_ordered = fmt_ordered_default, fmt_labeled = fmt_labeled_default, fieldsep = utils.fieldsep, linetrans = True):
         # source fields, exactly one will be set
         self.json = None
         self.raw = None
@@ -378,8 +425,9 @@ class Card:
                 self.bside = Card(src[utils.json_field_bside],
                                   fmt_ordered = fmt_ordered,
                                   fmt_labeled = fmt_labeled,
-                                  fieldsep = fieldsep)
-            p_success, v_success, parsed_fields = fields_from_json(src)
+                                  fieldsep = fieldsep,
+                                  linetrans = linetrans)
+            p_success, v_success, parsed_fields = fields_from_json(src, linetrans = linetrans)
             self.parsed = p_success
             self.valid = v_success
             self.fields = parsed_fields
@@ -391,7 +439,8 @@ class Card:
                 self.bside = Card(utils.bsidesep.join(sides[1:]), 
                                   fmt_ordered = fmt_ordered,
                                   fmt_labeled = fmt_labeled,
-                                  fieldsep = fieldsep)
+                                  fieldsep = fieldsep,
+                                  linetrans = linetrans)
             p_success, v_success, parsed_fields = fields_from_format(sides[0], fmt_ordered, 
                                                                      fmt_labeled,  fieldsep)
             self.parsed = p_success
@@ -503,10 +552,7 @@ class Card:
     # the NN representation, use str() or format() for output intended for human
     # readers.
 
-    def encode(self, fmt_ordered = fmt_ordered_default,
-               fmt_labeled = None, fieldsep = utils.fieldsep,
-               randomize_fields = False, randomize_mana = False,
-               initial_sep = True, final_sep = True):
+    def encode(self, fmt_ordered = fmt_ordered_default, fmt_labeled = None, fieldsep = utils.fieldsep, randomize_fields = False, randomize_mana = False, initial_sep = True, final_sep = True):
         outfields = []
 
         for field in fmt_ordered:
@@ -608,7 +654,7 @@ class Card:
                 mtext = transforms.text_unpass_2_counters(mtext)
                 #mtext = transforms.text_unpass_3_uncast(mtext)
                 mtext = transforms.text_unpass_4_unary(mtext)
-                mtext = transforms.text_unpass_5_symbols(mtext, for_forum)
+                mtext = transforms.text_unpass_5_symbols(mtext, for_forum, for_html)
                 mtext = sentencecase(mtext)
                 mtext = transforms.text_unpass_6_cardname(mtext, cardname)
                 mtext = transforms.text_unpass_7_newlines(mtext)
@@ -638,25 +684,27 @@ class Card:
             outstr += '<div class="card-text">'
             cardname = self.__dict__[field_name]
             #cardname = transforms.name_unpass_1_dashes(self.__dict__[field_name])
-            outstr += "<h5>" + cardname + "</h5>"
+            if vdump and not cardname:
+                cardname = '_NONAME_'
+            outstr += cardname + ' '
+            
+            coststr = self.__dict__[field_cost].format(for_html = for_html)
+            if vdump or not coststr == '_NOCOST_':
+                outstr += coststr
+                outstr += '<br>'
+                
             if self.__dict__[field_rarity]:
                 if self.__dict__[field_rarity] in utils.json_rarity_unmap:
                     rarity = utils.json_rarity_unmap[self.__dict__[field_rarity]]
                 else:
                     rarity = self.__dict__[field_rarity]
-                outstr += ' (<b>' + rarity.lower() + '</b>)'
-            outstr += '\n'
-            
-            # I need the simple formatting with '{'
-            coststr = self.__dict__[field_cost].format()
-            if vdump or not coststr == '_NOCOST_':
-                outstr += coststr.replace("/","-").replace("{",'<img src="~/mtgencode/Icons/' ).replace("}",'-mana;.png" >')
-                outstr += '\n'
+                outstr += ' (' + rarity.lower() + ') '
+            outstr += '\n<hr><b>'
 
-            outstr += ' <b>'.join(self.__dict__[field_supertypes] + self.__dict__[field_types])
+            outstr += ' '.join(self.__dict__[field_supertypes] + self.__dict__[field_types])
             if self.__dict__[field_subtypes]:
                 outstr += ' ' + utils.dash_marker + ' ' + ' '.join(self.__dict__[field_subtypes])
-            outstr += '</b>\n'
+            outstr += '</b><hr>\n'
             
             if self.__dict__[field_text].text:
                 mtext = self.__dict__[field_text].text
@@ -664,17 +712,17 @@ class Card:
                 #mtext = transforms.text_unpass_2_counters(mtext)
                 #mtext = transforms.text_unpass_3_uncast(mtext)
                 mtext = transforms.text_unpass_4_unary(mtext)
-                mtext = transforms.text_unpass_5_symbols(mtext, for_forum)
+                mtext = transforms.text_unpass_5_symbols(mtext,for_forum, for_html)
                 #mtext = transforms.text_unpass_6_cardname(mtext, cardname)
-                mtext = transforms.text_unpass_7_newlines(mtext)
+                mtext = transforms.text_unpass_7_newlines(mtext).replace("\n", "<br>")
                 #mtext = transforms.text_unpass_8_unicode(mtext)
                 newtext = Manatext('')
                 newtext.text = mtext
                 newtext.costs = self.__dict__[field_text].costs
-                outstr += newtext.format().replace("/","-").replace("{",'<img src="~/mtgencode/Icons/' ).replace("}",'-mana;.png" >') + '\n'
+                outstr += newtext.format(for_html = for_html) + '\n'
 
             if self.__dict__[field_pt]:
-                outstr += '(' + utils.from_unary(self.__dict__[field_pt]) + ')'
+                outstr += '<br>(' + utils.from_unary(self.__dict__[field_pt]) + ')<br>'
                 outstr += '\n'
 
             if self.__dict__[field_loyalty]:
@@ -687,7 +735,6 @@ class Card:
                 for idx, value in self.__dict__[field_other]:
                     outstr += '<' + str(idx) + '> ' + str(value)
                     outstr += '\n'
-        
         else:
             cardname = self.__dict__[field_name]
             #cardname = transforms.name_unpass_1_dashes(self.__dict__[field_name])
@@ -723,7 +770,7 @@ class Card:
                 #mtext = transforms.text_unpass_2_counters(mtext)
                 #mtext = transforms.text_unpass_3_uncast(mtext)
                 mtext = transforms.text_unpass_4_unary(mtext)
-                mtext = transforms.text_unpass_5_symbols(mtext, for_forum)
+                mtext = transforms.text_unpass_5_symbols(mtext, for_forum, for_html)
                 #mtext = transforms.text_unpass_6_cardname(mtext, cardname)
                 mtext = transforms.text_unpass_7_newlines(mtext)
                 #mtext = transforms.text_unpass_8_unicode(mtext)
@@ -749,11 +796,12 @@ class Card:
 
         if self.bside:
             if for_html:
-                outstr += "<hr>\n"
+                outstr += "<hr><hr>\n"
             else:
                 outstr += utils.dash_marker * 8 + '\n'
-            outstr += self.bside.format(gatherer = gatherer, for_forum = for_forum)
-
+            outstr += self.bside.format(gatherer = gatherer, for_forum = for_forum, for_html = for_html)
+        if for_html:
+            outstr += "</div>"
         return outstr
     
     def to_mse(self, print_raw = False, vdump = False):
@@ -794,7 +842,7 @@ class Card:
             mtext = transforms.text_unpass_2_counters(mtext)
             mtext = transforms.text_unpass_3_uncast(mtext)
             mtext = transforms.text_unpass_4_unary(mtext)
-            mtext = transforms.text_unpass_5_symbols(mtext, False)
+            mtext = transforms.text_unpass_5_symbols(mtext, False, False)
             mtext = sentencecase(mtext)
             # I don't really want these MSE specific passes in transforms,
             # but they could be pulled out separately somewhere else in here.
@@ -861,7 +909,7 @@ class Card:
                 mtext2 = transforms.text_unpass_2_counters(mtext2)
                 mtext2 = transforms.text_unpass_3_uncast(mtext2)
                 mtext2 = transforms.text_unpass_4_unary(mtext2)
-                mtext2 = transforms.text_unpass_5_symbols(mtext2, False)
+                mtext2 = transforms.text_unpass_5_symbols(mtext2, False, False)
                 mtext2 = sentencecase(mtext2)
                 mtext2 = mtext2.replace(utils.this_marker, '<atom-cardname><nospellcheck>'
                                       + utils.this_marker + '</nospellcheck></atom-cardname>')
