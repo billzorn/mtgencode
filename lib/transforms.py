@@ -515,8 +515,8 @@ def text_unpass_4_unary(s):
     return utils.from_unary(s)
 
 
-def text_unpass_5_symbols(s, for_forum):
-    return utils.from_symbols(s, for_forum = for_forum)
+def text_unpass_5_symbols(s, for_forum, for_html):
+    return utils.from_symbols(s, for_forum = for_forum, for_html = for_html)
 
 
 def text_unpass_6_cardname(s, name):

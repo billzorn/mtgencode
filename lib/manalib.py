@@ -108,12 +108,13 @@ class Manacost:
         return utils.mana_untranslate(utils.mana_open_delimiter + ''.join(self.sequence)
                                       + utils.mana_close_delimiter)
 
-    def format(self, for_forum = False):
+    def format(self, for_forum = False, for_html = False):
         if self.none:
             return '_NOCOST_'
+        
         else:
             return utils.mana_untranslate(utils.mana_open_delimiter + ''.join(self.sequence)
-                                          + utils.mana_close_delimiter, for_forum)
+                                          + utils.mana_close_delimiter, for_forum, for_html)
 
     def encode(self, randomize = False):
         if self.none:
@@ -177,10 +178,10 @@ class Manatext:
             text = text.replace(utils.reserved_mana_marker, str(cost), 1)
         return text
 
-    def format(self, for_forum = False):
+    def format(self, for_forum = False, for_html = False):
         text = self.text
         for cost in self.costs:
-            text = text.replace(utils.reserved_mana_marker, cost.format(for_forum = for_forum), 1)
+            text = text.replace(utils.reserved_mana_marker, cost.format(for_forum = for_forum, for_html = for_html), 1)
         return text
 
     def encode(self, randomize = False):

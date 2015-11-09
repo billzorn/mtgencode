@@ -17,7 +17,7 @@ def exclude_sets(cardset):
 
 def main(fname, oname = None, verbose = True, encoding = 'std',
          gatherer = False, for_forum = False, for_mse = False,
-         creativity = False, vdump = False):
+         creativity = False, vdump = False, for_html = False):
 
     fmt_ordered = cardlib.fmt_ordered_default
 
@@ -53,6 +53,11 @@ def main(fname, oname = None, verbose = True, encoding = 'std',
         if for_mse:
             # have to prepend a massive chunk of formatting info
             writer.write(utils.mse_prepend)
+
+        if for_html:
+            # have to preapend html info
+            writer.write(utils.html_prepend)
+
         for card in cards:
             if for_mse:
                 writer.write(card.to_mse().encode('utf-8'))
@@ -68,7 +73,7 @@ def main(fname, oname = None, verbose = True, encoding = 'std',
                 writer.write(('\n' + fstring[:-1]).replace('\n', '\n\t\t'))
             else:
                 writer.write(card.format(gatherer = gatherer, for_forum = for_forum,
-                                         vdump = vdump).encode('utf-8'))
+                                         vdump = vdump, for_html = for_html).encode('utf-8'))
 
             if creativity:
                 cstring = '~~ closest cards ~~\n'
@@ -95,8 +100,15 @@ def main(fname, oname = None, verbose = True, encoding = 'std',
         if for_mse:
             # more formatting info
             writer.write('version control:\n\ttype: none\napprentice code: ')
+        if for_html:
+            # closing the html file
+            writer.write(utils.html_append)
 
     if oname:
+        if for_html:
+            print oname
+            # if ('.html' != oname[-])
+            #     oname += '.html'
         if verbose:
             print 'Writing output to: ' + oname
         with open(oname, 'w') as ofile:
@@ -144,10 +156,14 @@ if __name__ == '__main__':
                         help='dump out lots of information about invalid cards')
     parser.add_argument('-v', '--verbose', action='store_true', 
                         help='verbose output')
-    parser.add_argument('-mse', '--mse', action='store_true', help='use Magic Set Editor 2 encoding; will output as .mse-set file')
-    
+    parser.add_argument('-mse', '--mse', action='store_true', 
+                        help='use Magic Set Editor 2 encoding; will output as .mse-set file')
+    parser.add_argument('-html', '--html', action='store_true', help='create a .html file with pretty forum formatting')
+
     args = parser.parse_args()
+
     main(args.infile, args.outfile, verbose = args.verbose, encoding = args.encoding,
          gatherer = args.gatherer, for_forum = args.forum, for_mse = args.mse,
-         creativity = args.creativity, vdump = args.dump)
+         creativity = args.creativity, vdump = args.dump, for_html = args.html)
+
     exit(0)

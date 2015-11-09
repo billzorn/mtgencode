@@ -9,6 +9,12 @@ import config
 # special chunk of text that Magic Set Editor 2 requires at the start of all set files.
 mse_prepend = 'mse version: 0.3.8\ngame: magic\nstylesheet: m15\nset info:\n\tsymbol:\nstyling:\n\tmagic-m15:\n\t\ttext box mana symbols: magic-mana-small.mse-symbol-font\n\t\toverlay:\n\tmagic-m15-clear:\n\t\ttext box mana symbols: magic-mana-small.mse-symbol-font\n\t\toverlay: \n\tmagic-m15-extra-improved:\n\t\ttext box mana symbols: magic-mana-small.mse-symbol-font\n\t\tpt box symbols: magic-pt-symbols-extra.mse-symbol-font\n\t\toverlay: \n\tmagic-m15-planeswalker:\n\t\ttext box mana symbols: magic-mana-small.mse-symbol-font\n\t\toverlay: \n\tmagic-m15-planeswalker-promo-black:\n\t\ttext box mana symbols: magic-mana-small.mse-symbol-font\n\t\toverlay: \n\tmagic-m15-promo-dka:\n\t\ttext box mana symbols: magic-mana-small.mse-symbol-font\n\t\toverlay: \n\tmagic-m15-token-clear:\n\t\ttext box mana symbols: magic-mana-small.mse-symbol-font\n\t\toverlay: \n\tmagic-new-planeswalker:\n\t\ttext box mana symbols: magic-mana-small.mse-symbol-font\n\t\toverlay: \n\tmagic-new-planeswalker-4abil:\n\t\ttext box mana symbols: magic-mana-small.mse-symbol-font\n\t\toverlay: \n\tmagic-new-planeswalker-clear:\n\t\ttext box mana symbols: magic-mana-small.mse-symbol-font\n\t\toverlay: \n\tmagic-new-planeswalker-promo-black:\n\t\ttext box mana symbols: magic-mana-small.mse-symbol-font\n\t\toverlay: \n'
 
+# special chunk of text to start an HTML document.
+box_height = 350
+import html_extra_data
+html_prepend = html_extra_data.html_prepend
+html_append = "\n/body>\n</html>"
+
 # encoding formats we know about
 formats = [
     'std',
@@ -136,6 +142,9 @@ mana_json_close_delimiter = mana_close_delimiter
 mana_json_hybrid_delimiter = '/'
 mana_forum_open_delimiter = '[mana]'
 mana_forum_close_delimiter = '[/mana]'
+mana_html_open_delimiter = "<img class='mana-"
+mana_html_close_delimiter = "'>"
+mana_html_hybrid_delimiter = '-'
 mana_unary_marker = '' # if the same as unary_marker, from_unary WILL replace numbers in mana costs
 mana_unary_counter = unary_counter
 
@@ -386,7 +395,7 @@ def mana_translate(jmanastr):
 # convert an encoded mana string back to json
 mana_symlen_min = min([len(sym) for sym in mana_symall_decode])
 mana_symlen_max = max([len(sym) for sym in mana_symall_decode])
-def mana_untranslate(manastr, for_forum = False):
+def mana_untranslate(manastr, for_forum = False, for_html = False):
     inner = manastr[1:-1]
     jmanastr = ''
     colorless_total = 0
@@ -406,6 +415,12 @@ def mana_untranslate(manastr, for_forum = False):
                     idx += symlen
                     if for_forum:
                         jmanastr = jmanastr + mana_decode_direct_forum(sym)
+                    if for_html:
+                        jmanastr = jmanastr + mana_decode_direct(sym)
+                        jmanastr = jmanastr.replace(mana_open_delimiter, mana_html_open_delimiter)
+                        jmanastr = jmanastr.replace(mana_close_delimiter, mana_html_close_delimiter)
+                        jmanastr = jmanastr.replace(mana_open_delimiter, mana_html_open_delimiter)
+                        jmanastr = jmanastr.replace(mana_json_hybrid_delimiter, mana_html_hybrid_delimiter)
                     else:
                         jmanastr = jmanastr + mana_decode_direct(sym)
                     break
@@ -419,6 +434,13 @@ def mana_untranslate(manastr, for_forum = False):
             return (mana_forum_open_delimiter + ('' if colorless_total == 0 
                                                  else str(colorless_total))
                     + jmanastr + mana_forum_close_delimiter)
+    if for_html:
+        if jmanastr == '':
+            return mana_html_open_delimiter + str(colorless_total) + mana_html_close_delimiter
+        else:
+            return (mana_html_open_delimiter + ('' if colorless_total == 0 
+                                                 else str(colorless_total))
+                    + mana_html_close_delimiter + jmanastr)
     else:
         if jmanastr == '':
             return mana_json_open_delimiter + str(colorless_total) + mana_json_close_delimiter
@@ -464,6 +486,11 @@ symbol_forum_trans = {
     tap_marker : mana_forum_open_delimiter + json_symbol_tap + mana_forum_close_delimiter,
     untap_marker : mana_forum_open_delimiter + json_symbol_untap + mana_forum_close_delimiter,
 }
+symbol_html_trans = {
+    tap_marker : mana_html_open_delimiter + json_symbol_tap + mana_html_close_delimiter,
+    untap_marker : mana_html_open_delimiter + json_symbol_untap + mana_html_close_delimiter,
+}
+
 json_symbol_regex = (re.escape(mana_json_open_delimiter) + '['
                      + json_symbol_tap + json_symbol_tap.lower()
                      + json_symbol_untap + json_symbol_untap.lower()
@@ -476,7 +503,7 @@ def to_symbols(s):
         s = s.replace(jsymstr, json_symbol_trans[jsymstr])
     return s
 
-def from_symbols(s, for_forum = False):
+def from_symbols(s, for_forum = False, for_html = False):
     symstrs = re.findall(symbol_regex, s)
     #for symstr in sorted(symstrs, lambda x,y: cmp(len(x), len(y)), reverse = True):
     # We have to do the right thing here, because the thing we replace exists in the thing
@@ -484,6 +511,8 @@ def from_symbols(s, for_forum = False):
     for symstr in set(symstrs):
         if for_forum:
             s = s.replace(symstr, symbol_forum_trans[symstr])
+        elif for_html:
+            s = s.replace(symstr, symbol_html_trans[symstr])
         else:
             s = s.replace(symstr, symbol_trans[symstr])
     return s
