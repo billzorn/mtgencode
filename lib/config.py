@@ -61,3 +61,4 @@ field_label_text = '9'
 # additional fields we add to the json cards
 json_field_bside = 'bside'
 json_field_set_name = 'setName'
+json_field_info_code = 'magicCardsInfoCode'

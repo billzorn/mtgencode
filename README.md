@@ -4,7 +4,7 @@ Utilities to assist in the process of generating Magic the Gathering cards with 
 
 http://www.mtgsalvation.com/forums/creativity/custom-card-creation/612057-generating-magic-cards-using-deep-recurrent-neural
 
-The purpose of this code is mostly to wrangle text between various human and machine readable formats. The original input comes from [mtgjson](http://mtgjson.com); this is filtered and reduced to one of several input formats intended for neural network training, such as the standard encoded format used in [data/output.txt](https://github.com/billzorn/mtgencode/blob/master/data/output.txt). Any json or encoded data, including output from appropriately trained neural nets, can then be interpreted as cards and decoded to a human readable format, such as a text spoiler or [Magic Set Editor 2](http://magicseteditor.sourceforge.net) set file.
+The purpose of this code is mostly to wrangle text between various human and machine readable formats. The original input comes from [mtgjson](http://mtgjson.com); this is filtered and reduced to one of several input formats intended for neural network training, such as the standard encoded format used in [data/output.txt](https://github.com/billzorn/mtgencode/blob/master/data/output.txt). Any json or encoded data, including output from appropriately trained neural nets, can then be interpreted as cards and decoded to a human readable format, such as a text spoiler, [Magic Set Editor 2](http://magicseteditor.sourceforge.net) set file, or a pretty, portable html file that can be viewed in any browser.
 
 ## Requirements
 
@@ -57,7 +57,7 @@ custom     | Blank format slot, inteded to help users add their own formats to t
 
 ```
 usage: decode.py [-h] [-e {std,named,noname,rfields,old,norarity,vec,custom}]
-                 [-g] [-f] [-c] [-d] [-v] [-mse]
+                 [-g] [-f] [-c] [-d] [-v] [-mse] [-html]
                  infile [outfile]
 
 positional arguments:
@@ -75,13 +75,14 @@ optional arguments:
   -v, --verbose         verbose output
   -mse, --mse           use Magic Set Editor 2 encoding; will output as .mse-
                         set file
+  -html, --html         create a .html file with pretty forum formatting
 ```
 
 The default output is a text spoiler which modifies the output of the neural net as little as possible while making it human readable. Specifying the -g option will produce a prettier, Gatherer-inspired text spoiler with heavier-weight transformations applied to the text, such as capitalization. The -f option encodes mana symbols in the format used by the mtgsalvation forum; this is useful if you want to cut and paste your spoiler into a post to share it.
 
 Passing the -mse option will cause decode.py to produce both the hilarious internal MSE text format as well as an actual mse set file, which is really just a renamed zip archive. The -f and -g flags will be respected in the text that is dumped to each card's notes field.
 
-Finally, the -c and -d options will print out additional data about the quality of the cards. Running with -c is extremely slow due to the massive amount of computation involved; -d is probably a good idea to use in general unless you're trying to produce pretty output to show off.
+Finally, the -c and -d options will print out additional data about the quality of the cards. Running with -c is extremely slow due to the massive amount of computation involved, though at least we can do it in parallel over all of your processor cores; -d is probably a good idea to use in general unless you're trying to produce pretty output to show off. Using html mode is especially useful with -c as we can link to visual spoilers from magiccards.info.
 
 ### Examples
 

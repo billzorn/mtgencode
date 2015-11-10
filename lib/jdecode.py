@@ -15,9 +15,14 @@ def mtg_open_json(fname, verbose = False):
     for k_set in jobj:
         set = jobj[k_set]
         setname = set['name']
+        if 'magicCardsInfoCode' in set:
+            codename = set['magicCardsInfoCode']
+        else:
+            codename = ''
         
         for card in set['cards']:
             card[utils.json_field_set_name] = setname
+            card[utils.json_field_info_code] = codename
 
             cardnumber = None
             if 'number' in card:

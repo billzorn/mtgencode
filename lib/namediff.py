@@ -6,6 +6,7 @@ import difflib
 import os
 import multiprocessing
 
+import utils
 import jdecode
 import cardlib
 
@@ -54,6 +55,7 @@ class Namediff:
                  json_fname = os.path.join(datadir, 'AllSets.json')):
         self.verbose = verbose
         self.names = {}
+        self.codes = {}
 
         if self.verbose:
             print 'Setting up namediff...'
@@ -71,11 +73,20 @@ class Namediff:
                 card = cardlib.Card(jcards[idx])
                 name = card.name
                 jname = jcards[idx]['name']
+                jcode = jcards[idx][utils.json_field_info_code]
+                if 'number' in jcards[idx]:
+                    jnum = jcards[idx]['number']
+                else:
+                    jnum = ''
                     
                 if name in self.names:
                     print '  Duplicate name ' + name + ', ignoring.'
                 else:
                     self.names[name] = jname
+                    if jcode and jnum:
+                        self.codes[name] = jcode + '/' + jnum + '.jpg'
+                    else:
+                        self.codes[name] = ''
                     namecount += 1
 
         print '  Read ' + str(namecount) + ' unique cardnames'

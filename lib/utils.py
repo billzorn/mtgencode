@@ -78,6 +78,7 @@ field_label_text = config.field_label_text
 # additional fields we add to the json cards
 json_field_bside = config.json_field_bside
 json_field_set_name = config.json_field_set_name
+json_field_info_code = config.json_field_info_code
 
 # unicode / ascii conversion
 unicode_trans = {

@@ -399,6 +399,9 @@ class Card:
         # flags
         self.parsed = True
         self.valid = True # doesn't record that much
+        # placeholders to fill in with expensive distance metrics
+        self.nearest_names = []
+        self.nearest_cards = []
         # default values for all fields
         self.__dict__[field_name] = ''
         self.__dict__[field_rarity] = ''
