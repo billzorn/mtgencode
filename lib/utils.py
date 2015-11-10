@@ -10,10 +10,9 @@ import config
 mse_prepend = 'mse version: 0.3.8\ngame: magic\nstylesheet: m15\nset info:\n\tsymbol:\nstyling:\n\tmagic-m15:\n\t\ttext box mana symbols: magic-mana-small.mse-symbol-font\n\t\toverlay:\n\tmagic-m15-clear:\n\t\ttext box mana symbols: magic-mana-small.mse-symbol-font\n\t\toverlay: \n\tmagic-m15-extra-improved:\n\t\ttext box mana symbols: magic-mana-small.mse-symbol-font\n\t\tpt box symbols: magic-pt-symbols-extra.mse-symbol-font\n\t\toverlay: \n\tmagic-m15-planeswalker:\n\t\ttext box mana symbols: magic-mana-small.mse-symbol-font\n\t\toverlay: \n\tmagic-m15-planeswalker-promo-black:\n\t\ttext box mana symbols: magic-mana-small.mse-symbol-font\n\t\toverlay: \n\tmagic-m15-promo-dka:\n\t\ttext box mana symbols: magic-mana-small.mse-symbol-font\n\t\toverlay: \n\tmagic-m15-token-clear:\n\t\ttext box mana symbols: magic-mana-small.mse-symbol-font\n\t\toverlay: \n\tmagic-new-planeswalker:\n\t\ttext box mana symbols: magic-mana-small.mse-symbol-font\n\t\toverlay: \n\tmagic-new-planeswalker-4abil:\n\t\ttext box mana symbols: magic-mana-small.mse-symbol-font\n\t\toverlay: \n\tmagic-new-planeswalker-clear:\n\t\ttext box mana symbols: magic-mana-small.mse-symbol-font\n\t\toverlay: \n\tmagic-new-planeswalker-promo-black:\n\t\ttext box mana symbols: magic-mana-small.mse-symbol-font\n\t\toverlay: \n'
 
 # special chunk of text to start an HTML document.
-box_height = 350
 import html_extra_data
 html_prepend = html_extra_data.html_prepend
-html_append = "\n/body>\n</html>"
+html_append = "\n</body>\n</html>"
 
 # encoding formats we know about
 formats = [
@@ -413,27 +412,21 @@ def mana_untranslate(manastr, for_forum = False, for_html = False):
                 sym = inner[idx:idx+symlen]
                 if sym in mana_symall_decode:
                     idx += symlen
-                    if for_forum:
-                        jmanastr = jmanastr + mana_decode_direct_forum(sym)
                     if for_html:
                         jmanastr = jmanastr + mana_decode_direct(sym)
                         jmanastr = jmanastr.replace(mana_open_delimiter, mana_html_open_delimiter)
                         jmanastr = jmanastr.replace(mana_close_delimiter, mana_html_close_delimiter)
                         jmanastr = jmanastr.replace(mana_open_delimiter, mana_html_open_delimiter)
                         jmanastr = jmanastr.replace(mana_json_hybrid_delimiter, mana_html_hybrid_delimiter)
+                    elif for_forum:
+                        jmanastr = jmanastr + mana_decode_direct_forum(sym)
                     else:
                         jmanastr = jmanastr + mana_decode_direct(sym)
                     break
             # otherwise we'll go into an infinite loop if we see a symbol we don't know
             if idx == old_idx:
                 idx += 1
-    if for_forum:
-        if jmanastr == '':
-            return mana_forum_open_delimiter + str(colorless_total) + mana_forum_close_delimiter
-        else:
-            return (mana_forum_open_delimiter + ('' if colorless_total == 0 
-                                                 else str(colorless_total))
-                    + jmanastr + mana_forum_close_delimiter)
+    
     if for_html:
         if jmanastr == '':
             return mana_html_open_delimiter + str(colorless_total) + mana_html_close_delimiter
@@ -441,6 +434,14 @@ def mana_untranslate(manastr, for_forum = False, for_html = False):
             return (mana_html_open_delimiter + ('' if colorless_total == 0 
                                                  else str(colorless_total))
                     + mana_html_close_delimiter + jmanastr)
+
+    elif for_forum:
+        if jmanastr == '':
+            return mana_forum_open_delimiter + str(colorless_total) + mana_forum_close_delimiter
+        else:
+            return (mana_forum_open_delimiter + ('' if colorless_total == 0 
+                                                 else str(colorless_total))
+                    + jmanastr + mana_forum_close_delimiter)
     else:
         if jmanastr == '':
             return mana_json_open_delimiter + str(colorless_total) + mana_json_close_delimiter
@@ -509,10 +510,10 @@ def from_symbols(s, for_forum = False, for_html = False):
     # We have to do the right thing here, because the thing we replace exists in the thing
     # we replace it with...
     for symstr in set(symstrs):
-        if for_forum:
-            s = s.replace(symstr, symbol_forum_trans[symstr])
-        elif for_html:
+        if for_html:
             s = s.replace(symstr, symbol_html_trans[symstr])
+        elif for_forum:
+            s = s.replace(symstr, symbol_forum_trans[symstr])
         else:
             s = s.replace(symstr, symbol_trans[symstr])
     return s

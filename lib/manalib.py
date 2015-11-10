@@ -181,7 +181,9 @@ class Manatext:
     def format(self, for_forum = False, for_html = False):
         text = self.text
         for cost in self.costs:
-            text = text.replace(utils.reserved_mana_marker, cost.format(for_forum = for_forum, for_html = for_html), 1)
+            text = text.replace(utils.reserved_mana_marker, cost.format(for_forum=for_forum, for_html=for_html), 1)
+        if for_html:
+            text = text.replace('\n', '<br>\n')
         return text
 
     def encode(self, randomize = False):

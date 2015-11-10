@@ -137,9 +137,10 @@ def mtg_open_file(fname, verbose = False,
         for card_src in text.split(utils.cardsep):
             if card_src:
                 card = cardlib.Card(card_src, fmt_ordered=fmt_ordered)
+                # unlike opening from json, we still want to return invalid cards
+                cards += [card]
                 if card.valid:
                     valid += 1
-                    cards += [card]
                 elif card.parsed:
                     invalid += 1
                 else:

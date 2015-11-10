@@ -19,6 +19,12 @@ def main(fname, oname = None, verbose = True, encoding = 'std',
          gatherer = False, for_forum = False, for_mse = False,
          creativity = False, vdump = False, for_html = False):
 
+    # there is a sane thing to do here (namely, produce both at the same time)
+    # but we don't support it yet.
+    if for_mse and for_html:
+        print 'ERROR - decode.py - incompatible formats "mse" and "html"'
+        return
+
     fmt_ordered = cardlib.fmt_ordered_default
 
     if encoding in ['std']:
@@ -68,12 +74,12 @@ def main(fname, oname = None, verbose = True, encoding = 'std',
                     fstring += 'raw:\n' + card.raw + '\n'
                 fstring += '\n'
                 fstring += card.format(gatherer = gatherer, for_forum = for_forum,
-                                       vdump = vdump)
+                                       vdump = vdump) + '\n'
                 fstring = fstring.replace('<', '(').replace('>', ')')
                 writer.write(('\n' + fstring[:-1]).replace('\n', '\n\t\t'))
             else:
-                writer.write(card.format(gatherer = gatherer, for_forum = for_forum,
-                                         vdump = vdump, for_html = for_html).encode('utf-8'))
+                writer.write((card.format(gatherer = gatherer, for_forum = for_forum,
+                                          vdump = vdump, for_html = for_html) + '\n').encode('utf-8'))
 
             if creativity:
                 cstring = '~~ closest cards ~~\n'
