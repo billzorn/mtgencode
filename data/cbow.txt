@@ -2540,7 +2540,7 @@ _BSIDE_ (A) (^) (WW) (BB) (instant) fuse \ creatures you control gain deathtouch
 
 (A) (^) (^) (BB) (BB) (sorcery) choose a color . target player reveals his or her hand and discards all cards of that color .
 
-(Y) (^) (^) (^) (RR) (GG) (legendary) (creature) hellion (&/) (/&) devour X \ where X is the number of creatures devoured this way
+(Y) (^) (^) (^) (RR) (GG) (legendary) (creature) hellion (&/) (/&) devour X , where X is the number of creatures devoured this way
 
 (A) (^) (GG) (GG) (sorcery) put a &^^^/ /&^^^ green beast creature token onto the battlefield . then if an opponent controls more creatures than you , return @ to its owner's hand .
 
@@ -14104,7 +14104,7 @@ _BSIDE_ (Y) (planeswalker) chandra ((&^^^^)) +&^ : @ deals &^^ damage to target 
 
 (O) (^) (UU) (instant) return target nonland permanent to its owner's hand .
 
-(N) (XX) (XX) (UU) (sorcery) x target creatures gain islandwalk until end of turn .
+(N) (XX) (XX) (UU) (sorcery) X target creatures gain islandwalk until end of turn .
 
 (A) (^) (^) (^) (^) (^) (WW) (WW) (creature) avatar (&^^^^/) (/&^^^^^^^) vigilance \ when @ enters the battlefield , for each opponent , exile up to one target creature that player controls and that player gains life equal to its power .
 
@@ -23642,7 +23642,7 @@ _BSIDE_ (N) (creature) werewolf (&^^^^^/) (/&^^^^^) @ attacks each turn if able 
 
 (O) (^) (GG) (creature) elf (&^^/) (/&^) T : untap target creature .
 
-(O) (XX) (RR) (sorcery) x target creatures can't block this turn .
+(O) (XX) (RR) (sorcery) X target creatures can't block this turn .
 
 (O) (^) (^) (^) (WW) (instant) put any number of target artifact cards from your graveyard on top of your library . \ draw a card .
 
@@ -25272,7 +25272,7 @@ _BSIDE_ (A) (^) (^) (^) (UU) (RR) (instant) put a &^^^/ /&^ red elemental creatu
 
 (O) (^) (BB) (sorcery) target player reveals his or her hand . you choose a nonland card from it . that player puts that card into his or her library third from the top .
 
-(O) (XX) (GG) (instant) cast @ only during the declare blockers step . \ x target attacking creatures become blocked . @ deals &^ damage to each of those creatures .
+(O) (XX) (GG) (instant) cast @ only during the declare blockers step . \ X target attacking creatures become blocked . @ deals &^ damage to each of those creatures .
 
 (O) (^) (^) (^) (^) (artifact) (creature) horse (&^^/) (/&^^) metalcraft ~ @ gets +&^^/ /+&^^ as long as you control three or more artifacts .
 
@@ -26638,7 +26638,7 @@ _BSIDE_ (N) (^) (RR) (instant) fuse \ @ deals &^^ damage to target creature or p
 
 (O) (GG) (creature) elf druid (&^/) (/&^) morph GG \ tap two untapped elves you control : add one mana of any color to your mana pool .
 
-(N) (XX) (RR) (instant) x target blocked creatures assign their combat damage this turn as though they weren't blocked .
+(N) (XX) (RR) (instant) X target blocked creatures assign their combat damage this turn as though they weren't blocked .
 
 (O) (^) (^) (RR) (creature) goblin shaman (&^/) (/&^) whenever @ becomes tapped , it deals &^ damage to target creature or player .
 

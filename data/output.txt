@@ -2536,7 +2536,7 @@
 
 |5sorcery|4|6|7|8|9choose a color. target player reveals his or her hand and discards all cards of that color.|3{^^BBBB}|0A|1persecute|
 
-|5creature|4legendary|6hellion|7|8&/&|9devour X\where X is the number of creatures devoured this way|3{^^^RRGG}|0Y|1thromok the insatiable|
+|5creature|4legendary|6hellion|7|8&/&|9devour X, where X is the number of creatures devoured this way|3{^^^RRGG}|0Y|1thromok the insatiable|
 
 |5sorcery|4|6|7|8|9put a &^^^/&^^^ green beast creature token onto the battlefield. then if an opponent controls more creatures than you, return @ to its owner's hand.|3{^GGGG}|0A|1pulse of the tangle|
 
@@ -14064,7 +14064,7 @@
 
 |5instant|4|6|7|8|9return target nonland permanent to its owner's hand.|3{^UU}|0O|1disperse|
 
-|5sorcery|4|6|7|8|9x target creatures gain islandwalk until end of turn.|3{XXXXUU}|0N|1part water|
+|5sorcery|4|6|7|8|9X target creatures gain islandwalk until end of turn.|3{XXXXUU}|0N|1part water|
 
 |5creature|4|6avatar|7|8&^^^^/&^^^^^^^|9vigilance\when @ enters the battlefield, for each opponent, exile up to one target creature that player controls and that player gains life equal to its power.|3{^^^^^WWWW}|0A|1luminate primordial|
 
@@ -23569,7 +23569,7 @@
 
 |5creature|4|6elf|7|8&^^/&^|9T: untap target creature.|3{^GG}|0O|1seeker of skybreak|
 
-|5sorcery|4|6|7|8|9x target creatures can't block this turn.|3{XXRR}|0O|1wave of indifference|
+|5sorcery|4|6|7|8|9X target creatures can't block this turn.|3{XXRR}|0O|1wave of indifference|
 
 |5instant|4|6|7|8|9put any number of target artifact cards from your graveyard on top of your library.\draw a card.|3{^^^WW}|0O|1frantic salvage|
 
@@ -25190,7 +25190,7 @@
 
 |5sorcery|4|6|7|8|9target player reveals his or her hand. you choose a nonland card from it. that player puts that card into his or her library third from the top.|3{^BB}|0O|1lost hours|
 
-|5instant|4|6|7|8|9cast @ only during the declare blockers step.\x target attacking creatures become blocked. @ deals &^ damage to each of those creatures.|3{XXGG}|0O|1choking vines|
+|5instant|4|6|7|8|9cast @ only during the declare blockers step.\X target attacking creatures become blocked. @ deals &^ damage to each of those creatures.|3{XXGG}|0O|1choking vines|
 
 |5artifact creature|4|6horse|7|8&^^/&^^|9metalcraft ~ @ gets +&^^/+&^^ as long as you control three or more artifacts.|3{^^^^}|0O|1chrome steed|
 
@@ -26552,7 +26552,7 @@
 
 |5creature|4|6elf druid|7|8&^/&^|9morph {GG}\tap two untapped elves you control: add one mana of any color to your mana pool.|3{GG}|0O|1birchlore rangers|
 
-|5instant|4|6|7|8|9x target blocked creatures assign their combat damage this turn as though they weren't blocked.|3{XXRR}|0N|1outmaneuver|
+|5instant|4|6|7|8|9X target blocked creatures assign their combat damage this turn as though they weren't blocked.|3{XXRR}|0N|1outmaneuver|
 
 |5creature|4|6goblin shaman|7|8&^/&^|9whenever @ becomes tapped, it deals &^ damage to target creature or player.|3{^^RR}|0O|1goblin medics|
 

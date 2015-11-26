@@ -134,6 +134,8 @@ def text_pass_4b_x(s):
     s = s.replace('x.', x_marker + '.')
     s = s.replace('x,', x_marker + ',')
     s = s.replace('x/x', x_marker + '/' + x_marker)
+    s = s.replace('x target', x_marker + ' target')
+    s = s.replace('si' + x_marker + ' target', 'six target')
     return s
 
 
@@ -425,8 +427,9 @@ def text_pass_11_linetrans(s):
     for line in lines:
         if not '.' in line:
             # because this is inconsistent
-            line = line.replace(';', ',')
-            sublines = line.split(',')
+            line = line.replace(',', ';')
+            line = line.replace('; where', ', where') # Thromok the Insatiable
+            sublines = line.split(';')
             for subline in sublines:
                 if 'equip' in subline or 'enchant' in subline:
                     prelines += [subline.strip()]
