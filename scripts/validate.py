@@ -67,6 +67,12 @@ def check_pt(card):
                 and not card.pt)
     return None
 
+def check_lands(card):
+    if 'land' in card.types:
+        return card.cost.format() == '_NOCOST_'
+    else:
+        return None
+
 # doesn't handle granted activated abilities in ""
 def check_X(card):
     correct = None
@@ -143,6 +149,13 @@ def check_X(card):
 
     return correct
 
+def check_kicker(card):
+    # also lazy and simple
+    if 'kicker' in card.text.text or 'kicked' in card.text.text:
+        return 'kicker' in card.text.text and 'kicked' in card.text.text
+    else:
+        return None
+
 def check_counters(card):
     uses = len(re.findall(re.escape(utils.counter_marker), card.text.text))
     if uses > 0:
@@ -150,51 +163,199 @@ def check_counters(card):
     else:
         return None
 
+def check_choices(card):
+    bullets = len(re.findall(re.escape(utils.bullet_marker), card.text.text))
+    obracks = len(re.findall(re.escape(utils.choice_open_delimiter), card.text.text))
+    cbracks = len(re.findall(re.escape(utils.choice_close_delimiter), card.text.text))
+    if bullets + obracks + cbracks > 0:
+        if not (obracks == cbracks and bullets > 0):
+            return False
+        # could compile ahead of time
+        choice_regex = (re.escape(utils.choice_open_delimiter) + re.escape(utils.unary_marker)
+                        + r'.*' + re.escape(utils.bullet_marker) + r'.*' 
+                        + re.escape(utils.choice_close_delimiter))
+        nochoices = re.sub(choice_regex, '', card.text.text)
+        nobullets = len(re.findall(re.escape(utils.bullet_marker), nochoices))
+        noobracks = len(re.findall(re.escape(utils.choice_open_delimiter), nochoices))
+        nocbracks = len(re.findall(re.escape(utils.choice_close_delimiter), nochoices))
+        return nobullets + noobracks + nocbracks == 0
+    else:
+        return None
+
+def check_auras(card):
+    # a bit loose
+    if 'enchantment' in card.types or 'aura' in card.subtypes or 'enchant' in card.text.text:
+        return 'enchantment' in card.types or 'aura' in card.subtypes or 'enchant' in card.text.text
+    else:
+        return None
+
+def check_equipment(card):
+    # probably even looser, chould check for actual equip abilities and noncreatureness
+    if 'equipment' in card.subtypes:
+        return 'equip' in card.text.text
+    else:
+        return None
+
+def check_planeswalkers(card):
+    if 'planeswalker' in card.types:
+        good_lines = 0
+        bad_lines = 0
+        initial_re = r'^[+-]?' + re.escape(utils.unary_marker) + re.escape(utils.unary_counter) + '*:'
+        initial_re_X = r'^[-+]' + re.escape(utils.x_marker) + '+:'
+        for line in card.text_lines:
+            if len(re.findall(initial_re, line.text)) == 1:
+                good_lines += 1
+            elif len(re.findall(initial_re_X, line.text)) == 1:
+                good_lines += 1
+            elif 'can be your commander' in line.text:
+                pass
+            elif 'countertype' in line.text or 'transform' in line.text:
+                pass
+            else:
+                bad_lines += 1
+        return good_lines > 1 and bad_lines == 0
+    else:
+        return None
+
+def check_levelup(card):
+    if 'level' in card.text.text:
+        uplines = 0
+        llines = 0
+        for line in card.text_lines:
+            if 'countertype ' + utils.counter_marker + ' level' in line.text:
+                uplines += 1
+                llines += 1
+            elif 'with level up' in line.text:
+                llines += 1
+            elif 'level up' in line.text:
+                uplines += 1
+            elif 'level' in line.text:
+                llines += 1
+        return uplines == 1 and llines > 0
+    else:
+        return None
+
+def check_activated(card):
+    activated = 0
+    for line in card.text_lines:
+        if '.' in line.text:
+            subtext = re.sub(r'"[^"]*"', '', line.text)
+            if 'forecast' in subtext:
+                pass
+            elif 'return ' + utils.this_marker + ' from your graveyard' in subtext:
+                pass
+            elif 'on the stack' in subtext:
+                pass
+            elif ':' in subtext:
+                activated += 1
+    if activated > 0:
+        return list_only(card.types, ['creature', 'land', 'artifact', 'enchantment', 'planeswalker', 'tribal'])
+    else:
+        return None
+
+def check_triggered(card):
+    triggered = 0
+    triggered_2 = 0
+    for line in card.text_lines:
+        if 'when ' + utils.this_marker + ' enters the battlefield' in line.text:
+            triggered += 1
+        if 'when ' + utils.this_marker + ' leaves the battlefield' in line.text:
+            triggered += 1
+        if 'when ' + utils.this_marker + ' dies' in line.text:
+            triggered += 1
+        elif 'at the beginning' == line.text[:16] or 'when' == line.text[:4]:
+            if 'from your graveyard' in line.text:
+                triggered_2 += 1
+            elif 'in your graveyard' in line.text:
+                triggered_2 += 1
+            elif 'if ' + utils.this_marker + ' is suspended' in line.text:
+                triggered_2 += 1
+            elif 'if that card is exiled' in line.text or 'if ' + utils.this_marker + ' is exiled' in line.text:
+                triggered_2 += 1
+            elif 'when the creature ' + utils.this_marker + ' haunts' in line.text:
+                triggered_2 += 1
+            elif 'when you cycle ' + utils.this_marker in line.text or 'when you cast ' + utils.this_marker in line.text:
+                triggered_2 += 1
+            elif 'this turn' in line.text or 'this combat' in line.text or 'your next upkeep' in line.text:
+                triggered_2 += 1
+            elif 'from your library' in line.text:
+                triggered_2 += 1
+            elif 'you discard ' + utils.this_marker in line.text or 'you to discard ' + utils.this_marker in line.text:
+                triggered_2 += 1
+            else:
+                triggered += 1
+            
+    if triggered > 0:
+        return list_only(card.types, ['creature', 'land', 'artifact', 'enchantment', 'planeswalker', 'tribal'])
+    elif triggered_2:
+        return True
+    else:
+        return None
+
 props = OrderedDict([
     ('types', check_types),
     ('pt', check_pt),
+    ('lands', check_lands),
     ('X', check_X),
+    ('kicker', check_kicker),
     ('counters', check_counters),
+    ('choices', check_choices),
+    ('auras', check_auras),
+    ('equipment', check_equipment),
+    ('planeswalkers', check_planeswalkers),
+    ('levelup', check_levelup),
+    ('activated', check_activated),
+    ('triggered', check_triggered),
 ])
 values = OrderedDict([(k, (0,0,0)) for k in props])
 
-def main(fname, oname = None, verbose = True):
+def main(fname, oname = None, verbose = True, dump = False):
     # may need to set special arguments here
     cards = jdecode.mtg_open_file(fname, verbose=verbose)
-    rg = {}
+    
+    do_grams = False
+
+    if do_grams:
+        rg = {}
+        for card in cards:
+            g = rare_grams(card, thresh=2, grams=2)
+            if len(card.text_words) > 0:
+                g = int(1.0 + (float(g) * 100.0 / float(len(card.text_words))))
+            if g in rg:
+                rg[g] += 1
+            else:
+                rg[g] = 1
+            if g >= 60:
+                print g
+                print card.format()
+
+        tot = 0
+        vmax = sum(rg.values())
+        pct90 = None
+        pct95 = None
+        pct99 = None
+        for i in sorted(rg):
+            print str(i) + ' rare ngrams: ' + str(rg[i])
+            tot += rg[i]
+            if pct90 is None and tot >= vmax * 0.90:
+                pct90 = i
+            if pct95 is None and tot >= vmax * 0.95:
+                pct95 = i
+            if pct99 is None and tot >= vmax * 0.99:
+                pct99 = i
+
+        print '90% - ' + str(pct90)
+        print '95% - ' + str(pct95)
+        print '99% - ' + str(pct99)
+        exit(0)
+
+    total_all = 0
+    total_good = 0
+    total_bad = 0
+
     for card in cards:
-        g = rare_grams(card, thresh=2, grams=2)
-        if len(card.text_words) > 0:
-            g = int(1.0 + (float(g) * 100.0 / float(len(card.text_words))))
-        if g in rg:
-            rg[g] += 1
-        else:
-            rg[g] = 1
-        if g >= 60:
-            print g
-            print card.format()
-
-    tot = 0
-    vmax = sum(rg.values())
-    pct90 = None
-    pct95 = None
-    pct99 = None
-    for i in sorted(rg):
-        print str(i) + ' rare ngrams: ' + str(rg[i])
-        tot += rg[i]
-        if pct90 is None and tot >= vmax * 0.90:
-            pct90 = i
-        if pct95 is None and tot >= vmax * 0.95:
-            pct95 = i
-        if pct99 is None and tot >= vmax * 0.99:
-            pct99 = i
-
-    print '90% - ' + str(pct90)
-    print '95% - ' + str(pct95)
-    print '99% - ' + str(pct99)
-    exit(0)
-
-    for card in cards:
+        total_all += 1
+        overall = True
         for prop in props:
             (total, good, bad) = values[prop]
             this_prop = props[prop](card)
@@ -204,14 +365,34 @@ def main(fname, oname = None, verbose = True):
                     good += 1
                 else:
                     bad += 1
+                    overall = False
+                    if card.name not in ['demonic pact', 'lavaclaw reaches',
+                                         "ertai's trickery", 'rumbling aftershocks', # i hate these
+                    ] and dump:
+                        print('---- ' + prop + '----')
+                        print(card.encode())
+                        print(card.format())
                 values[prop] = (total, good, bad)
+        if overall:
+            total_good += 1
+        else:
+            total_bad += 1
+            
+    # summary
+    print('-- overall --')
+    print('  total: ' + str(total_all))
+    print('  good : ' + str(total_good))
+    print('  bad  : ' + str(total_bad))
+    print('----')
 
+    # breakdown
     for prop in props:
         (total, good, bad) = values[prop]
-        print prop + ':'
-        print '  total: ' + str(total)
-        print '  good : ' + str(good)
-        print '  bad  : ' + str(bad)
+        print(prop + ':')
+        print('  total: ' + str(total))
+        print('  good : ' + str(good))
+        print('  bad  : ' + str(bad))
+
 
 if __name__ == '__main__':
     
@@ -224,7 +405,10 @@ if __name__ == '__main__':
                         help='name of output file, will be overwritten')
     parser.add_argument('-v', '--verbose', action='store_true', 
                         help='verbose output')
+    parser.add_argument('-d', '--dump', action='store_true', 
+                        help='print invalid cards')
 
     args = parser.parse_args()
-    main(args.infile, args.outfile, verbose=args.verbose)
+    main(args.infile, args.outfile, verbose=args.verbose, dump=args.dump)
     exit(0)
+ 
