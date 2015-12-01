@@ -419,6 +419,7 @@ class Card:
         self.__dict__[field_text] = Manatext('')
         self.__dict__[field_text + '_lines'] = []
         self.__dict__[field_text + '_words'] = []
+        self.__dict__[field_text + '_lines_words'] = []
         self.__dict__[field_other] = []
         self.bside = None
         # format-independent view of processed input
@@ -545,6 +546,9 @@ class Card:
                     self.__dict__[field_text + '_words'] = re.sub(utils.unletters_regex, 
                                                                   ' ', 
                                                                   fulltext).split()
+                    self.__dict__[field_text + '_lines_words'] = map(
+                        lambda line: re.sub(utils.unletters_regex, ' ', line).split(),
+                        fulltext.split(utils.newline))
             else:
                 self.valid = False
                 self.__dict__[field_other] += [(idx, '<text> ' + str(value))]

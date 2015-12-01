@@ -9,6 +9,37 @@ sys.path.append(libdir)
 import utils
 import jdecode
 
+datadir = os.path.realpath(os.path.join(libdir, '../data'))
+gramdir = os.path.join(datadir, 'ngrams')
+compute_ngrams = False
+gramdicts = {}
+if os.path.isdir(gramdir):
+    import keydiff
+    compute_ngrams = True
+    for fname in os.listdir(gramdir):
+        suffixes = re.findall(r'\.[0-9]*g$', fname)
+        if suffixes:
+            grams = int(suffixes[0][1:-1])
+            d = {}
+            with open(os.path.join(gramdir, fname), 'rt') as f:
+                keydiff.parse_keyfile(f, d, int)
+            gramdicts[grams] = d
+
+def rare_grams(card, thresh = 2, grams = 2):
+    if not grams in gramdicts:
+        return None
+    rares = 0
+    gramdict = gramdicts[grams]
+    for line in card.text_lines_words:
+        for i in range(0, len(line) - (grams - 1)):
+            ngram = ' '.join([line[i + j] for j in range(0, grams)])
+            if ngram in gramdict:
+                if gramdict[ngram] < thresh:
+                    rares += 1
+            else:
+                rares += 1
+    return rares
+
 def list_only(l, items):
     for e in l:
         if not e in items:
@@ -130,6 +161,38 @@ values = OrderedDict([(k, (0,0,0)) for k in props])
 def main(fname, oname = None, verbose = True):
     # may need to set special arguments here
     cards = jdecode.mtg_open_file(fname, verbose=verbose)
+    rg = {}
+    for card in cards:
+        g = rare_grams(card, thresh=2, grams=2)
+        if len(card.text_words) > 0:
+            g = int(1.0 + (float(g) * 100.0 / float(len(card.text_words))))
+        if g in rg:
+            rg[g] += 1
+        else:
+            rg[g] = 1
+        if g >= 60:
+            print g
+            print card.format()
+
+    tot = 0
+    vmax = sum(rg.values())
+    pct90 = None
+    pct95 = None
+    pct99 = None
+    for i in sorted(rg):
+        print str(i) + ' rare ngrams: ' + str(rg[i])
+        tot += rg[i]
+        if pct90 is None and tot >= vmax * 0.90:
+            pct90 = i
+        if pct95 is None and tot >= vmax * 0.95:
+            pct95 = i
+        if pct99 is None and tot >= vmax * 0.99:
+            pct99 = i
+
+    print '90% - ' + str(pct90)
+    print '95% - ' + str(pct95)
+    print '99% - ' + str(pct99)
+    exit(0)
 
     for card in cards:
         for prop in props:

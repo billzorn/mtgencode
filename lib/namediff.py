@@ -56,6 +56,7 @@ class Namediff:
         self.verbose = verbose
         self.names = {}
         self.codes = {}
+        self.cardstrings = {}
 
         if self.verbose:
             print 'Setting up namediff...'
@@ -83,6 +84,7 @@ class Namediff:
                     print '  Duplicate name ' + name + ', ignoring.'
                 else:
                     self.names[name] = jname
+                    self.cardstrings[name] = card.encode()
                     if jcode and jnum:
                         self.codes[name] = jcode + '/' + jnum + '.jpg'
                     else:
@@ -93,6 +95,7 @@ class Namediff:
         print '  Building SequenceMatcher objects.'
         
         self.matchers = [difflib.SequenceMatcher(b=n, autojunk=False) for n in self.names]
+        self.card_matchers = [difflib.SequenceMatcher(b=self.cardstrings[n], autojunk=False) for n in self.cardstrings]
 
         print '... Done.'
     
@@ -103,5 +106,15 @@ class Namediff:
         workpool = multiprocessing.Pool(threads)
         proto_worklist = list_split(names, threads)
         worklist = map(lambda x: (x, self.names, n), proto_worklist)
+        donelist = workpool.map(f_nearest_per_thread, worklist)
+        return list_flatten(donelist)
+
+    def nearest_card(self, card, n=5):
+        return f_nearest(card.encode(), self.card_matchers, n)
+
+    def nearest_card_par(self, cards, n=5, threads=cores):
+        workpool = multiprocessing.Pool(threads)
+        proto_worklist = list_split(cards, threads)
+        worklist = map(lambda x: (map(lambda c: c.encode(), x), self.cardstrings.values(), n), proto_worklist)
         donelist = workpool.map(f_nearest_per_thread, worklist)
         return list_flatten(donelist)
