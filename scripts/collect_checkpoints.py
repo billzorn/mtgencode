@@ -3,6 +3,13 @@ import sys
 import os
 import shutil
 
+def cleanup_dump(dumpstr):
+    cardfrags = dumpstr.split('\n\n')
+    if len(cardfrags) < 4:
+        return ''
+    else:
+        return '\n\n'.join(cardfrags[2:-1]) + '\n\n'
+
 def identify_checkpoints(basedir, ident):
     cp_infos = []
     for path in os.listdir(basedir):
@@ -46,8 +53,10 @@ def process_dir(basedir, targetdir, ident, copy_cp = False, verbose = False):
         tdpath = os.path.join(targetdir, dname)
         tcpath = os.path.join(targetdir, cname)
         if verbose:
-            print('    cp ' + dpath + ' ' + tdpath)
-        shutil.copy(dpath,  tdpath)
+            print('    cpx ' + dpath + ' ' + tdpath)
+        with open(dpath, 'rt') as infile:
+            with open(tdpath, 'wt') as outfile:
+                outfile.write(cleanup_dump(infile.read()))
         if copy_cp:
             if os.path.isfile(cpath):
                 if verbose:
