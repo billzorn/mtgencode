@@ -88,3 +88,4 @@ if __name__ == '__main__':
         seed = int(args.seed)
     main(args.rnndir, args.cpdir, float(args.temperature), int(args.count), 
          seed=seed, ident=args.ident, verbose = args.verbose)
+    exit(0)

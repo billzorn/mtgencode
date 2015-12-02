@@ -65,6 +65,11 @@ def makevector(vocabulary,vecs,sequence):
             res = v
         else:
             res = [x + y for x, y in zip(res,v)]
+
+    # bad things happen if we have a vector of only unknown words
+    if res is None:
+        return [0.0]*len(vecs[0])
+
     length = math.sqrt(sum([res[i] * res[i] for i in range(0,len(res))]))
     for i in range(0,len(res)):
         res[i] /= length
