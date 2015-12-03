@@ -3,13 +3,20 @@ import sys
 import os
 import shutil
 
+def cleanup_dump(dumpstr):
+    cardfrags = dumpstr.split('\n\n')
+    if len(cardfrags) < 4:
+        return ''
+    else:
+        return '\n\n'.join(cardfrags[2:-1]) + '\n\n'
+
 def identify_checkpoints(basedir, ident):
     cp_infos = []
-    for path in os.listdir(cpdir):
+    for path in os.listdir(basedir):
         fullpath = os.path.join(basedir, path)
         if not os.path.isfile(fullpath):
             continue
-        if not (name[:13] == 'lm_lstm_epoch' and name[-4:] == '.txt'):
+        if not (path[:13] == 'lm_lstm_epoch' and path[-4:] == '.txt'):
             continue
         if not ident in path:
             continue
@@ -33,30 +40,36 @@ def identify_checkpoints(basedir, ident):
     return cp_infos
 
 def process_dir(basedir, targetdir, ident, copy_cp = False, verbose = False):
+    (basepath, basedirname) = os.path.split(basedir)
+    if basedirname == '':
+        (basepath, basedirname) = os.path.split(basepath)
+
     cp_infos = identify_checkpoints(basedir, ident)
     for (dpath, cpath, (epoch, vloss, temp)) in cp_infos:
         if verbose:
             print('found dumpfile ' + dpath)
-        dname = basedir + '_epoch' + epoch + '_' + vloss + '.' + ident + '.' + temp + '.txt'
-        cname = basedir + '_epoch' + epoch + '_' + vloss + '.t7'
+        dname = basedirname + '_epoch' + epoch + '_' + vloss + '.' + ident + '.' + temp + '.txt'
+        cname = basedirname + '_epoch' + epoch + '_' + vloss + '.t7'
         tdpath = os.path.join(targetdir, dname)
         tcpath = os.path.join(targetdir, cname)
         if verbose:
-            print('cp ' + dpath + ' ' + tdpath)
-        #shutil.copy(dpath,  tdpath)
+            print('    cpx ' + dpath + ' ' + tdpath)
+        with open(dpath, 'rt') as infile:
+            with open(tdpath, 'wt') as outfile:
+                outfile.write(cleanup_dump(infile.read()))
         if copy_cp:
-            if os.path.isfile('cpath'):
+            if os.path.isfile(cpath):
                 if verbose:
-                    print('cp ' + cpath + ' ' + tcpath)
-                #shutil.copy(cpath,  tcpath)
+                    print('    cp ' + cpath + ' ' + tcpath)
+                shutil.copy(cpath,  tcpath)
 
     if copy_cp and len(cp_infos) > 0:
         cmdpath = os.path.join(basedir, 'command.txt')
-        tcmdpath = os.path.join(targetdir, basedir + '.command')
-        if os.path.isfile('cpath'):
+        tcmdpath = os.path.join(targetdir, basedirname + '.command')
+        if os.path.isfile(cmdpath):
             if verbose:
-                print('cp ' + cmdpath + ' ' + tcmdpath)
-            #shutil.copy(cmdpath,  tcmdpath)
+                print('    cp ' + cmdpath + ' ' + tcmdpath)
+            shutil.copy(cmdpath,  tcmdpath)
 
     for path in os.listdir(basedir):
         fullpath = os.path.join(basedir, path)
