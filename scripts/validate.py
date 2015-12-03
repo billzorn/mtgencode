@@ -46,6 +46,10 @@ def list_only(l, items):
             return False
     return True
 
+def pct(x, total):
+    pctstr = 100.0 * float(x) / float(total)
+    return '(' + str(pctstr)[:5] + '%)'
+
 def check_types(card):
     if 'instant' in card.types:
         return list_only(card.types, ['tribal', 'instant'])
@@ -378,20 +382,24 @@ def main(fname, oname = None, verbose = True, dump = False):
         else:
             total_bad += 1
             
+    if total_all == 0:
+        print('no cards seen?')
+        return
+
     # summary
     print('-- overall --')
     print('  total: ' + str(total_all))
-    print('  good : ' + str(total_good))
-    print('  bad  : ' + str(total_bad))
+    print('  good : ' + str(total_good) + ' ' + pct(total_good, total_all))
+    print('  bad  : ' + str(total_bad) + ' ' + pct(total_bad, total_all))
     print('----')
 
     # breakdown
     for prop in props:
         (total, good, bad) = values[prop]
         print(prop + ':')
-        print('  total: ' + str(total))
-        print('  good : ' + str(good))
-        print('  bad  : ' + str(bad))
+        print('  total: ' + str(total) + ' ' + pct(total, total_all))
+        print('  good : ' + str(good) + ' ' + pct(good, total_all))
+        print('  bad  : ' + str(bad) + ' ' + pct(bad, total_all))
 
 
 if __name__ == '__main__':
