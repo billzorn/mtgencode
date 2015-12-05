@@ -296,6 +296,46 @@ def check_triggered(card):
     else:
         return None
 
+def check_chosen(card):
+    if 'chosen' in card.text.text:
+        return ('choose' in card.text.text
+                or 'chosen at random' in card.text.text
+                or 'name' in card.text.text
+                or 'is chosen' in card.text.text
+                or 'search' in card.text.text)
+    else:
+        return None
+
+def check_shuffle(card):
+    retval = None
+    # sadly, this does not detect spurious shuffling
+    for line in card.text_lines:
+        if 'search' in line.text and 'library' in line.text:
+            thisval = ('shuffle' in line.text
+                       or 'searches' in line.text
+                       or 'searched' in line.text
+                       or 'searching' in line.text
+                       or 'rest' in line.text
+                       or 'instead' in line.text)
+            if retval is None:
+                retval = thisval
+            else:
+                retval = retval and thisval
+    return retval
+
+def check_quotes(card):
+    retval = None
+    for line in card.text_lines:
+        # NOTE: the '" pattern in the training set is actually incorrect
+        quotes = len(re.findall(re.escape('"'), line.text))
+        if quotes > 0:
+            thisval = quotes % 2 == 0
+            if retval is None:
+                retval = thisval
+            else:
+                retval = retval and thisval
+    return retval
+
 props = OrderedDict([
     ('types', check_types),
     ('pt', check_pt),
@@ -304,14 +344,60 @@ props = OrderedDict([
     ('kicker', check_kicker),
     ('counters', check_counters),
     ('choices', check_choices),
+    ('quotes', check_quotes),
     ('auras', check_auras),
     ('equipment', check_equipment),
     ('planeswalkers', check_planeswalkers),
     ('levelup', check_levelup),
+    ('chosen', check_chosen),
+    ('shuffle', check_shuffle),
     ('activated', check_activated),
     ('triggered', check_triggered),
 ])
-values = OrderedDict([(k, (0,0,0)) for k in props])
+
+def process_props(cards, dump = False, uncovered = False):
+    total_all = 0
+    total_good = 0
+    total_bad = 0
+    total_uncovered = 0
+    values = OrderedDict([(k, (0,0,0)) for k in props])
+
+    for card in cards:
+        total_all += 1
+        overall = True
+        any_prop = False
+        for prop in props:
+            (total, good, bad) = values[prop]
+            this_prop = props[prop](card)
+            if not this_prop is None:
+                total += 1
+                if not prop == 'types':
+                    any_prop = True
+                if this_prop:
+                    good += 1
+                else:
+                    bad += 1
+                    overall = False
+                    if card.name not in ['demonic pact', 'lavaclaw reaches',
+                                         "ertai's trickery", 'rumbling aftershocks', # i hate these
+                    ] and dump:
+                        print('---- ' + prop + ' ----')
+                        print(card.encode())
+                        print(card.format())
+                values[prop] = (total, good, bad)
+        if overall:
+            total_good += 1
+        else:
+            total_bad += 1
+        if not any_prop:
+            total_uncovered += 1
+            if uncovered:
+                print('---- uncovered ----')
+                print(card.encode())
+                print(card.format())
+
+    return ((total_all, total_good, total_bad, total_uncovered),
+            values)
 
 def main(fname, oname = None, verbose = True, dump = False):
     # may need to set special arguments here
@@ -351,55 +437,26 @@ def main(fname, oname = None, verbose = True, dump = False):
         print '90% - ' + str(pct90)
         print '95% - ' + str(pct95)
         print '99% - ' + str(pct99)
-        exit(0)
 
-    total_all = 0
-    total_good = 0
-    total_bad = 0
+    else:
+        ((total_all, total_good, total_bad, total_uncovered), 
+         values) = process_props(cards, dump=dump)
 
-    for card in cards:
-        total_all += 1
-        overall = True
+        # summary
+        print('-- overall --')
+        print('  total     : ' + str(total_all))
+        print('  good      : ' + str(total_good) + ' ' + pct(total_good, total_all))
+        print('  bad       : ' + str(total_bad) + ' ' + pct(total_bad, total_all))
+        print('  uncocoverd: ' + str(total_uncovered) + ' ' + pct(total_uncovered, total_all))
+        print('----')
+
+        # breakdown
         for prop in props:
             (total, good, bad) = values[prop]
-            this_prop = props[prop](card)
-            if not this_prop is None:
-                total += 1
-                if this_prop:
-                    good += 1
-                else:
-                    bad += 1
-                    overall = False
-                    if card.name not in ['demonic pact', 'lavaclaw reaches',
-                                         "ertai's trickery", 'rumbling aftershocks', # i hate these
-                    ] and dump:
-                        print('---- ' + prop + '----')
-                        print(card.encode())
-                        print(card.format())
-                values[prop] = (total, good, bad)
-        if overall:
-            total_good += 1
-        else:
-            total_bad += 1
-            
-    if total_all == 0:
-        print('no cards seen?')
-        return
-
-    # summary
-    print('-- overall --')
-    print('  total: ' + str(total_all))
-    print('  good : ' + str(total_good) + ' ' + pct(total_good, total_all))
-    print('  bad  : ' + str(total_bad) + ' ' + pct(total_bad, total_all))
-    print('----')
-
-    # breakdown
-    for prop in props:
-        (total, good, bad) = values[prop]
-        print(prop + ':')
-        print('  total: ' + str(total) + ' ' + pct(total, total_all))
-        print('  good : ' + str(good) + ' ' + pct(good, total_all))
-        print('  bad  : ' + str(bad) + ' ' + pct(bad, total_all))
+            print(prop + ':')
+            print('  total: ' + str(total) + ' ' + pct(total, total_all))
+            print('  good : ' + str(good) + ' ' + pct(good, total_all))
+            print('  bad  : ' + str(bad) + ' ' + pct(bad, total_all))
 
 
 if __name__ == '__main__':
