@@ -326,8 +326,9 @@ def check_shuffle(card):
 def check_quotes(card):
     retval = None
     for line in card.text_lines:
-        # NOTE: the '" pattern in the training set is actually incorrect
         quotes = len(re.findall(re.escape('"'), line.text))
+        # HACK: the '" pattern in the training set is actually incorrect
+        quotes += len(re.findall(re.escape('\'"'), line.text))
         if quotes > 0:
             thisval = quotes % 2 == 0
             if retval is None:
@@ -399,7 +400,7 @@ def process_props(cards, dump = False, uncovered = False):
     return ((total_all, total_good, total_bad, total_uncovered),
             values)
 
-def main(fname, oname = None, verbose = True, dump = False):
+def main(fname, oname = None, verbose = False, dump = False):
     # may need to set special arguments here
     cards = jdecode.mtg_open_file(fname, verbose=verbose)
     

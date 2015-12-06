@@ -49,7 +49,7 @@ def build_ngram_model(cards, n, separate_lines = True, verbose = False):
     lang = extract_language(cards, separate_lines=separate_lines)
     if verbose:
         print('found ' + str(len(lang)) + ' sentences')
-    lm = model.NgramModel(n, lang)
+    lm = model.NgramModel(n, lang, pad_left=True, pad_right=True)
     if verbose:
         print(lm)
     return lm
