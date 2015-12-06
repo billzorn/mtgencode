@@ -8,9 +8,14 @@ from collections import OrderedDict
 import scipy
 import scipy.stats
 import numpy as np
+import math
+
+def mean_nonan(l):
+    filtered = [x for x in l if not math.isnan(x)]
+    return  np.mean(filtered)
 
 def gmean_nonzero(l):
-    filtered = [x for x in l if x != 0]
+    filtered = [x for x in l if x != 0 and not math.isnan(x)]
     return  scipy.stats.gmean(filtered)
 
 libdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../lib')
@@ -18,7 +23,7 @@ sys.path.append(libdir)
 datadir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../data')
 import jdecode
 
-import validate
+import mtg_validate
 import ngrams
 
 def annotate_values(values):
@@ -66,7 +71,7 @@ def get_statistics(fname, lm = None, sep = False, verbose=False):
 
     # validate
     ((total_all, total_good, total_bad, total_uncovered), 
-         values) = validate.process_props(cards)
+         values) = mtg_validate.process_props(cards)
     
     stats['props'] = annotate_values(values)
     stats['props']['overall'] = OrderedDict([('total', total_all), 
@@ -97,8 +102,8 @@ def get_statistics(fname, lm = None, sep = False, verbose=False):
             if cdist == 1.0:
                 card_dupes += 1
 
-        dists['name_mean'] = np.mean(dists['name'])
-        dists['cbow_mean'] = np.mean(dists['cbow'])
+        dists['name_mean'] = mean_nonan(dists['name'])
+        dists['cbow_mean'] = mean_nonan(dists['cbow'])
         dists['name_geomean'] = gmean_nonzero(dists['name'])
         dists['cbow_geomean'] = gmean_nonzero(dists['cbow'])
         stats['dists'] = dists
@@ -125,19 +130,20 @@ def get_statistics(fname, lm = None, sep = False, verbose=False):
             ngram['perp'] += [perp]
             ngram['perp_per'] += [perp_per]
 
-        ngram['perp_mean'] = np.mean(ngram['perp'])
-        ngram['perp_per_mean'] = np.mean(ngram['perp_per'])
+        ngram['perp_mean'] = mean_nonan(ngram['perp'])
+        ngram['perp_per_mean'] = mean_nonan(ngram['perp_per'])
         ngram['perp_geomean'] = gmean_nonzero(ngram['perp'])
         ngram['perp_per_geomean'] = gmean_nonzero(ngram['perp_per'])
         stats['ngram'] = ngram
 
-    print_statistics(stats)
+    return stats
     
 
 def main(infile, verbose = False):
     lm = ngrams.build_ngram_model(jdecode.mtg_open_file(str(os.path.join(datadir, 'output.txt'))),
                             3, separate_lines=True, verbose=True)
-    get_statistics(infile, lm=lm, sep=True, verbose=verbose)
+    stats = get_statistics(infile, lm=lm, sep=True, verbose=verbose)
+    print_statistics(stats)
 
 if __name__ == '__main__':
     
