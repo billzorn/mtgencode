@@ -110,7 +110,8 @@ def get_statistics(fname, lm = None, sep = False, verbose=False):
         
     # n-grams
     if not lm is None:
-        ngram = OrderedDict([('perp', []), ('perp_per', [])])
+        ngram = OrderedDict([('perp', []), ('perp_per', []), 
+                             ('perp_max', []), ('perp_per_max', [])])
         for card in cards:
             if len(card.text.text) == 0:
                 perp = 0.0
@@ -122,13 +123,19 @@ def get_statistics(fname, lm = None, sep = False, verbose=False):
                 perps_per = [perps[i] / float(len(vtexts[i])) for i in range(0, len(vtexts))]
                 perp = gmean_nonzero(perps)
                 perp_per = gmean_nonzero(perps_per)
+                perp_max = max(perps)
+                perp_per_max = max(perps_per)
             else:
                 vtext = card.text.vectorize().split()
                 perp = lm.perplexity(vtext)
                 perp_per = perp / float(len(vtext))
+                perp_max = perp
+                perp_per_max = perps_per
 
             ngram['perp'] += [perp]
             ngram['perp_per'] += [perp_per]
+            ngram['perp_max'] += [perp_max]
+            ngram['perp_per_max'] += [perp_per_max]
 
         ngram['perp_mean'] = mean_nonan(ngram['perp'])
         ngram['perp_per_mean'] = mean_nonan(ngram['perp_per'])

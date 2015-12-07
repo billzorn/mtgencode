@@ -156,7 +156,9 @@ def check_X(card):
 def check_kicker(card):
     # also lazy and simple
     if 'kicker' in card.text.text or 'kicked' in card.text.text:
-        return 'kicker' in card.text.text and 'kicked' in card.text.text
+        # could also check for costs, at least make 'it's $ kicker,' not count as a kicker ability
+        newtext = card.text.text.replace(utils.reserved_mana_marker + ' kicker', '')
+        return 'kicker' in newtext and 'kicked' in newtext
     else:
         return None
 
