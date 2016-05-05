@@ -13,7 +13,7 @@ class Manacost:
         colors = ''
         for sym in self.symbols:
             if self.symbols[sym] > 0:
-                symcolors = re.sub(r'2|P|S|X', '', sym)
+                symcolors = re.sub(r'2|P|S|X|C', '', sym)
                 for symcolor in symcolors:
                     if symcolor not in colors:
                         colors += symcolor
