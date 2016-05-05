@@ -434,9 +434,9 @@ def mana_untranslate(manastr, for_forum = False, for_html = False):
         if jmanastr == '':
             return mana_html_open_delimiter + str(colorless_total) + mana_html_close_delimiter
         else:
-            return (mana_html_open_delimiter + ('' if colorless_total == 0 
-                                                 else str(colorless_total))
-                    + mana_html_close_delimiter + jmanastr)
+            return (('' if colorless_total == 0
+                     else mana_html_open_delimiter + str(colorless_total) + mana_html_close_delimiter)
+                    + jmanastr)
 
     elif for_forum:
         if jmanastr == '':
