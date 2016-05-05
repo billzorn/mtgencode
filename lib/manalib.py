@@ -136,7 +136,7 @@ class Manacost:
         else:
             ld = ''
             rd = ''
-        return ' '.join(map(lambda s: ld + s + rd, self.sequence))
+        return ' '.join(map(lambda s: ld + s + rd, sorted(self.sequence)))
         
 
 class Manatext:
