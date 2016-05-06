@@ -13063,7 +13063,7 @@
 
 |5enchantment|4|6aura|7|8|9enchant creature\{UU}: tap enchanted creature.\{UU}: untap enchanted creature.|3{^^UU}|0O|1freed from the real|
 
-|5enchantment|4|6|7|8|9converge ~ @ enters the battlefield with a crystal counter on it for each color of mana spent to cast it.\remove a crystal counter from @: tap target creature.\{WWUUBBRRGG}: scry &^^^.|3{^^^^UU}|0A|1prism array|
+|5enchantment|4|6|7|8|9converge ~ @ enters the battlefield with a % counter on it for each color of mana spent to cast it.\remove a % counter from @: tap target creature.\{WWUUBBRRGG}: scry &^^^.\countertype % crystal|3{^^^^UU}|0A|1prism array|
 
 |5sorcery|4|6|7|8|9[& = return target creature card from your graveyard to your hand. = return target enchantment card from your graveyard to your hand.]|3{^^GG}|0N|1reviving melody|
 
