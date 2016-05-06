@@ -49,7 +49,7 @@ named      | Name first: `|name|type|supertype|subtype|loyalty|pt|text|cost|rari
 noname     | No name field at all: `|type|supertype|subtype|loyalty|pt|text|cost|rarity|`.
 rfields    | Randomize the order of the fields, using only the label to distinguish which field is which.
 old        | Legacy format: `|name|supertype|type|loyalty|subtype|rarity|pt|cost|text|`. No field labels.
-norarity   | Older legacy format: `|name|supertype|type|loyalty|subtype|rarity|pt|cost|text|`. No field labels.
+norarity   | Older legacy format: `|name|supertype|type|loyalty|subtype|pt|cost|text|`. No field labels.
 vec        | Produce a content vector for each card; used with [word2vec](https://code.google.com/p/word2vec/).
 custom     | Blank format slot, inteded to help users add their own formats to the python source.
 
