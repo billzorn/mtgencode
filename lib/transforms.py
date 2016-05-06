@@ -136,6 +136,8 @@ def text_pass_4b_x(s):
     s = s.replace('x/x', x_marker + '/' + x_marker)
     s = s.replace('x target', x_marker + ' target')
     s = s.replace('si' + x_marker + ' target', 'six target')
+    # there's also some stupid ice age card that wants -x/-y
+    s = s.replace('/~', '/-')
     return s
 
 
@@ -251,6 +253,7 @@ def text_pass_5_counters(s):
         'petrification counter',
         'shred counter',
         'pupa counter',
+        'crystal counter',
     ]
     usedcounters = []
     for countername in allcounters:
@@ -338,11 +341,11 @@ def text_pass_7_choice(s):
     # the idea is to take 'choose n ~\n=ability\n=ability\n'
     # to '[n = ability = ability]\n'
     
-    def choice_formatting_helper(s_helper, prefix, count):
+    def choice_formatting_helper(s_helper, prefix, count, suffix = ''):
         single_choices = re.findall(ur'(' + prefix + ur'\n?(\u2022.*(\n|$))+)', s_helper)
         for choice in single_choices:
             newchoice = choice[0]
-            newchoice = newchoice.replace(prefix, unary_marker + (unary_counter * count))
+            newchoice = newchoice.replace(prefix, unary_marker + (unary_counter * count) + suffix)
             newchoice = newchoice.replace('\n', ' ')
             if newchoice[-1:] == ' ':
                 newchoice = choice_open_delimiter + newchoice[:-1] + choice_close_delimiter + '\n'
@@ -360,6 +363,12 @@ def text_pass_7_choice(s):
     s = choice_formatting_helper(s, ur'choose khans or dragons.', 1)
     # this is for 'an opponent chooses one', which will be a bit weird but still work out
     s = choice_formatting_helper(s, ur'chooses one \u2014', 1)
+    # Demonic Pact has 'choose one that hasn't been chosen'...
+    s = choice_formatting_helper(s, ur"choose one that hasn't been chosen \u2014", 1,
+                                 suffix=" that hasn't been chosen")
+    # 'choose n. you may choose the same mode more than once.'
+    s = choice_formatting_helper(s, ur'choose three. you may choose the same mode more than once.', 3,
+                                 suffix='. you may choose the same mode more than once.')
 
     return s
 
@@ -425,30 +434,88 @@ def text_pass_11_linetrans(s):
 
     lines = s.split(utils.newline)
     for line in lines:
+        line = line.strip()
+        if line == '':
+            continue
         if not '.' in line:
             # because this is inconsistent
             line = line.replace(',', ';')
             line = line.replace('; where', ', where') # Thromok the Insatiable
+            line = line.replace('; and', ', and') # wonky protection
+            line = line.replace('; from', ', from') # wonky protection
+            line = line.replace('upkeep;', 'upkeep,') # wonky protection
             sublines = line.split(';')
             for subline in sublines:
+                subline = subline.strip()
                 if 'equip' in subline or 'enchant' in subline:
-                    prelines += [subline.strip()]
+                    prelines += [subline]
                 elif 'countertype' in subline or 'kicker' in subline:
-                    postlines += [subline.strip()]
+                    postlines += [subline]
                 else:
-                    keylines += [subline.strip()]
+                    keylines += [subline]
         elif u'\u2014' in line and not u' \u2014 ' in line:
             if 'equip' in line or 'enchant' in line:
-                prelines += [line.strip()]
+                prelines += [line]
             elif 'countertype' in line or 'kicker' in line:
-                postlines += [line.strip()]
+                postlines += [line]
             else:
-                keylines += [line.strip()]
+                keylines += [line]
         else:
-            mainlines += [line.strip()]
+            mainlines += [line]
 
     alllines = prelines + keylines + mainlines + postlines
     return utils.newline.join(alllines)
+
+# randomize the order of the lines
+# not a text pass, intended to be invoked dynamically when encoding a card
+# call this on fully encoded text, with mana symbols expanded
+def randomize_lines(text):
+    # forget about level up, ignore empty text too while we're at it
+    if text == '' or 'level up' in text:
+        return [],[],[],[]
+    
+    preline_search = ['equip', 'fortify', 'enchant ', 'bestow']
+    postline_search = [
+        'countertype', 'multikicker', 'kicker', 'suspend', 'echo', 'awaken',
+        'buyback', 'champion', 'dash', 'entwine', 'evoke', 'fading', 'flashback',
+        'madness', 'megamorph', 'morph', 'miracle', 'ninjutsu', 'overload',
+        'prowl', 'recover', 'reinforce', 'replicate', 'scavenge', 'splice',
+        'surge', 'unearth', 'transmute', 'transfigure', 'vanishing', 'tribute',
+    ]
+    # cycling is a special case to handle the variants
+    keyline_search = ['cumulative']
+
+    prelines = []
+    keylines = []
+    mainlines = []
+    postlines = []
+
+    lines = text.split(utils.newline)
+    # we've already done linetrans once, so some of the irregularities have been simplified
+    for line in lines:
+        if not '.' in line:
+            if any(line.startswith(s) for s in preline_search):
+                prelines.append(line)
+            elif any(line.startswith(s) for s in postline_search) or 'cycling' in line:
+                postlines.append(line)
+            else:
+                keylines.append(line)
+        elif (utils.dash_marker in line and not 
+              (' '+utils.dash_marker+' ' in line or 'non'+utils.dash_marker in line)):
+            if any(line.startswith(s) for s in preline_search):
+                prelines.append(line)
+            elif any(line.startswith(s) for s in postline_search) or 'cycling' in line:
+                postlines.append(line)
+            elif any(line.startswith(s) for s in keyline_search):
+                keylines.append(line)
+            else:
+                mainlines.append(line)
+        elif ': monstrosity' in line:
+            postlines.append(line)
+        else:
+            mainlines.append(line)
+
+    return prelines, keylines, mainlines, postlines
 
 
 # Text unpasses, for decoding. All assume the text inside a Manatext, so don't do anything
