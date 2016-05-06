@@ -24026,7 +24026,7 @@
 
 |5sorcery|4|6|7|8|9destroy each creature with converted mana cost &^^^ or less.|3{^^WWWWBB}|0A|1culling sun|
 
-|5enchantment|4|6|7|8|9at the beginning of your upkeep\choose one that hasn't been chosen ~\= @ deals &^^^^ damage to target creature or player and you gain &^^^^ life.\= target opponent discards two cards.\= draw two cards.\= you lose the game.|3{^^BBBB}|0Y|1demonic pact|
+|5enchantment|4|6|7|8|9at the beginning of your upkeep, [&^ that hasn't been chosen = @ deals &^^^^ damage to target creature or player and you gain &^^^^ life. = target opponent discards two cards. = draw two cards. = you lose the game.]|3{^^BBBB}|0Y|1demonic pact|
 
 |5creature|4|6spirit|7|8&^^/&^^|9{BB}: target player dealt damage by @ this turn loses &^ life.|3{BBBB}|0O|1wicked akuba|
 
