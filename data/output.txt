@@ -720,7 +720,7 @@
 
 |5creature|4|6atog|7|8&^/&^^|9sacrifice an enchantment: @ gets +&^/+&^ until end of turn.\discard a card: @ gets +&^/+&^ until end of turn.|3{^WWUU}|0N|1phantatog|
 
-|5sorcery|4|6|7|8|9choose three. you may choose the same mode more than once.\= put a &^^/&^^ white knight creature token with vigilance onto the battlefield.\= exile target enchantment.\= you gain &^^^^^ life.|3{^^^WWWW}|0A|1righteous confluence|
+|5sorcery|4|6|7|8|9[&^^^. you may choose the same mode more than once. = put a &^^/&^^ white knight creature token with vigilance onto the battlefield. = exile target enchantment. = you gain &^^^^^ life.]|3{^^^WWWW}|0A|1righteous confluence|
 
 |5sorcery|4|6|7|8|9suspend &^^^^~{^RR}\destroy target artifact or land.|3{^^^^RR}|0O|1plunder|
 
@@ -3273,7 +3273,7 @@
 
 |5creature|4|6wurm|7|8&^^^^^/&^^^^|9when @ enters the battlefield, flip a coin. if you lose the flip, return @ to its owner's hand.|3{^^^RR}|0N|1wild wurm|
 
-|5instant|4|6|7|8|9choose three. you may choose the same mode more than once.\= uncast target spell unless its controller pays {^^^}.\= return target creature to its owner's hand.\= draw a card.|3{^^^UUUU}|0A|1mystic confluence|
+|5instant|4|6|7|8|9[&^^^. you may choose the same mode more than once. = uncast target spell unless its controller pays {^^^}. = return target creature to its owner's hand. = draw a card.]|3{^^^UUUU}|0A|1mystic confluence|
 
 |5creature|4|6bringer|7|8&^^^^^/&^^^^^|9trample\you may pay {WWUUBBRRGG} rather than pay @'s mana cost.\at the beginning of your upkeep, you may pay &^^ life. if you do, search your library for a card, then shuffle your library and put that card on top of it.|3{^^^^^^^BBBB}|0A|1bringer of the black dawn|
 
@@ -5538,7 +5538,7 @@
 
 |5creature|4|6elemental|7|8&^^/&^^|9{RR}, return @ to its owner's hand: add {CCCCRR} to your mana pool. activate this ability only any time you could cast a sorcery.|3{^^RR}|0O|1grinning ignus|
 
-|5instant|4|6|7|8|9choose three. you may choose the same mode more than once.\= target player draws a card and loses &^ life.\= target creature gets -&^^/-&^^ until end of turn.\= return target creature card from your graveyard to your hand.|3{^^^BBBB}|0A|1wretched confluence|
+|5instant|4|6|7|8|9[&^^^. you may choose the same mode more than once. = target player draws a card and loses &^ life. = target creature gets -&^^/-&^^ until end of turn. = return target creature card from your graveyard to your hand.]|3{^^^BBBB}|0A|1wretched confluence|
 
 |5creature|4|6crab|7|8&^/&^^^^^|9|3{^UUUU}|0O|1ancient crab|
 
@@ -20379,7 +20379,7 @@
 
 |5enchantment|4|6aura|7|8|9enchant creature\enchanted creature gets +&^^/+&^^.\enchanted creature has flying as long as you control a red or white permanent.|3{^^UU}|0O|1jeskai runemark|
 
-|5sorcery|4|6|7|8|9choose three. you may choose the same mode more than once.\= put two +&^/+&^ counters on target creature.\= return target permanent card from your graveyard to your hand.\= search your library for a basic land card, put it onto the battlefield tapped, then shuffle your library.|3{^^^^GGGG}|0A|1verdant confluence|
+|5sorcery|4|6|7|8|9[&^^^. you may choose the same mode more than once. = put two +&^/+&^ counters on target creature. = return target permanent card from your graveyard to your hand. = search your library for a basic land card, put it onto the battlefield tapped, then shuffle your library.]|3{^^^^GGGG}|0A|1verdant confluence|
 
 |5sorcery|4|6|7|8|9fuse\target player puts the top eight cards of his or her library into his or her graveyard.|3{UUBB}|0A|1breaking|
 |5sorcery|4|6|7|8|9fuse\put a creature card from a graveyard onto the battlefield under your control. it gains haste until end of turn.|3{^^^^BBRR}|0A|1entering|
@@ -29643,7 +29643,7 @@
 
 |5sorcery|4|6|7|8|9as an additional cost to cast @, sacrifice a creature.\gain control of target nonartifact, nonblack creature.|3{^^BBBB}|0A|1ritual of the machine|
 
-|5sorcery|4|6|7|8|9choose three. you may choose the same mode more than once.\= @ deals &^ damage to each creature.\= @ deals &^^ damage to each opponent.\= destroy target artifact.|3{^^RRRR}|0A|1fiery confluence|
+|5sorcery|4|6|7|8|9[&^^^. you may choose the same mode more than once. = @ deals &^ damage to each creature. = @ deals &^^ damage to each opponent. = destroy target artifact.]|3{^^RRRR}|0A|1fiery confluence|
 
 |5instant|4|6|7|8|9target creature gets +X/+X until end of turn, where X is the number of elves on the battlefield.|3{GG}|0O|1wirewood pride|
 
