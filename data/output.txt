@@ -1412,7 +1412,7 @@
 
 |5creature|4|6human wizard|7|8&^^/&^|9shadow\at the beginning of your upkeep, sacrifice @ unless you pay {UU}.|3{UU}|0O|1drifter il~dal|
 
-|5land|4|6urza"s tower|7|8|9T: add {CC} to your mana pool. if you control an urza's mine and an urza's power~plant, add {CCCCCC} to your mana pool instead.|3|0N|1urza's tower|
+|5land|4|6urza's tower|7|8|9T: add {CC} to your mana pool. if you control an urza's mine and an urza's power~plant, add {CCCCCC} to your mana pool instead.|3|0N|1urza's tower|
 
 |5artifact|4|6|7|8|9as @ enters the battlefield, choose a creature type.\creature spells of the chosen type cost {^^} less to cast.|3{^^^}|0A|1urza's incubator|
 
@@ -16245,7 +16245,7 @@
 
 |5sorcery|4|6|7|8|9target opponent reveals his or her hand. you draw a card for each mountain and red card in it.|3{^^UU}|0N|1baleful stare|
 
-|5land|4|6urza"s|7|8|9T: add {CC} to your mana pool.\{^^^^^^^}, T: put a &^^/&^^ colorless assembly~worker artifact creature token onto the battlefield.|3|0N|1urza's factory|
+|5land|4|6urza's|7|8|9T: add {CC} to your mana pool.\{^^^^^^^}, T: put a &^^/&^^ colorless assembly~worker artifact creature token onto the battlefield.|3|0N|1urza's factory|
 
 |5creature|4|6moonfolk wizard|7|8&^^/&^|9flying\{^^^}, return three lands you control to their owner's hand: return target creature to its owner's hand.|3{^^^UU}|0N|1soratami mirror~mage|
 
@@ -20995,7 +20995,7 @@
 
 |5creature|4|6goblin warrior|7|8&^/&^|9{BB}, sacrifice a goblin: @ gets +&^^/+&^^ until end of turn.|3{BB}|0O|1facevaulter|
 
-|5land|4|6urza"s mine|7|8|9T: add {CC} to your mana pool. if you control an urza's power~plant and an urza's tower, add {CCCC} to your mana pool instead.|3|0N|1urza's mine|
+|5land|4|6urza's mine|7|8|9T: add {CC} to your mana pool. if you control an urza's power~plant and an urza's tower, add {CCCC} to your mana pool instead.|3|0N|1urza's mine|
 
 |5creature|4|6goblin|7|8&^/&^|9@ doesn't untap during your untap step.\whenever a creature dies, untap @.\T: @ deals &^ damage to target creature or player.|3{^^RR}|0A|1goblin sharpshooter|
 
@@ -28430,7 +28430,7 @@
 
 |5instant|4|6|7|8|9cast @ only during the declare attackers step and only if you've been attacked this step.\destroy target attacking creature.|3{^^WW}|0A|1eightfold maze|
 
-|5land|4|6urza"s power-plant|7|8|9T: add {CC} to your mana pool. if you control an urza's mine and an urza's tower, add {CCCC} to your mana pool instead.|3|0N|1urza's power plant|
+|5land|4|6urza's power~plant|7|8|9T: add {CC} to your mana pool. if you control an urza's mine and an urza's tower, add {CCCC} to your mana pool instead.|3|0N|1urza's power plant|
 
 |5artifact|4|6|7|8|9T: each player draws a card.|3{^^^}|0A|1temple bell|
 
@@ -30460,7 +30460,7 @@
 
 |5enchantment|4|6|7|8|9as @ enters the battlefield, choose a color.\{WW}: the next time a source of your choice of the chosen color would deal damage to you this turn, prevent that damage.|3{^WWWW}|0A|1story circle|
 
-|5artifact creature|4|6assembly-worker|7|8&^^/&^^|9T: target @ creature gets +&^/+&^ until end of turn.|3{^^^}|0N|1assembly~worker|
+|5artifact creature|4|6assembly~worker|7|8&^^/&^^|9T: target @ creature gets +&^/+&^ until end of turn.|3{^^^}|0N|1assembly~worker|
 
 |5creature|4|6human advisor|7|8&/&^|9T: draw a card, then discard a card. if a creature card is discarded this way, untap @, then transform it.|3{^^UU}|0N|1civilized scholar|
 |5creature|4|6human mutant|7|8&^^^^^/&^|9at the beginning of your end step, if @ didn't attack this turn, tap @, then transform it.|3|0N|1homicidal brute|
