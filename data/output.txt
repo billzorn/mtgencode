@@ -922,7 +922,7 @@
 
 |5creature|4|6turtle|7|8&^^/&^^|9@ has shroud as long as you control no untapped lands.|3{GGGG}|0N|1vintara snapper|
 
-|5sorcery|4|6|7|8|9x is the number of artifact and/or creature cards in an opponent's graveyard as you cast @.\distribute X +&^/+&^ counters among any number of target creatures.|3{XXBB}|0A|1spoils of war|
+|5sorcery|4|6|7|8|9X is the number of artifact and/or creature cards in an opponent's graveyard as you cast @.\distribute X +&^/+&^ counters among any number of target creatures.|3{XXBB}|0A|1spoils of war|
 
 |5artifact creature|4|6golem warrior|7|8&^^^^/&^^^^|9@ can't attack or block unless you tap an untapped creature you control not declared as an attacking or blocking creature this combat.|3{^^^^}|0N|1hollow warrior|
 
@@ -1631,7 +1631,7 @@
 
 |5land|4|6|7|8|9@ enters the battlefield tapped.\when @ enters the battlefield, you gain &^ life.\T: add {UU} or {BB} to your mana pool.|3|0N|1jwar isle refuge|
 
-|5instant|4|6|7|8|9cast @ only during combat before blockers are declared.\x can't be greater than the number of snow lands you control.\choose X target attacking creatures. for each of those creatures, its controller may pay {^} or {^^}. if that player doesn't, destroy that creature at end of combat. if that player pays only {^}, prevent all combat damage that would be dealt to and dealt by that creature this combat.|3{XXUU}|0A|1winter's chill|
+|5instant|4|6|7|8|9cast @ only during combat before blockers are declared.\X can't be greater than the number of snow lands you control.\choose X target attacking creatures. for each of those creatures, its controller may pay {^} or {^^}. if that player doesn't, destroy that creature at end of combat. if that player pays only {^}, prevent all combat damage that would be dealt to and dealt by that creature this combat.|3{XXUU}|0A|1winter's chill|
 
 |5land|4|6|7|8|9T: add {CC} to your mana pool.\{^}, T: put a % counter on @.\{^}, remove X % counters from @: add X mana in any combination of {RR} and/or {GG} to your mana pool.\countertype % storage|3|0N|1fungal reaches|
 
@@ -9577,7 +9577,7 @@
 
 |5instant|4|6trap|7|8|9if four or more creatures are attacking, you may pay {^WW} rather than pay @'s mana cost.\@ deals &^^^^^ damage divided as you choose among any number of target attacking creatures.|3{^^^WWWW}|0N|1arrow volley trap|
 
-|5instant|4|6|7|8|9x can't be &.\target spell's controller exiles it with X % counters on it.\at the beginning of each of that player's upkeeps, if that card is exiled, remove a % counter from it. if the card has no % counters on it, he or she puts it onto the stack as a copy of the original spell.\countertype % delay|3{XXUU}|0A|1ertai's meddling|
+|5instant|4|6|7|8|9X can't be &.\target spell's controller exiles it with X % counters on it.\at the beginning of each of that player's upkeeps, if that card is exiled, remove a % counter from it. if the card has no % counters on it, he or she puts it onto the stack as a copy of the original spell.\countertype % delay|3{XXUU}|0A|1ertai's meddling|
 
 |5enchantment|4|6|7|8|9at the beginning of each upkeep, if you lost life last turn, put a &^/&^ white soldier creature token onto the battlefield.|3{^^^WW}|0N|1first response|
 
