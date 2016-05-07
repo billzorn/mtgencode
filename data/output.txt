@@ -22655,7 +22655,7 @@
 
 |5creature|4legendary|6spirit|7|8&^^^/&^^|9flying\soulshift &^^^^\{^}, sacrifice a spirit: target opponent reveals his or her hand. you choose a card from it. that player discards that card. activate this ability only any time you could cast a sorcery.|3{^^^^BB}|0A|1he who hungers|
 
-|5planeswalker|4|6gideon|7&^^^^|8|9+&^: put a % counter on @ for each creature target opponent controls.\&: until end of turn, @ becomes a human soldier creature with power and toughness each equal to the number of % counters on him and gains indestructible. he's still a planeswalker. prevent all damage that would be dealt to @ this turn.\-&^^^^^^^^^^^^^^^: exile all other permanents.\countertype % loyalty|3{^^WWWW}|0Y|1gideon, champion of justice|
+|5planeswalker|4|6gideon|7&^^^^|8|9+&^: put a % counter on @ for each creature target opponent controls.\&: until end of turn, @ becomes a human soldier creature with power and toughness each equal to the number of % counters on him and gains indestructible. @ is still a planeswalker. prevent all damage that would be dealt to @ this turn.\-&^^^^^^^^^^^^^^^: exile all other permanents.\countertype % loyalty|3{^^WWWW}|0Y|1gideon, champion of justice|
 
 |5creature|4|6merfolk rogue|7|8&^^/&^|9morph {UU}\when @ is turned face up, you may tap or untap target permanent.|3{^UU}|0O|1coral trickster|
 
