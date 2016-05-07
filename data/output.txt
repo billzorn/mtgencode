@@ -1705,7 +1705,7 @@
 
 |5instant|4|6|7|8|9cast @ only during the declare blockers step.\remove target creature defending player controls from combat. creatures it was blocking that had become blocked by only that creature this combat become unblocked. you may have it block an attacking creature of your choice.|3{RR}|0O|1false orders|
 
-|5artifact|4legendary|6equipment|7|8|9equip {^^^^}\equipment named sword of kaldra, @, and helm of kaldra have indestructible.\equipped creature has indestructible.|3{^^^^}|0A|1shield of kaldra|
+|5artifact|4legendary|6equipment|7|8|9equip {^^^^}\equipment named sword of kaldra, shield of kaldra, and helm of kaldra have indestructible.\equipped creature has indestructible.|3{^^^^}|0A|1shield of kaldra|
 
 |5sorcery|4|6|7|8|9draw four cards. you lose half your life, rounded up.|3{BBBBBB}|0A|1cruel bargain|
 
@@ -9141,7 +9141,7 @@
 
 |5creature|4|6hydra|7|8&^^^^^^^^/&^^^^^^^^|9whenever @ deals combat damage to an opponent, it deals that much damage to each other opponent.|3{^^^^GGGG}|0A|1hydra omnivore|
 
-|5creature|4legendary|6human rogue|7|8&^^^/&^|9you may have @ enter the battlefield as a copy of any creature on the battlefield, except its name is still @, it's legendary in addition to its other types, and it gains "{^^UUUU}: return @ to its owner's hand at the beginning of the next end step."|3{^^UUUU}|0A|1sakashima the impostor|
+|5creature|4legendary|6human rogue|7|8&^^^/&^|9you may have @ enter the battlefield as a copy of any creature on the battlefield, except its name is still sakashima the impostor, it's legendary in addition to its other types, and it gains "{^^UUUU}: return @ to its owner's hand at the beginning of the next end step."|3{^^UUUU}|0A|1sakashima the impostor|
 
 |5creature|4|6centaur shaman|7|8&^^^/&^^^^|9whenever a player activates an ability that isn't a mana ability, @ deals &^ damage to that player.|3{^RRGG}|0A|1burning~tree shaman|
 
@@ -12445,7 +12445,7 @@
 
 |5artifact creature|4|6construct|7|8&^^^^/&^^^^^|9echo {^^^^}\@ attacks each turn if able.|3{^^^^}|0N|1thran war machine|
 
-|5creature|4|6djinn|7|8&^^^/&^^^^^|9trample\at the beginning of your upkeep, if you don't control a creature named keeper of @, @ deals &^^^ damage to you and attacks this turn if able.\{RR}: @ gets +&^/+& until end of turn.|3{^^^RRRR}|0A|1kookus|
+|5creature|4|6djinn|7|8&^^^/&^^^^^|9trample\at the beginning of your upkeep, if you don't control a creature named keeper of kookus, @ deals &^^^ damage to you and attacks this turn if able.\{RR}: @ gets +&^/+& until end of turn.|3{^^^RRRR}|0A|1kookus|
 
 |5artifact creature|4|6snake|7|8&^^/&^|9first strike|3{^^^}|0O|1coiled tinviper|
 
@@ -16604,7 +16604,7 @@
 
 |5enchantment|4|6aura|7|8|9enchant creature\flash\enchanted creature has shroud.|3{^UU}|0O|1alexi's cloak|
 
-|5land|4legendary|6|7|8|9T: add {CC} to your mana pool.\{^RR}, T: put a &/&^ red kobold creature token named kobolds of @ onto the battlefield.|3|0A|1kher keep|
+|5land|4legendary|6|7|8|9T: add {CC} to your mana pool.\{^RR}, T: put a &/&^ red kobold creature token named kobolds of kher keep onto the battlefield.|3|0A|1kher keep|
 
 |5enchantment|4|6|7|8|9as long as you control exactly one creature, that creature gets +&^^^/+&^ and has lifelink.|3{^^^^BB}|0N|1homicidal seclusion|
 
@@ -23107,7 +23107,7 @@
 
 |5enchantment|4|6|7|8|9whenever a creature enters the battlefield under your control, you may destroy target artifact or enchantment.|3{^GGWW}|0N|1aura shards|
 
-|5creature|4legendary|6shapeshifter|7|8&^^^/&^^^|9hexproof\whenever a creature card is put into an opponent's graveyard from anywhere, you may have @ become a copy of that card except its name is still @, it's legendary in addition to its other types, and it gains hexproof and this ability.|3{UUUUBBBB}|0Y|1lazav, dimir mastermind|
+|5creature|4legendary|6shapeshifter|7|8&^^^/&^^^|9hexproof\whenever a creature card is put into an opponent's graveyard from anywhere, you may have @ become a copy of that card except its name is still lazav, dimir mastermind, it's legendary in addition to its other types, and it gains hexproof and this ability.|3{UUUUBBBB}|0Y|1lazav, dimir mastermind|
 
 |5enchantment|4|6|7|8|9at the beginning of your upkeep, count the number of permanents you control. your life total becomes that number.|3{^^^^^WWWW}|0A|1touch of the eternal|
 
@@ -29102,7 +29102,7 @@
 
 |5creature|4legendary|6human wizard|7|8&^^^/&^^^|9{^BB}, T: target creature gets -&^/-&^ until end of turn.|3{^^^^BB}|0A|1grandmother sengir|
 
-|5creature|4|6beast|7|8&^^^/&^^^|9haste\when @ enters the battlefield, you may search your library for a card named avaraX, reveal it, and put it into your hand. if you do, shuffle your library.\{^RR}: @ gets +&^/+& until end of turn.|3{^^^RRRR}|0N|1avarax|
+|5creature|4|6beast|7|8&^^^/&^^^|9haste\when @ enters the battlefield, you may search your library for a card named avarax, reveal it, and put it into your hand. if you do, shuffle your library.\{^RR}: @ gets +&^/+& until end of turn.|3{^^^RRRR}|0N|1avarax|
 
 |5artifact|4|6|7|8|9if you would lose the game, instead shuffle your hand, your graveyard, and all permanents you own into your library, then draw seven cards and your life total becomes &^^^^^^^^^^^^^^^^^^^^.|3{^^^^^}|0Y|1lich's mirror|
 
