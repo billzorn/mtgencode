@@ -257,8 +257,11 @@ def fields_from_json(src_json, linetrans = True):
         parsed = False
 
     if 'subtypes' in src_json:
-        fields[field_subtypes] = [(-1, map(lambda s: utils.to_ascii(s.lower()), 
+        fields[field_subtypes] = [(-1, map(lambda s: utils.to_ascii(s.lower())
+                                           # urza's lands...
+                                           .replace('"', "'").replace('-', utils.dash_marker), 
                                            src_json['subtypes']))]
+        
 
     if 'rarity' in src_json:
         if src_json['rarity'] in utils.json_rarity_map:

@@ -94,6 +94,19 @@ def text_pass_2_cardname(s, name):
     for override in overrides:
         s = s.replace(override, this_marker)
 
+    # stupid planeswalker abilities
+    s = s.replace('to him.', 'to ' + this_marker + '.')
+    s = s.replace('to him this', 'to ' + this_marker + ' this')
+    s = s.replace('to himself', 'to itself')
+    s = s.replace("he's", this_marker + ' is')
+
+    # sometimes we actually don't want to do this replacement
+    s = s.replace('named ' + this_marker, 'named ' + name)
+    s = s.replace('name is still ' + this_marker, 'name is still ' + name)
+    s = s.replace('named keeper of ' + this_marker, 'named keeper of ' + name)
+    s = s.replace('named kobolds of ' + this_marker, 'named kobolds of ' + name)
+    s = s.replace('named sword of kaldra, ' + this_marker, 'named sword of kaldra, ' + name)
+
     return s
 
 
@@ -133,9 +146,12 @@ def text_pass_4b_x(s):
     s = s.replace(u'x\u2014', x_marker + u'\u2014')
     s = s.replace('x.', x_marker + '.')
     s = s.replace('x,', x_marker + ',')
+    s = s.replace('x is', x_marker + ' is')
+    s = s.replace('x can\'t', x_marker + ' can\'t')
     s = s.replace('x/x', x_marker + '/' + x_marker)
     s = s.replace('x target', x_marker + ' target')
     s = s.replace('si' + x_marker + ' target', 'six target')
+    s = s.replace('avara' + x_marker, 'avarax')
     # there's also some stupid ice age card that wants -x/-y
     s = s.replace('/~', '/-')
     return s
@@ -469,25 +485,27 @@ def text_pass_11_linetrans(s):
 # randomize the order of the lines
 # not a text pass, intended to be invoked dynamically when encoding a card
 # call this on fully encoded text, with mana symbols expanded
-def randomize_lines(text):
+def separate_lines(text):
     # forget about level up, ignore empty text too while we're at it
     if text == '' or 'level up' in text:
-        return [],[],[],[]
+        return [],[],[],[],[]
     
     preline_search = ['equip', 'fortify', 'enchant ', 'bestow']
-    postline_search = [
-        'countertype', 'multikicker', 'kicker', 'suspend', 'echo', 'awaken',
-        'buyback', 'champion', 'dash', 'entwine', 'evoke', 'fading', 'flashback',
+    costline_search = [
+        'multikicker', 'kicker', 'suspend', 'echo', 'awaken',
+        'buyback', 'dash', 'entwine', 'evoke', 'flashback',
         'madness', 'megamorph', 'morph', 'miracle', 'ninjutsu', 'overload',
         'prowl', 'recover', 'reinforce', 'replicate', 'scavenge', 'splice',
-        'surge', 'unearth', 'transmute', 'transfigure', 'vanishing', 'tribute',
+        'surge', 'unearth', 'transmute', 'transfigure',
     ]
     # cycling is a special case to handle the variants
+    postline_search = ['countertype']
     keyline_search = ['cumulative']
 
     prelines = []
     keylines = []
     mainlines = []
+    costlines = []
     postlines = []
 
     lines = text.split(utils.newline)
@@ -496,26 +514,28 @@ def randomize_lines(text):
         if not '.' in line:
             if any(line.startswith(s) for s in preline_search):
                 prelines.append(line)
-            elif any(line.startswith(s) for s in postline_search) or 'cycling' in line:
+            elif any(line.startswith(s) for s in postline_search):
                 postlines.append(line)
+            elif any(line.startswith(s) for s in costline_search) or 'cycling' in line:
+                costlines.append(line)
             else:
                 keylines.append(line)
         elif (utils.dash_marker in line and not 
               (' '+utils.dash_marker+' ' in line or 'non'+utils.dash_marker in line)):
             if any(line.startswith(s) for s in preline_search):
                 prelines.append(line)
-            elif any(line.startswith(s) for s in postline_search) or 'cycling' in line:
-                postlines.append(line)
+            elif any(line.startswith(s) for s in costline_search) or 'cycling' in line:
+                costlines.append(line)
             elif any(line.startswith(s) for s in keyline_search):
                 keylines.append(line)
             else:
                 mainlines.append(line)
         elif ': monstrosity' in line:
-            postlines.append(line)
+            costlines.append(line)
         else:
             mainlines.append(line)
 
-    return prelines, keylines, mainlines, postlines
+    return prelines, keylines, mainlines, costlines, postlines
 
 
 # Text unpasses, for decoding. All assume the text inside a Manatext, so don't do anything
