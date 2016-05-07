@@ -8248,7 +8248,7 @@
 
 |5artifact|4|6|7|8|9when @ enters the battlefield, draw a card.\{^}, T, sacrifice @: target creature can't attack or block this turn.|3{^^}|0O|1alchemist's vial|
 
-|5planeswalker|4|6gideon|7&^^^^^^|8|9+&^^: during target opponent's next turn, creatures that player controls attack @ if able.\-&^^: destroy target tapped creature.\&: until end of turn, @ becomes a &^^^^^^/&^^^^^^ human soldier creature that's still a planeswalker. prevent all damage that would be dealt to him this turn.|3{^^^WWWW}|0Y|1gideon jura|
+|5planeswalker|4|6gideon|7&^^^^^^|8|9+&^^: during target opponent's next turn, creatures that player controls attack @ if able.\-&^^: destroy target tapped creature.\&: until end of turn, @ becomes a &^^^^^^/&^^^^^^ human soldier creature that's still a planeswalker. prevent all damage that would be dealt to @ this turn.|3{^^^WWWW}|0Y|1gideon jura|
 
 |5creature|4|6spirit|7|8&^^^^/&^^^^|9soulshift &^^^^\soulshift &^^^^|3{^^^GGGG}|0N|1forked~branch garami|
 
@@ -19013,7 +19013,7 @@
 |5enchantment|4|6aura|7|8|9enchant creature\enchanted creature gets +&^^^/+&^^ and has trample.\at the beginning of each upkeep, if a player cast two or more spells last turn, sacrifice @.|3{^RR}|0N|1call of the full moon|
 
 |5creature|4legendary|6human soldier|7|8&^^/&^|9at end of combat, if @ and at least two other creatures attacked this combat, exile @, then return him to the battlefield transformed under his owner's control.\{^^WW}: @ gains indestructible until end of turn.|3{WW}|0Y|1kytheon, hero of akros|
-|5planeswalker|4|6gideon|7&^^^|8|9+&^^: up to one target creature an opponent controls attacks @ during its controller's next turn if able.\+&^: until your next turn, target creature gains indestructible. untap that creature.\&: until end of turn, @ becomes a &^^^^/&^^^^ human soldier creature with indestructible that's still a planeswalker. prevent all damage that would be dealt to him this turn.|3|0Y|1gideon, battle~forged|
+|5planeswalker|4|6gideon|7&^^^|8|9+&^^: up to one target creature an opponent controls attacks @ during its controller's next turn if able.\+&^: until your next turn, target creature gains indestructible. untap that creature.\&: until end of turn, @ becomes a &^^^^/&^^^^ human soldier creature with indestructible that's still a planeswalker. prevent all damage that would be dealt to @ this turn.|3|0Y|1gideon, battle~forged|
 
 |5enchantment|4|6aura|7|8|9enchant creature\enchanted creature gets +&^^^/+&^^^ as long as it's a zombie. otherwise, it gets -&^^^/-&^^^.|3{^^^BBBB}|0O|1clutch of undeath|
 
@@ -20324,7 +20324,7 @@
 
 |5sorcery|4|6|7|8|9@ deals X plus &^ damage divided as you choose among any number of target creatures and/or players.|3{XXXXRR}|0O|1meteor shower|
 
-|5planeswalker|4|6garruk|7&^^^|8|9when @ has two or fewer % counters on him, transform him.\&: @ deals &^^^ damage to target creature. that creature deals damage equal to its power to him.\&: put a &^^/&^^ green wolf creature token onto the battlefield.\countertype % loyalty|3{^^^GG}|0Y|1garruk relentless|
+|5planeswalker|4|6garruk|7&^^^|8|9when @ has two or fewer % counters on him, transform him.\&: @ deals &^^^ damage to target creature. that creature deals damage equal to its power to @.\&: put a &^^/&^^ green wolf creature token onto the battlefield.\countertype % loyalty|3{^^^GG}|0Y|1garruk relentless|
 |5planeswalker|4|6garruk|7|8|9+&^: put a &^/&^ black wolf creature token with deathtouch onto the battlefield.\-&^: sacrifice a creature. if you do, search your library for a creature card, reveal it, put it into your hand, then shuffle your library.\-&^^^: creatures you control gain trample and get +X/+X until end of turn, where X is the number of creature cards in your graveyard.|3|0Y|1garruk, the veil~cursed|
 
 |5artifact|4|6|7|8|9imprint ~ when @ enters the battlefield, you may exile an instant card with converted mana cost &^^ or less from your hand.\{^^}, T: you may copy the exiled card. if you do, you may cast the copy without paying its mana cost.|3{^^}|0N|1isochron scepter|
@@ -22655,7 +22655,7 @@
 
 |5creature|4legendary|6spirit|7|8&^^^/&^^|9flying\soulshift &^^^^\{^}, sacrifice a spirit: target opponent reveals his or her hand. you choose a card from it. that player discards that card. activate this ability only any time you could cast a sorcery.|3{^^^^BB}|0A|1he who hungers|
 
-|5planeswalker|4|6gideon|7&^^^^|8|9+&^: put a % counter on @ for each creature target opponent controls.\&: until end of turn, @ becomes a human soldier creature with power and toughness each equal to the number of % counters on him and gains indestructible. he's still a planeswalker. prevent all damage that would be dealt to him this turn.\-&^^^^^^^^^^^^^^^: exile all other permanents.\countertype % loyalty|3{^^WWWW}|0Y|1gideon, champion of justice|
+|5planeswalker|4|6gideon|7&^^^^|8|9+&^: put a % counter on @ for each creature target opponent controls.\&: until end of turn, @ becomes a human soldier creature with power and toughness each equal to the number of % counters on him and gains indestructible. he's still a planeswalker. prevent all damage that would be dealt to @ this turn.\-&^^^^^^^^^^^^^^^: exile all other permanents.\countertype % loyalty|3{^^WWWW}|0Y|1gideon, champion of justice|
 
 |5creature|4|6merfolk rogue|7|8&^^/&^|9morph {UU}\when @ is turned face up, you may tap or untap target permanent.|3{^UU}|0O|1coral trickster|
 
@@ -26968,7 +26968,7 @@
 
 |5creature|4|6human druid|7|8&^^/&^^|9at the beginning of each upkeep, if @ is enchanted, put a &^/&^ green saproling creature token onto the battlefield.|3{^GG}|0N|1dreampod druid|
 
-|5planeswalker|4|6sarkhan|7&^^^^^^^|8|9&: reveal the top card of your library and put it into your hand. @ deals damage to himself equal to that card's converted mana cost.\-&^^: target creature's controller sacrifices it, then that player puts a &^^^^^/&^^^^^ red dragon creature token with flying onto the battlefield.\-&^^^^: each dragon creature you control deals damage equal to its power to target player.|3{^^^BBRR}|0Y|1sarkhan the mad|
+|5planeswalker|4|6sarkhan|7&^^^^^^^|8|9&: reveal the top card of your library and put it into your hand. @ deals damage to itself equal to that card's converted mana cost.\-&^^: target creature's controller sacrifices it, then that player puts a &^^^^^/&^^^^^ red dragon creature token with flying onto the battlefield.\-&^^^^: each dragon creature you control deals damage equal to its power to target player.|3{^^^BBRR}|0Y|1sarkhan the mad|
 
 |5creature|4|6spirit|7|8&^^^/&^^|9@ can't block.\channel ~ {^BB}, discard @: target creature can't block this turn.|3{^^^^BB}|0O|1shinen of fear's chill|
 
@@ -31020,7 +31020,7 @@
 
 |5creature|4legendary|6demon spirit|7|8*/*|9@'s power and toughness are each equal to the number of cards in your hand.\{BB}, sacrifice @: all creatures get -X/-X until end of turn, where X is the number of cards in your hand.|3{^^^BBBB}|0A|1kagemaro, first to suffer|
 
-|5planeswalker|4|6gideon|7&^^^^|8|9+&^: until end of turn, @ becomes a &^^^^^/&^^^^^ human soldier ally creature with indestructible that's still a planeswalker. prevent all damage that would be dealt to him this turn.\&: put a &^^/&^^ white knight ally creature token onto the battlefield.\-&^^^^: you get an emblem with "creatures you control get +&^/+&^."|3{^^WWWW}|0Y|1gideon, ally of zendikar|
+|5planeswalker|4|6gideon|7&^^^^|8|9+&^: until end of turn, @ becomes a &^^^^^/&^^^^^ human soldier ally creature with indestructible that's still a planeswalker. prevent all damage that would be dealt to @ this turn.\&: put a &^^/&^^ white knight ally creature token onto the battlefield.\-&^^^^: you get an emblem with "creatures you control get +&^/+&^."|3{^^WWWW}|0Y|1gideon, ally of zendikar|
 
 |5enchantment|4|6|7|8|9whenever you cast a spell from your graveyard, @ deals &^^ damage to target creature or player.|3{^^RR}|0N|1burning vengeance|
 
