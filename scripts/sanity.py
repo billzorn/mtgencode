@@ -2,11 +2,13 @@
 import sys
 import os
 import re
+import json
 
 libdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../lib')
 sys.path.append(libdir)
 import utils
 import jdecode
+import cardlib
 import transforms
 
 def check_lines(fname):
@@ -122,6 +124,28 @@ def check_vocab(fname):
                 print(card.encode())
                 break
 
+def check_characters(fname, vname):
+    cards = jdecode.mtg_open_file(fname, verbose=True, linetrans=True)
+
+    tokens = {c for c in utils.cardsep}
+    for card in cards:
+        for c in card.encode():
+            tokens.add(c)
+
+    token_to_idx = {tok:i+1 for i, tok in enumerate(sorted(tokens))}
+    idx_to_token = {i+1:tok for i, tok in enumerate(sorted(tokens))}
+
+    print('Vocabulary: ({:d} symbols)'.format(len(token_to_idx)))
+    for token in sorted(token_to_idx):
+        print('{:8s} : {:4d}'.format(repr(token), token_to_idx[token]))
+
+    # compliant with torch-rnn
+    if vname:
+        json_data = {'token_to_idx':token_to_idx, 'idx_to_token':idx_to_token}
+        print('writing vocabulary to {:s}'.format(vname))
+        with open(vname, 'w') as f:
+            json.dump(json_data, f)
+
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
@@ -132,11 +156,17 @@ if __name__ == '__main__':
                         help='show behavior of line separation')
     parser.add_argument('-vocab', action='store_true',
                         help='show vocabulary counts from encoded card text')
+    parser.add_argument('-chars', action='store_true',
+                        help='generate and display vocabulary of characters used in encoding')
+    parser.add_argument('--vocab_name', default=None,
+                        help='json file to write vocabulary to')
     args = parser.parse_args()
 
     if args.lines:
         check_lines(args.infile)
     if args.vocab:
         check_vocab(args.infile)
+    if args.chars:
+        check_characters(args.infile, args.vocab_name)
 
     exit(0)

@@ -1,5 +1,6 @@
 # transform passes used to encode / decode cards
 import re
+import random
 
 # These could probably use a little love... They tend to hardcode in lots
 # of things very specific to the mtgjson format.
@@ -482,6 +483,7 @@ def text_pass_11_linetrans(s):
     alllines = prelines + keylines + mainlines + postlines
     return utils.newline.join(alllines)
 
+
 # randomize the order of the lines
 # not a text pass, intended to be invoked dynamically when encoding a card
 # call this on fully encoded text, with mana symbols expanded
@@ -491,6 +493,7 @@ def separate_lines(text):
         return [],[],[],[],[]
     
     preline_search = ['equip', 'fortify', 'enchant ', 'bestow']
+    # probably could use optimization with a regex
     costline_search = [
         'multikicker', 'kicker', 'suspend', 'echo', 'awaken',
         'buyback', 'dash', 'entwine', 'evoke', 'flashback',
@@ -536,6 +539,48 @@ def separate_lines(text):
             mainlines.append(line)
 
     return prelines, keylines, mainlines, costlines, postlines
+
+choice_re = re.compile(re.escape(utils.choice_open_delimiter) + r'.*' + 
+                       re.escape(utils.choice_close_delimiter))
+choice_divider = ' ' + utils.bullet_marker + ' '
+def randomize_choice(line):
+    choices = re.findall(choice_re, line)
+    if len(choices) < 1:
+        return line
+    new_line = line
+    for choice in choices:
+        parts = choice[1:-1].split(choice_divider)
+        if len(parts) < 3:
+            continue
+        choiceparts = parts[1:]
+        random.shuffle(choiceparts)
+        new_line = new_line.replace(choice, 
+                                    utils.choice_open_delimiter +
+                                    choice_divider.join(parts[:1] + choiceparts) +
+                                    utils.choice_close_delimiter,
+                                    1)
+    return new_line
+    
+
+def randomize_lines(text):
+    if text == '' or 'level up' in text:
+        return text
+
+    prelines, keylines, mainlines, costlines, postlines = separate_lines(text)
+    random.shuffle(prelines)
+    random.shuffle(keylines)
+    new_mainlines = []
+    for line in mainlines:
+        if line.endswith(utils.choice_close_delimiter):
+            new_mainlines.append(randomize_choice(line))
+        # elif utils.choice_open_delimiter in line or utils.choice_close_delimiter in line:
+        #     print(line)
+        else:
+            new_mainlines.append(line)
+    random.shuffle(new_mainlines)
+    random.shuffle(costlines)
+    #random.shuffle(postlines) # only one kind ever (countertype)
+    return utils.newline.join(prelines+keylines+new_mainlines+costlines+postlines)
 
 
 # Text unpasses, for decoding. All assume the text inside a Manatext, so don't do anything

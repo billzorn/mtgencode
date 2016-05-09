@@ -565,9 +565,9 @@ class Card:
     # the NN representation, use str() or format() for output intended for human
     # readers.
 
-    def encode(self, fmt_ordered = fmt_ordered_default, fmt_labeled = None, 
-               fieldsep = utils.fieldsep, randomize_fields = False, randomize_mana = False, 
-               initial_sep = True, final_sep = True):
+    def encode(self, fmt_ordered = fmt_ordered_default, fmt_labeled = fmt_labeled_default, 
+               fieldsep = utils.fieldsep, initial_sep = True, final_sep = True,
+               randomize_fields = False, randomize_mana = False, randomize_lines = False):
         outfields = []
 
         for field in fmt_ordered:
@@ -581,6 +581,8 @@ class Card:
                         outfield_str = outfield.encode(randomize = randomize_mana)
                     elif isinstance(outfield, Manatext):
                         outfield_str = outfield.encode(randomize = randomize_mana)
+                        if randomize_lines:
+                            outfield_str = transforms.randomize_lines(outfield_str)
                     else:
                         outfield_str = outfield
                 else:
