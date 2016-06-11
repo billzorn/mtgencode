@@ -257,8 +257,11 @@ def fields_from_json(src_json, linetrans = True):
         parsed = False
 
     if 'subtypes' in src_json:
-        fields[field_subtypes] = [(-1, map(lambda s: utils.to_ascii(s.lower()), 
+        fields[field_subtypes] = [(-1, map(lambda s: utils.to_ascii(s.lower())
+                                           # urza's lands...
+                                           .replace('"', "'").replace('-', utils.dash_marker), 
                                            src_json['subtypes']))]
+        
 
     if 'rarity' in src_json:
         if src_json['rarity'] in utils.json_rarity_map:
@@ -389,13 +392,19 @@ def fields_from_format(src_text, fmt_ordered, fmt_labeled, fieldsep):
 class Card:
     '''card representation with data'''
 
-    def __init__(self, src, fmt_ordered = fmt_ordered_default, fmt_labeled = fmt_labeled_default, fieldsep = utils.fieldsep, linetrans = True):
+    def __init__(self, src, fmt_ordered = fmt_ordered_default, 
+                            fmt_labeled = fmt_labeled_default, 
+                            fieldsep = utils.fieldsep, linetrans = True):
+
         # source fields, exactly one will be set
         self.json = None
         self.raw = None
         # flags
         self.parsed = True
         self.valid = True # doesn't record that much
+        # placeholders to fill in with expensive distance metrics
+        self.nearest_names = []
+        self.nearest_cards = []
         # default values for all fields
         self.__dict__[field_name] = ''
         self.__dict__[field_rarity] = ''
@@ -413,6 +422,7 @@ class Card:
         self.__dict__[field_text] = Manatext('')
         self.__dict__[field_text + '_lines'] = []
         self.__dict__[field_text + '_words'] = []
+        self.__dict__[field_text + '_lines_words'] = []
         self.__dict__[field_other] = []
         self.bside = None
         # format-independent view of processed input
@@ -539,6 +549,9 @@ class Card:
                     self.__dict__[field_text + '_words'] = re.sub(utils.unletters_regex, 
                                                                   ' ', 
                                                                   fulltext).split()
+                    self.__dict__[field_text + '_lines_words'] = map(
+                        lambda line: re.sub(utils.unletters_regex, ' ', line).split(),
+                        fulltext.split(utils.newline))
             else:
                 self.valid = False
                 self.__dict__[field_other] += [(idx, '<text> ' + str(value))]
@@ -552,7 +565,9 @@ class Card:
     # the NN representation, use str() or format() for output intended for human
     # readers.
 
-    def encode(self, fmt_ordered = fmt_ordered_default, fmt_labeled = None, fieldsep = utils.fieldsep, randomize_fields = False, randomize_mana = False, initial_sep = True, final_sep = True):
+    def encode(self, fmt_ordered = fmt_ordered_default, fmt_labeled = fmt_labeled_default, 
+               fieldsep = utils.fieldsep, initial_sep = True, final_sep = True,
+               randomize_fields = False, randomize_mana = False, randomize_lines = False):
         outfields = []
 
         for field in fmt_ordered:
@@ -566,6 +581,8 @@ class Card:
                         outfield_str = outfield.encode(randomize = randomize_mana)
                     elif isinstance(outfield, Manatext):
                         outfield_str = outfield.encode(randomize = randomize_mana)
+                        if randomize_lines:
+                            outfield_str = transforms.randomize_lines(outfield_str)
                     else:
                         outfield_str = outfield
                 else:
@@ -585,7 +602,7 @@ class Card:
             outfields = [''] + outfields
         if final_sep:
             outfields = outfields + ['']
-        
+
         outstr = fieldsep.join(outfields)
 
         if self.bside:
@@ -599,19 +616,31 @@ class Card:
 
         return outstr
 
-    def format(self, gatherer = False, for_forum = False, for_mse = False, vdump = False, for_html = False):
+    def format(self, gatherer = False, for_forum = False, vdump = False, for_html = False):
+        linebreak = '\n'
+        if for_html:
+            linebreak = '<hr>' + linebreak
+
         outstr = ''
+        if for_html:
+            outstr += '<div class="card-text">\n'
+
         if gatherer:
             cardname = titlecase(transforms.name_unpass_1_dashes(self.__dict__[field_name]))
             if vdump and not cardname:
                 cardname = '_NONAME_'
-            if for_forum:
+            # in general, for_html overrides for_forum
+            if for_html: 
+                outstr += '<b>'
+            elif for_forum:
                 outstr += '[b]'
             outstr += cardname
-            if for_forum:
+            if for_html: 
+                outstr += '</b>'
+            elif for_forum:
                 outstr += '[/b]'
 
-            coststr = self.__dict__[field_cost].format(for_forum = for_forum)
+            coststr = self.__dict__[field_cost].format(for_forum=for_forum, for_html=for_html)
             if vdump or not coststr == '_NOCOST_':
                 outstr += ' ' + coststr
 
@@ -628,7 +657,7 @@ class Card:
                 if not self.valid:
                     outstr += ' _INVALID_'
                 
-            outstr += '\n'
+            outstr += linebreak
 
             basetypes = map(str.capitalize, self.__dict__[field_types])
             if vdump and len(basetypes) < 1:
@@ -646,9 +675,9 @@ class Card:
             if self.__dict__[field_loyalty]:
                 outstr += ' ((' + utils.from_unary(self.__dict__[field_loyalty]) + '))'
 
-            outstr += '\n'
-
             if self.__dict__[field_text].text:
+                outstr += linebreak
+
                 mtext = self.__dict__[field_text].text
                 mtext = transforms.text_unpass_1_choice(mtext, delimit = False)
                 mtext = transforms.text_unpass_2_counters(mtext)
@@ -662,109 +691,68 @@ class Card:
                 newtext = Manatext('')
                 newtext.text = mtext
                 newtext.costs = self.__dict__[field_text].costs
-                outstr += newtext.format(for_forum = for_forum)
-            
-                outstr += '\n'
 
+                outstr += newtext.format(for_forum = for_forum, for_html = for_html)
+            
             if vdump and self.__dict__[field_other]:
-                if for_forum:
+                outstr += linebreak
+
+                if for_html:
+                    outstr += '<i>'
+                elif for_forum:
                     outstr += '[i]'
                 else:
                     outstr += utils.dash_marker * 2
-                    outstr += '\n'
+
+                first = True
                 for idx, value in self.__dict__[field_other]:
-                    outstr += '<' + str(idx) + '> ' + str(value)
-                    outstr += '\n'
+                    if for_html:
+                        if not first:
+                            outstr += '<br>\n'
+                        else:
+                            first = False
+                    else:
+                        outstr += linebreak
+                    outstr += '(' + str(idx) + ') ' + str(value)
+                    
+                if for_html:
+                    outstr += '</i>'
                 if for_forum:
-                    outstr = outstr[:-1] # hack off the last newline
                     outstr += '[/i]'
-                    outstr += '\n'
 
-        elif for_html:
-            outstr += '<div class="card-text">'
-            cardname = self.__dict__[field_name]
-            #cardname = transforms.name_unpass_1_dashes(self.__dict__[field_name])
-            if vdump and not cardname:
-                cardname = '_NONAME_'
-            outstr += cardname + ' '
-            
-            coststr = self.__dict__[field_cost].format(for_html = for_html)
-            if vdump or not coststr == '_NOCOST_':
-                outstr += coststr
-                outstr += '<br>'
-                
-            if self.__dict__[field_rarity]:
-                if self.__dict__[field_rarity] in utils.json_rarity_unmap:
-                    rarity = utils.json_rarity_unmap[self.__dict__[field_rarity]]
-                else:
-                    rarity = self.__dict__[field_rarity]
-                outstr += ' (' + rarity.lower() + ') '
-            outstr += '\n<hr><b>'
-
-            outstr += ' '.join(self.__dict__[field_supertypes] + self.__dict__[field_types])
-            if self.__dict__[field_subtypes]:
-                outstr += ' ' + utils.dash_marker + ' ' + ' '.join(self.__dict__[field_subtypes])
-            outstr += '</b><hr>\n'
-            
-            if self.__dict__[field_text].text:
-                mtext = self.__dict__[field_text].text
-                mtext = transforms.text_unpass_1_choice(mtext, delimit = True)
-                #mtext = transforms.text_unpass_2_counters(mtext)
-                #mtext = transforms.text_unpass_3_uncast(mtext)
-                mtext = transforms.text_unpass_4_unary(mtext)
-                mtext = transforms.text_unpass_5_symbols(mtext,for_forum, for_html)
-                #mtext = transforms.text_unpass_6_cardname(mtext, cardname)
-                mtext = transforms.text_unpass_7_newlines(mtext).replace("\n", "<br>")
-                #mtext = transforms.text_unpass_8_unicode(mtext)
-                newtext = Manatext('')
-                newtext.text = mtext
-                newtext.costs = self.__dict__[field_text].costs
-                outstr += newtext.format(for_html = for_html) + '\n'
-
-            if self.__dict__[field_pt]:
-                outstr += '<br>(' + utils.from_unary(self.__dict__[field_pt]) + ')<br>'
-                outstr += '\n'
-
-            if self.__dict__[field_loyalty]:
-                outstr += '((' + utils.from_unary(self.__dict__[field_loyalty]) + '))'
-                outstr += '\n'
-                
-            if vdump and self.__dict__[field_other]:
-                outstr += utils.dash_marker * 2
-                outstr += '\n'
-                for idx, value in self.__dict__[field_other]:
-                    outstr += '<' + str(idx) + '> ' + str(value)
-                    outstr += '\n'
         else:
             cardname = self.__dict__[field_name]
             #cardname = transforms.name_unpass_1_dashes(self.__dict__[field_name])
             if vdump and not cardname:
                 cardname = '_NONAME_'
             outstr += cardname
+
+            coststr = self.__dict__[field_cost].format(for_forum=for_forum, for_html=for_html)
+            if vdump or not coststr == '_NOCOST_':
+                outstr += ' ' + coststr
+
+            if vdump:
+                if not self.parsed:
+                    outstr += ' _UNPARSED_'
+                if not self.valid:
+                    outstr += ' _INVALID_'
+            
+            outstr += linebreak
+
+            outstr += ' '.join(self.__dict__[field_supertypes] + self.__dict__[field_types])
+            if self.__dict__[field_subtypes]:
+                outstr += ' ' + utils.dash_marker + ' ' + ' '.join(self.__dict__[field_subtypes])
+
             if self.__dict__[field_rarity]:
                 if self.__dict__[field_rarity] in utils.json_rarity_unmap:
                     rarity = utils.json_rarity_unmap[self.__dict__[field_rarity]]
                 else:
                     rarity = self.__dict__[field_rarity]
                 outstr += ' (' + rarity.lower() + ')'
-            if vdump:
-                if not self.parsed:
-                    outstr += ' _UNPARSED_'
-                if not self.valid:
-                    outstr += ' _INVALID_'
-            outstr += '\n'
-            
-            coststr = self.__dict__[field_cost].format(for_forum = for_forum)
-            if vdump or not coststr == '_NOCOST_':
-                outstr += coststr
-                outstr += '\n'
-
-            outstr += ' '.join(self.__dict__[field_supertypes] + self.__dict__[field_types])
-            if self.__dict__[field_subtypes]:
-                outstr += ' ' + utils.dash_marker + ' ' + ' '.join(self.__dict__[field_subtypes])
-            outstr += '\n'
             
             if self.__dict__[field_text].text:
+                outstr += linebreak
+
                 mtext = self.__dict__[field_text].text
                 mtext = transforms.text_unpass_1_choice(mtext, delimit = True)
                 #mtext = transforms.text_unpass_2_counters(mtext)
@@ -777,31 +765,60 @@ class Card:
                 newtext = Manatext('')
                 newtext.text = mtext
                 newtext.costs = self.__dict__[field_text].costs
-                outstr += newtext.format(for_forum = for_forum) + '\n'
+
+                outstr += newtext.format(for_forum=for_forum, for_html=for_html)
 
             if self.__dict__[field_pt]:
+                outstr += linebreak
                 outstr += '(' + utils.from_unary(self.__dict__[field_pt]) + ')'
-                outstr += '\n'
 
             if self.__dict__[field_loyalty]:
+                outstr += linebreak
                 outstr += '((' + utils.from_unary(self.__dict__[field_loyalty]) + '))'
-                outstr += '\n'
                 
             if vdump and self.__dict__[field_other]:
-                outstr += utils.dash_marker * 2
-                outstr += '\n'
+                outstr += linebreak
+
+                if for_html:
+                    outstr += '<i>'
+                else:
+                    outstr += utils.dash_marker * 2
+
+                first = True
                 for idx, value in self.__dict__[field_other]:
-                    outstr += '<' + str(idx) + '> ' + str(value)
-                    outstr += '\n'
+                    if for_html:
+                        if not first:
+                            outstr += '<br>\n'
+                        else:
+                            first = False
+                    else:
+                        outstr += linebreak
+                    outstr += '(' + str(idx) + ') ' + str(value)
+
+                if for_html:
+                    outstr += '</i>'
 
         if self.bside:
             if for_html:
-                outstr += "<hr><hr>\n"
+                outstr += '\n'
+                # force for_forum to false so that the inner div doesn't duplicate the forum
+                # spoiler of the bside
+                outstr += self.bside.format(gatherer=gatherer, for_forum=False, for_html=for_html, vdump=vdump)
             else:
-                outstr += utils.dash_marker * 8 + '\n'
-            outstr += self.bside.format(gatherer = gatherer, for_forum = for_forum, for_html = for_html)
+                outstr += linebreak
+                outstr += utils.dash_marker * 8
+                outstr += linebreak
+                outstr += self.bside.format(gatherer=gatherer, for_forum=for_forum, for_html=for_html, vdump=vdump)
+
         if for_html:
+            if for_forum:
+                outstr += linebreak
+                # force for_html to false to create a copyable forum spoiler div
+                outstr += ('<div>' 
+                           + self.format(gatherer=gatherer, for_forum=for_forum, for_html=False, vdump=vdump).replace('\n', '<br>')
+                           + '</div>')
             outstr += "</div>"
+
         return outstr
     
     def to_mse(self, print_raw = False, vdump = False):

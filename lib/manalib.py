@@ -13,7 +13,7 @@ class Manacost:
         colors = ''
         for sym in self.symbols:
             if self.symbols[sym] > 0:
-                symcolors = re.sub(r'2|P|S|X', '', sym)
+                symcolors = re.sub(r'2|P|S|X|C', '', sym)
                 for symcolor in symcolors:
                     if symcolor not in colors:
                         colors += symcolor
@@ -136,7 +136,7 @@ class Manacost:
         else:
             ld = ''
             rd = ''
-        return ' '.join(map(lambda s: ld + s + rd, self.sequence))
+        return ' '.join(map(lambda s: ld + s + rd, sorted(self.sequence)))
         
 
 class Manatext:
@@ -181,7 +181,9 @@ class Manatext:
     def format(self, for_forum = False, for_html = False):
         text = self.text
         for cost in self.costs:
-            text = text.replace(utils.reserved_mana_marker, cost.format(for_forum = for_forum, for_html = for_html), 1)
+            text = text.replace(utils.reserved_mana_marker, cost.format(for_forum=for_forum, for_html=for_html), 1)
+        if for_html:
+            text = text.replace('\n', '<br>\n')
         return text
 
     def encode(self, randomize = False):

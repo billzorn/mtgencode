@@ -4,7 +4,7 @@ Utilities to assist in the process of generating Magic the Gathering cards with 
 
 http://www.mtgsalvation.com/forums/creativity/custom-card-creation/612057-generating-magic-cards-using-deep-recurrent-neural
 
-The purpose of this code is mostly to wrangle text between various human and machine readable formats. The original input comes from [mtgjson](http://mtgjson.com); this is filtered and reduced to one of several input formats intended for neural network training, such as the standard encoded format used in [data/output.txt](https://github.com/billzorn/mtgencode/blob/master/data/output.txt). Any json or encoded data, including output from appropriately trained neural nets, can then be interpreted as cards and decoded to a human readable format, such as a text spoiler or [Magic Set Editor 2](http://magicseteditor.sourceforge.net) set file.
+The purpose of this code is mostly to wrangle text between various human and machine readable formats. The original input comes from [mtgjson](http://mtgjson.com); this is filtered and reduced to one of several input formats intended for neural network training, such as the standard encoded format used in [data/output.txt](https://github.com/billzorn/mtgencode/blob/master/data/output.txt). Any json or encoded data, including output from appropriately trained neural nets, can then be interpreted as cards and decoded to a human readable format, such as a text spoiler, [Magic Set Editor 2](http://magicseteditor.sourceforge.net) set file, or a pretty, portable html file that can be viewed in any browser.
 
 ## Requirements
 
@@ -21,7 +21,8 @@ Functionality is provided by two main driver scripts: encode.py and decode.py. L
 ### encode.py
 
 ```
-usage: encode.py [-h] [-d N] [-e {std,rmana,rmana_dual,rfields,vec}] [-s] [-v]
+usage: encode.py [-h] [-e {std,named,noname,rfields,old,norarity,vec,custom}]
+                 [-r] [--nolinetrans] [--nolabel] [-s] [-v]
                  infile [outfile]
 
 positional arguments:
@@ -30,50 +31,58 @@ positional arguments:
 
 optional arguments:
   -h, --help            show this help message and exit
-  -d N, --duplicate N   number of times to duplicate each card
-  -e {std,rmana,rmana_dual,rfields,vec}, --encoding {std,rmana,rmana_dual,rfields,vec}
+  -e {std,named,noname,rfields,old,norarity,vec,custom}, --encoding {std,named,noname,rfields,old,norarity,vec,custom}
+                        encoding format to use
+  -r, --randomize       randomize the order of symbols in mana costs
+  --nolinetrans         don't reorder lines of card text
+  --nolabel             don't label fields
   -s, --stable          don't randomize the order of the cards
   -v, --verbose         verbose output
-
 ```
 
 The supported encodings are:
 
 Argument   | Description
 -----------|------------
-std        | standard format: |name|supertypes|types|loyalty|subtypes|rarity|pt|cost|text|
-rmana      | randomized mana: as standard, but symbols in mana costs will be mixed: {^^UUUU} -> {UU^^UU}
-rmana_dual | as rmana, but with a second mana cost field after the text field
-rfields    | randomize the order of the fields, and use a label to distinguish which field is which
-vec        | produce a content vector for each card; used with [word2vec](https://code.google.com/p/word2vec/)
+std        | Standard format: `|type|supertype|subtype|loyalty|pt|text|cost|rarity|name|`.
+named      | Name first: `|name|type|supertype|subtype|loyalty|pt|text|cost|rarity|`.
+noname     | No name field at all: `|type|supertype|subtype|loyalty|pt|text|cost|rarity|`.
+rfields    | Randomize the order of the fields, using only the label to distinguish which field is which.
+old        | Legacy format: `|name|supertype|type|loyalty|subtype|rarity|pt|cost|text|`. No field labels.
+norarity   | Older legacy format: `|name|supertype|type|loyalty|subtype|pt|cost|text|`. No field labels.
+vec        | Produce a content vector for each card; used with [word2vec](https://code.google.com/p/word2vec/).
+custom     | Blank format slot, inteded to help users add their own formats to the python source.
 
 ### decode.py
 
 ```
-usage: decode.py [-h] [-g] [-f] [-c] [-d] [--norarity] [-v] [-mse]
+usage: decode.py [-h] [-e {std,named,noname,rfields,old,norarity,vec,custom}]
+                 [-g] [-f] [-c] [-d] [-v] [-mse] [-html]
                  infile [outfile]
 
 positional arguments:
-  infile            encoded card file or json corpus to encode
-  outfile           output file, defaults to stdout
+  infile                encoded card file or json corpus to encode
+  outfile               output file, defaults to stdout
 
 optional arguments:
-  -h, --help        show this help message and exit
-  -g, --gatherer    emulate Gatherer visual spoiler
-  -f, --forum       use pretty mana encoding for mtgsalvation forum
-  -c, --creativity  use CBOW fuzzy matching to check creativity of cards
-  -d, --dump        dump out lots of information about invalid cards
-  --norarity        the card format has no rarity field; use for legacy input
-  -v, --verbose     verbose output
-  -mse, --mse       use Magic Set Editor 2 encoding; will output as .mse-set
-                    file
+  -h, --help            show this help message and exit
+  -e {std,named,noname,rfields,old,norarity,vec,custom}, --encoding {std,named,noname,rfields,old,norarity,vec,custom}
+                        encoding format to use
+  -g, --gatherer        emulate Gatherer visual spoiler
+  -f, --forum           use pretty mana encoding for mtgsalvation forum
+  -c, --creativity      use CBOW fuzzy matching to check creativity of cards
+  -d, --dump            dump out lots of information about invalid cards
+  -v, --verbose         verbose output
+  -mse, --mse           use Magic Set Editor 2 encoding; will output as .mse-
+                        set file
+  -html, --html         create a .html file with pretty forum formatting
 ```
 
 The default output is a text spoiler which modifies the output of the neural net as little as possible while making it human readable. Specifying the -g option will produce a prettier, Gatherer-inspired text spoiler with heavier-weight transformations applied to the text, such as capitalization. The -f option encodes mana symbols in the format used by the mtgsalvation forum; this is useful if you want to cut and paste your spoiler into a post to share it.
 
 Passing the -mse option will cause decode.py to produce both the hilarious internal MSE text format as well as an actual mse set file, which is really just a renamed zip archive. The -f and -g flags will be respected in the text that is dumped to each card's notes field.
 
-Finally, the -c and -d options will print out additional data about the quality of the cards. Running with -c is extremely slow due to the massive amount of computation involved; -d is probably a good idea to use in general unless you're trying to produce pretty output to show off.
+Finally, the -c and -d options will print out additional data about the quality of the cards. Running with -c is extremely slow due to the massive amount of computation involved, though at least we can do it in parallel over all of your processor cores; -d is probably a good idea to use in general unless you're trying to produce pretty output to show off. Using html mode is especially useful with -c as we can link to visual spoilers from magiccards.info.
 
 ### Examples
 
@@ -287,6 +296,8 @@ Several ambiguous words are resolved. Most directly, the word 'counter' as in 'c
 
 I also reformat cards that choose between multiple things by removing the choice clause itself and instead having a delimited list of options prefixed by a number. If you could choose different numbers of things (one or both, one or more - turns out the latter is valid in all existing cases) then the number is 0, otherwise it's however many things you'd get to choose. So, 'choose one -\= effect x\= effect y' (the \ is a newline) becomes [&^ = effect x = effect y].
 
+Finally, some postprocessing is done to put the lines of a card's ability text into a standardized, canonical form. Lines with multiple keywords are split, and then we put all of the simple keywords first, followed by things like static or activated abilities. A few things always go first (such as equip and enchant) and a few other things always go last (such as kicker and countertype). There are various reasons for doing this transformation, and some proper science could probably come up with a better specific procedure. One of the primary motivations for putting abilities onto individual lines is that it should simplify the process of adding back in reminder text. It should be noted somewhere that the definition of a simple keyword ability vs. some other line of text is that a simple keyword won't contain a period, and we can split a line with multiple of them by looking for commas and semicolons.
+
 ======
 
 Here's an attempt at a list of all the things I do:
@@ -318,3 +329,5 @@ Here's an attempt at a list of all the things I do:
 * Replace acutal newline characters with \ so that we can use those to separate cards
 
 * Clean all the unicode junk like accents and unicode minus signs out of the text so there are fewer characters
+
+* Split composite text lines (i.e. "flying, first strike" -> "flying\first strike") and put the lines into canonical order

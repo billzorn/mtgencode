@@ -15,9 +15,14 @@ def mtg_open_json(fname, verbose = False):
     for k_set in jobj:
         set = jobj[k_set]
         setname = set['name']
+        if 'magicCardsInfoCode' in set:
+            codename = set['magicCardsInfoCode']
+        else:
+            codename = ''
         
         for card in set['cards']:
             card[utils.json_field_set_name] = setname
+            card[utils.json_field_info_code] = codename
 
             cardnumber = None
             if 'number' in card:
@@ -137,9 +142,10 @@ def mtg_open_file(fname, verbose = False,
         for card_src in text.split(utils.cardsep):
             if card_src:
                 card = cardlib.Card(card_src, fmt_ordered=fmt_ordered)
+                # unlike opening from json, we still want to return invalid cards
+                cards += [card]
                 if card.valid:
                     valid += 1
-                    cards += [card]
                 elif card.parsed:
                     invalid += 1
                 else:

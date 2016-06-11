@@ -1,5 +1,6 @@
 # transform passes used to encode / decode cards
 import re
+import random
 
 # These could probably use a little love... They tend to hardcode in lots
 # of things very specific to the mtgjson format.
@@ -94,6 +95,19 @@ def text_pass_2_cardname(s, name):
     for override in overrides:
         s = s.replace(override, this_marker)
 
+    # stupid planeswalker abilities
+    s = s.replace('to him.', 'to ' + this_marker + '.')
+    s = s.replace('to him this', 'to ' + this_marker + ' this')
+    s = s.replace('to himself', 'to itself')
+    s = s.replace("he's", this_marker + ' is')
+
+    # sometimes we actually don't want to do this replacement
+    s = s.replace('named ' + this_marker, 'named ' + name)
+    s = s.replace('name is still ' + this_marker, 'name is still ' + name)
+    s = s.replace('named keeper of ' + this_marker, 'named keeper of ' + name)
+    s = s.replace('named kobolds of ' + this_marker, 'named kobolds of ' + name)
+    s = s.replace('named sword of kaldra, ' + this_marker, 'named sword of kaldra, ' + name)
+
     return s
 
 
@@ -133,7 +147,14 @@ def text_pass_4b_x(s):
     s = s.replace(u'x\u2014', x_marker + u'\u2014')
     s = s.replace('x.', x_marker + '.')
     s = s.replace('x,', x_marker + ',')
+    s = s.replace('x is', x_marker + ' is')
+    s = s.replace('x can\'t', x_marker + ' can\'t')
     s = s.replace('x/x', x_marker + '/' + x_marker)
+    s = s.replace('x target', x_marker + ' target')
+    s = s.replace('si' + x_marker + ' target', 'six target')
+    s = s.replace('avara' + x_marker, 'avarax')
+    # there's also some stupid ice age card that wants -x/-y
+    s = s.replace('/~', '/-')
     return s
 
 
@@ -249,6 +270,7 @@ def text_pass_5_counters(s):
         'petrification counter',
         'shred counter',
         'pupa counter',
+        'crystal counter',
     ]
     usedcounters = []
     for countername in allcounters:
@@ -336,11 +358,11 @@ def text_pass_7_choice(s):
     # the idea is to take 'choose n ~\n=ability\n=ability\n'
     # to '[n = ability = ability]\n'
     
-    def choice_formatting_helper(s_helper, prefix, count):
+    def choice_formatting_helper(s_helper, prefix, count, suffix = ''):
         single_choices = re.findall(ur'(' + prefix + ur'\n?(\u2022.*(\n|$))+)', s_helper)
         for choice in single_choices:
             newchoice = choice[0]
-            newchoice = newchoice.replace(prefix, unary_marker + (unary_counter * count))
+            newchoice = newchoice.replace(prefix, unary_marker + (unary_counter * count) + suffix)
             newchoice = newchoice.replace('\n', ' ')
             if newchoice[-1:] == ' ':
                 newchoice = choice_open_delimiter + newchoice[:-1] + choice_close_delimiter + '\n'
@@ -358,6 +380,12 @@ def text_pass_7_choice(s):
     s = choice_formatting_helper(s, ur'choose khans or dragons.', 1)
     # this is for 'an opponent chooses one', which will be a bit weird but still work out
     s = choice_formatting_helper(s, ur'chooses one \u2014', 1)
+    # Demonic Pact has 'choose one that hasn't been chosen'...
+    s = choice_formatting_helper(s, ur"choose one that hasn't been chosen \u2014", 1,
+                                 suffix=" that hasn't been chosen")
+    # 'choose n. you may choose the same mode more than once.'
+    s = choice_formatting_helper(s, ur'choose three. you may choose the same mode more than once.', 3,
+                                 suffix='. you may choose the same mode more than once.')
 
     return s
 
@@ -423,29 +451,136 @@ def text_pass_11_linetrans(s):
 
     lines = s.split(utils.newline)
     for line in lines:
+        line = line.strip()
+        if line == '':
+            continue
         if not '.' in line:
             # because this is inconsistent
-            line = line.replace(';', ',')
-            sublines = line.split(',')
+            line = line.replace(',', ';')
+            line = line.replace('; where', ', where') # Thromok the Insatiable
+            line = line.replace('; and', ', and') # wonky protection
+            line = line.replace('; from', ', from') # wonky protection
+            line = line.replace('upkeep;', 'upkeep,') # wonky protection
+            sublines = line.split(';')
             for subline in sublines:
+                subline = subline.strip()
                 if 'equip' in subline or 'enchant' in subline:
-                    prelines += [subline.strip()]
+                    prelines += [subline]
                 elif 'countertype' in subline or 'kicker' in subline:
-                    postlines += [subline.strip()]
+                    postlines += [subline]
                 else:
-                    keylines += [subline.strip()]
+                    keylines += [subline]
         elif u'\u2014' in line and not u' \u2014 ' in line:
             if 'equip' in line or 'enchant' in line:
-                prelines += [line.strip()]
+                prelines += [line]
             elif 'countertype' in line or 'kicker' in line:
-                postlines += [line.strip()]
+                postlines += [line]
             else:
-                keylines += [line.strip()]
+                keylines += [line]
         else:
-            mainlines += [line.strip()]
+            mainlines += [line]
 
     alllines = prelines + keylines + mainlines + postlines
     return utils.newline.join(alllines)
+
+
+# randomize the order of the lines
+# not a text pass, intended to be invoked dynamically when encoding a card
+# call this on fully encoded text, with mana symbols expanded
+def separate_lines(text):
+    # forget about level up, ignore empty text too while we're at it
+    if text == '' or 'level up' in text:
+        return [],[],[],[],[]
+    
+    preline_search = ['equip', 'fortify', 'enchant ', 'bestow']
+    # probably could use optimization with a regex
+    costline_search = [
+        'multikicker', 'kicker', 'suspend', 'echo', 'awaken',
+        'buyback', 'dash', 'entwine', 'evoke', 'flashback',
+        'madness', 'megamorph', 'morph', 'miracle', 'ninjutsu', 'overload',
+        'prowl', 'recover', 'reinforce', 'replicate', 'scavenge', 'splice',
+        'surge', 'unearth', 'transmute', 'transfigure',
+    ]
+    # cycling is a special case to handle the variants
+    postline_search = ['countertype']
+    keyline_search = ['cumulative']
+
+    prelines = []
+    keylines = []
+    mainlines = []
+    costlines = []
+    postlines = []
+
+    lines = text.split(utils.newline)
+    # we've already done linetrans once, so some of the irregularities have been simplified
+    for line in lines:
+        if not '.' in line:
+            if any(line.startswith(s) for s in preline_search):
+                prelines.append(line)
+            elif any(line.startswith(s) for s in postline_search):
+                postlines.append(line)
+            elif any(line.startswith(s) for s in costline_search) or 'cycling' in line:
+                costlines.append(line)
+            else:
+                keylines.append(line)
+        elif (utils.dash_marker in line and not 
+              (' '+utils.dash_marker+' ' in line or 'non'+utils.dash_marker in line)):
+            if any(line.startswith(s) for s in preline_search):
+                prelines.append(line)
+            elif any(line.startswith(s) for s in costline_search) or 'cycling' in line:
+                costlines.append(line)
+            elif any(line.startswith(s) for s in keyline_search):
+                keylines.append(line)
+            else:
+                mainlines.append(line)
+        elif ': monstrosity' in line:
+            costlines.append(line)
+        else:
+            mainlines.append(line)
+
+    return prelines, keylines, mainlines, costlines, postlines
+
+choice_re = re.compile(re.escape(utils.choice_open_delimiter) + r'.*' + 
+                       re.escape(utils.choice_close_delimiter))
+choice_divider = ' ' + utils.bullet_marker + ' '
+def randomize_choice(line):
+    choices = re.findall(choice_re, line)
+    if len(choices) < 1:
+        return line
+    new_line = line
+    for choice in choices:
+        parts = choice[1:-1].split(choice_divider)
+        if len(parts) < 3:
+            continue
+        choiceparts = parts[1:]
+        random.shuffle(choiceparts)
+        new_line = new_line.replace(choice, 
+                                    utils.choice_open_delimiter +
+                                    choice_divider.join(parts[:1] + choiceparts) +
+                                    utils.choice_close_delimiter,
+                                    1)
+    return new_line
+    
+
+def randomize_lines(text):
+    if text == '' or 'level up' in text:
+        return text
+
+    prelines, keylines, mainlines, costlines, postlines = separate_lines(text)
+    random.shuffle(prelines)
+    random.shuffle(keylines)
+    new_mainlines = []
+    for line in mainlines:
+        if line.endswith(utils.choice_close_delimiter):
+            new_mainlines.append(randomize_choice(line))
+        # elif utils.choice_open_delimiter in line or utils.choice_close_delimiter in line:
+        #     print(line)
+        else:
+            new_mainlines.append(line)
+    random.shuffle(new_mainlines)
+    random.shuffle(costlines)
+    #random.shuffle(postlines) # only one kind ever (countertype)
+    return utils.newline.join(prelines+keylines+new_mainlines+costlines+postlines)
 
 
 # Text unpasses, for decoding. All assume the text inside a Manatext, so don't do anything

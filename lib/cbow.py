@@ -8,20 +8,18 @@ import subprocess
 import os
 import struct
 import math
+import multiprocessing
+
 import utils
 import cardlib
 import transforms
-
-# # this would be nice, but doing it naively makes things worse
-# from joblib import Parallel, delayed
-# import multiprocessing
+import namediff
 
 libdir = os.path.dirname(os.path.realpath(__file__))
 datadir = os.path.realpath(os.path.join(libdir, '../data'))
 
-# # multithreading control parameters
-# cores = multiprocessing.cpu_count()
-# segments = cores / 2 if cores / 2 > 0 else 1
+# multithreading control parameters
+cores = multiprocessing.cpu_count()
 
 # max length of vocabulary entries
 max_w = 50
@@ -67,6 +65,11 @@ def makevector(vocabulary,vecs,sequence):
             res = v
         else:
             res = [x + y for x, y in zip(res,v)]
+
+    # bad things happen if we have a vector of only unknown words
+    if res is None:
+        return [0.0]*len(vecs[0])
+
     length = math.sqrt(sum([res[i] * res[i] for i in range(0,len(res))]))
     for i in range(0,len(res)):
         res[i] /= length
@@ -118,6 +121,33 @@ except ImportError:
 def cosine_similarity_name(cardvec, v, name):
     return (cosine_similarity(cardvec, v), name)
 
+# we need to put the logic in a regular function (as opposed to a method of an object)
+# so that we can pass the function to multiprocessing
+def f_nearest(card, vocab, vecs, cardvecs, n):
+    if isinstance(card, cardlib.Card):
+        words = card.vectorize().split('\n\n')[0]
+    else:
+        # assume it's a string (that's already a vector)
+        words = card
+            
+    if not words:
+        return []
+
+    cardvec = makevector(vocab, vecs, words)
+
+    comparisons = [cosine_similarity_name(cardvec, v, name) for (name, v) in cardvecs]
+
+    comparisons.sort(reverse = True)
+    comp_n = comparisons[:n]
+    
+    if isinstance(card, cardlib.Card) and card.bside:
+        comp_n += f_nearest(card.bside, vocab, vecs, cardvecs, n=n)
+
+    return comp_n
+
+def f_nearest_per_thread(workitem):
+    (workcards, vocab, vecs, cardvecs, n) = workitem
+    return map(lambda card: f_nearest(card, vocab, vecs, cardvecs, n), workcards)
 
 class CBOW:
     def __init__(self, verbose = True,
@@ -147,8 +177,6 @@ class CBOW:
                 self.cardvecs += [(name, makevector(self.vocab, 
                                                     self.vecs, 
                                                     card.vectorize()))]
-
-        # self.par = Parallel(n_jobs=segments)
                 
         if self.verbose:
             print '... Done.'
@@ -157,25 +185,11 @@ class CBOW:
             print '  card vecs:  ' + str(len(self.cardvecs))
 
     def nearest(self, card, n=5):
-        if isinstance(card, cardlib.Card):
-            words = card.vectorize().split('\n\n')[0]
-        else:
-            # assume it's a string (that's already a vector)
-            words = card
-            
-        if not words:
-            return []
+        return f_nearest(card, self.vocab, self.vecs, self.cardvecs, n)
 
-        cardvec = makevector(self.vocab, self.vecs, words)
-
-        comparisons = [cosine_similarity_name(cardvec, v, name) for (name, v) in self.cardvecs]
-        # comparisons = self.par(delayed(cosine_similarity_name)(cardvec, v, name) 
-        #                        for (name, v) in self.cardvecs)
-
-        comparisons.sort(reverse = True)
-        comp_n = comparisons[:n]
-        
-        if isinstance(card, cardlib.Card) and card.bside:
-            comp_n += self.nearest(card.bside)
-
-        return comp_n
+    def nearest_par(self, cards, n=5, threads=cores):
+        workpool = multiprocessing.Pool(threads)
+        proto_worklist = namediff.list_split(cards, threads)
+        worklist = map(lambda x: (x, self.vocab, self.vecs, self.cardvecs, n), proto_worklist)
+        donelist = workpool.map(f_nearest_per_thread, worklist)
+        return namediff.list_flatten(donelist)

@@ -12,12 +12,15 @@ import cardlib
 from cbow import CBOW
 from namediff import Namediff
 
-def exclude_sets(cardset):
-    return cardset == 'Unglued' or cardset == 'Unhinged' or cardset == 'Celebration'
-
 def main(fname, oname = None, verbose = True, encoding = 'std',
          gatherer = False, for_forum = False, for_mse = False,
          creativity = False, vdump = False, for_html = False):
+
+    # there is a sane thing to do here (namely, produce both at the same time)
+    # but we don't support it yet.
+    if for_mse and for_html:
+        print 'ERROR - decode.py - incompatible formats "mse" and "html"'
+        return
 
     fmt_ordered = cardlib.fmt_ordered_default
 
@@ -46,8 +49,36 @@ def main(fname, oname = None, verbose = True, encoding = 'std',
     cards = jdecode.mtg_open_file(fname, verbose=verbose, fmt_ordered=fmt_ordered)
 
     if creativity:
-        cbow = CBOW()
         namediff = Namediff()
+        cbow = CBOW()
+        if verbose:
+            print 'Computing nearest names...'
+        nearest_names = namediff.nearest_par(map(lambda c: c.name, cards), n=3)
+        if verbose:
+            print 'Computing nearest cards...'
+        nearest_cards = cbow.nearest_par(cards)
+        for i in range(0, len(cards)):
+            cards[i].nearest_names = nearest_names[i]
+            cards[i].nearest_cards = nearest_cards[i]
+        if verbose:
+            print '...Done.'
+
+    def hoverimg(cardname, dist, nd):
+        truename = nd.names[cardname]
+        code = nd.codes[cardname]
+        namestr = ''
+        if for_html:
+            if code:
+                namestr = ('<div class="hover_img"><a href="#">' + truename 
+                           + '<span><img src="http://magiccards.info/scans/en/' + code
+                           + '" alt="image"/></span></a>' + ': ' + str(dist) + '</div>')
+            else:
+                namestr = '<div>' + truename + ': ' + str(dist) + '</div>'
+        elif for_forum:
+            namestr = '[card]' + truename + '[/card]' + ': ' + str(dist) + '\n'
+        else:
+            namestr = truename + ': ' + str(dist) + '\n'
+        return namestr 
 
     def writecards(writer):
         if for_mse:
@@ -68,31 +99,30 @@ def main(fname, oname = None, verbose = True, encoding = 'std',
                     fstring += 'raw:\n' + card.raw + '\n'
                 fstring += '\n'
                 fstring += card.format(gatherer = gatherer, for_forum = for_forum,
-                                       vdump = vdump)
+                                       vdump = vdump) + '\n'
                 fstring = fstring.replace('<', '(').replace('>', ')')
                 writer.write(('\n' + fstring[:-1]).replace('\n', '\n\t\t'))
             else:
-                writer.write(card.format(gatherer = gatherer, for_forum = for_forum,
-                                         vdump = vdump, for_html = for_html).encode('utf-8'))
+                fstring = card.format(gatherer = gatherer, for_forum = for_forum,
+                                      vdump = vdump, for_html = for_html)
+                if creativity and for_html:
+                    fstring = fstring[:-6] # chop off the closing </div> to stick stuff in
+                writer.write((fstring + '\n').encode('utf-8'))
 
             if creativity:
                 cstring = '~~ closest cards ~~\n'
-                nearest = cbow.nearest(card)
+                nearest = card.nearest_cards
                 for dist, cardname in nearest:
-                    cardname = namediff.names[cardname]
-                    if for_forum:
-                        cardname = '[card]' + cardname + '[/card]'
-                    cstring += cardname + ': ' + str(dist) + '\n'
+                    cstring += hoverimg(cardname, dist, namediff)
                 cstring += '~~ closest names ~~\n'
-                nearest = namediff.nearest(card.name)
+                nearest = card.nearest_names
                 for dist, cardname in nearest:
-                    cardname = namediff.names[cardname]
-                    if for_forum:
-                        cardname = '[card]' + cardname + '[/card]'
-                    cstring += cardname + ': ' + str(dist) + '\n'
-                if for_mse:
-                    cstring = cstring.replace('<', '(').replace('>', ')')
+                    cstring += hoverimg(cardname, dist, namediff)
+                if for_html:
+                    cstring = '<hr><div>' + cstring.replace('\n', '<br>\n') + '</div>\n</div>'
+                elif for_mse:
                     cstring = ('\n\n' + cstring[:-1]).replace('\n', '\n\t\t')
+                
                 writer.write(cstring.encode('utf-8'))
 
             writer.write('\n'.encode('utf-8'))
@@ -159,8 +189,11 @@ if __name__ == '__main__':
     parser.add_argument('-mse', '--mse', action='store_true', 
                         help='use Magic Set Editor 2 encoding; will output as .mse-set file')
     parser.add_argument('-html', '--html', action='store_true', help='create a .html file with pretty forum formatting')
+
     args = parser.parse_args()
+
     main(args.infile, args.outfile, verbose = args.verbose, encoding = args.encoding,
          gatherer = args.gatherer, for_forum = args.forum, for_mse = args.mse,
          creativity = args.creativity, vdump = args.dump, for_html = args.html)
+
     exit(0)
