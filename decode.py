@@ -88,6 +88,7 @@ def main(fname, oname = None, verbose = True, encoding = 'std',
         if for_html:
             # have to preapend html info
             writer.write(utils.html_prepend)
+            for_forum = True
 
         for card in cards:
             if for_mse:
