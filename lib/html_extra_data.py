@@ -11,8 +11,7 @@ html_prepend = """<!DOCTYPE html>
 	    }
 	    div.hover_img {
 	    	position: relative;
-	    	left: 45%;
-	    	display:inline;
+	    	display:inline-block;
 	    }
 	    .hover_img a {
 	        position: relative;
@@ -23,18 +22,16 @@ html_prepend = """<!DOCTYPE html>
 	        display: none;
 	        z-index: 99;
 	    }
-	    .hover_img span:hover {
-	    	display:block;
+	    .hover_img:hover span {
+	    	display:inline-block;
 	    }
 	    
 	    .hover_img span p {
+	    	padding: 10px;
 	        width:250px;
 	        background:#FFFF99;
 	    }
 	    
-	    .hover_img a:hover span {
-	        display: block;
-	    }
 	    .hover_img img {
 	    	height: 445px;
 	    	width: 312px;

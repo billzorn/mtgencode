@@ -69,9 +69,9 @@ def main(fname, oname = None, verbose = True, encoding = 'std',
         namestr = ''
         if for_html:
             if code:
-                namestr = ('<div class="hover_img"><a href="http://magiccards.info/scans/en/' + code + '">' + truename 
-                           + '</a><span><img style="background: url(http://magiccards.info/scans/en/' + code
-                           + ');" alt="image"/></span>' + ': ' + str(dist) + '</div>')
+                namestr = ('<div class="hover_img"><a href="#">' + truename 
+                           + '<span><img style="background: url(http://magiccards.info/scans/en/' + code
+                           + ');" alt=""/></span></a>' + ': ' + str(dist) + '\n</div>\n')
             else:
                 namestr = '<div>' + truename + ': ' + str(dist) + '</div>'
         elif for_forum:
@@ -116,6 +116,8 @@ def main(fname, oname = None, verbose = True, encoding = 'std',
                 nearest = card.nearest_cards
                 for dist, cardname in nearest:
                     cstring += hoverimg(cardname, dist, namediff)
+                if for_html:
+                    cstring += "<br>\n"
                 cstring += '~~ closest names ~~\n'
                 if for_html:
                     cstring += "<br>\n"
@@ -123,7 +125,7 @@ def main(fname, oname = None, verbose = True, encoding = 'std',
                 for dist, cardname in nearest:
                     cstring += hoverimg(cardname, dist, namediff)
                 if for_html:
-                    cstring = '<hr><div>' + cstring.replace('\n', '<br>\n') + '</div>\n</div>'
+                    cstring = '<hr><div>' + cstring + '</div>\n</div>'
                 elif for_mse:
                     cstring = ('\n\n' + cstring[:-1]).replace('\n', '\n\t\t')
                 
