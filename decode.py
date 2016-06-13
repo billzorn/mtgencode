@@ -69,9 +69,9 @@ def main(fname, oname = None, verbose = True, encoding = 'std',
         namestr = ''
         if for_html:
             if code:
-                namestr = ('<div class="hover_img"><a href="#">' + truename 
-                           + '<span><img src="http://magiccards.info/scans/en/' + code
-                           + '" alt="image"/></span></a>' + ': ' + str(dist) + '</div>')
+                namestr = ('<div class="hover_img"><a href="http://magiccards.info/scans/en/' + code + '>' + truename 
+                           + '</a><span><img style="background: url(http://magiccards.info/scans/en/' + code
+                           + ');" alt="image"/></span>' + ': ' + str(dist) + '</div>')
             else:
                 namestr = '<div>' + truename + ': ' + str(dist) + '</div>'
         elif for_forum:
@@ -111,10 +111,14 @@ def main(fname, oname = None, verbose = True, encoding = 'std',
 
             if creativity:
                 cstring = '~~ closest cards ~~\n'
+                if for_html:
+                    cstring += "<br>\n"
                 nearest = card.nearest_cards
                 for dist, cardname in nearest:
                     cstring += hoverimg(cardname, dist, namediff)
                 cstring += '~~ closest names ~~\n'
+                if for_html:
+                    cstring += "<br>\n"
                 nearest = card.nearest_names
                 for dist, cardname in nearest:
                     cstring += hoverimg(cardname, dist, namediff)
