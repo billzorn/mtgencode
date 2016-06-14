@@ -1,7 +1,26 @@
 box_width = 350
+id_lables = ["white", "blue", "black", "red", "green", "multi", "colorless"]
 html_prepend = """<!DOCTYPE html>
 <head>
     <style>
+	    ul {
+		    list-style-type: none;
+		    margin: 0;
+		    padding: 0;
+		    overflow: hidden;
+		}
+
+		li {
+		    float: left;
+		}
+
+		li a {
+		    display: block;
+		    color: white;
+		    text-align: center;
+		    padding: 14px 16px;
+		    text-decoration: none;
+		}
 	    .card-text {
 	        display: inline-block;
 	        width: 350px;
@@ -9,6 +28,25 @@ html_prepend = """<!DOCTYPE html>
 	        padding: 3px;
 	        border: 3px solid #000000;
 	    }
+	    #red > div{
+	    	border-color:red;
+	    }
+	    #blue > div{
+	    	border-color:blue;
+	    }
+	    #green > div{
+	    	border-color:lawngreen;
+	    }
+	    #white > div{
+	    	border-color:yellow;
+	    }
+	    #multi > div{
+	    	border-color:gold;
+	    }
+	    #colorless > div{
+	    	border-color:lightgrey;
+	    }
+
 	    div.hover_img {
 	    	position: relative;
 	    	display:inline-block;
@@ -449,4 +487,14 @@ html_prepend = """<!DOCTYPE html>
 	    }
     </style>
 </head>
-<body>"""
+<body>
+	<ul id="top">
+			<li style="background-color:yellow;"><a href="#white" style="color:black">White Cards</a></li>
+			<li style="background-color:blue;"><a href="#blue">Blue Cards</a></li>
+			<li style="background-color:black;"><a href="#black">Black Cards</a></li>
+			<li style="background-color:red;"><a href="#red">Red Cards</a></li>
+			<li style="background-color:green;"><a href="#green">Green Cards</a></li>
+			<li style="background-color:gold;"><a href="#multi" style="color:black">Multi-colored Cards</a></li>
+			<li style="background-color:lightgrey;"><a href="#colorless" style="color:black">Colorless Cards</a></li>
+	</ul>
+"""
