@@ -644,6 +644,13 @@ class Card:
             if vdump or not coststr == '_NOCOST_':
                 outstr += ' ' + coststr
 
+            if for_html and for_forum:
+               #force for_html to false to create tootip with forum spoiler
+                outstr += ('<div class="hover_img"><a href="#">[F]</a> <span><p>' 
+                           + self.format(gatherer=gatherer, for_forum=for_forum, for_html=False, vdump=vdump).replace('\n', '<br>')
+                           + '</p></span></div><a href="#top" style="float: right;">back to top</a>')
+
+
             if self.__dict__[field_rarity]:
                 if self.__dict__[field_rarity] in utils.json_rarity_unmap:
                     rarity = utils.json_rarity_unmap[self.__dict__[field_rarity]]
@@ -651,12 +658,7 @@ class Card:
                     rarity = self.__dict__[field_rarity]
                 outstr += ' (' + rarity + ')'
 
-            if for_html and for_forum:
-               #force for_html to false to create tootip with forum spoiler
-                outstr += ('<div class="hover_img"><a href="#">[F]</a> <span><p>' 
-                           + self.format(gatherer=gatherer, for_forum=for_forum, for_html=False, vdump=vdump).replace('\n', '<br>')
-                           + '</p></span></div><a href="#top" style="float: right;">back to top</a>')
-
+            
             if vdump:
                 if not self.parsed:
                     outstr += ' _UNPARSED_'
