@@ -46,7 +46,7 @@ html_prepend = """<!DOCTYPE html>
 	    #colorless > div{
 	    	border-color:lightgrey;
 	    }
-	    #colorless > div{
+	    #lands > div{
 	    	border-color:darkgoldenrod;
 	    }
 
