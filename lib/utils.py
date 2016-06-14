@@ -11,6 +11,7 @@ mse_prepend = 'mse version: 0.3.8\ngame: magic\nstylesheet: m15\nset info:\n\tsy
 
 # special chunk of text to start an HTML document.
 import html_extra_data
+segment_ids = html_extra_data.id_lables
 html_prepend = html_extra_data.html_prepend
 html_append = "\n</body>\n</html>"
 
