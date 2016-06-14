@@ -1,5 +1,5 @@
 box_width = 350
-id_lables = ["white", "blue", "black", "red", "green", "multi", "colorless"]
+id_lables = ["white", "blue", "black", "red", "green", "multi", "colorless", "lands"]
 html_prepend = """<!DOCTYPE html>
 <head>
     <style>
@@ -45,6 +45,9 @@ html_prepend = """<!DOCTYPE html>
 	    }
 	    #colorless > div{
 	    	border-color:lightgrey;
+	    }
+	    #colorless > div{
+	    	border-color:darkgoldenrod;
 	    }
 
 	    div.hover_img {
@@ -496,5 +499,6 @@ html_prepend = """<!DOCTYPE html>
 			<li style="background-color:green;"><a href="#green">Green Cards</a></li>
 			<li style="background-color:gold;"><a href="#multi" style="color:black">Multi-colored Cards</a></li>
 			<li style="background-color:lightgrey;"><a href="#colorless" style="color:black">Colorless Cards</a></li>
+			<li style="background-color:darkgoldenrod;"><a href="#lands" style="color:black">lands Cards</a></li>
 	</ul>
 """

@@ -89,8 +89,10 @@ def main(fname, oname = None, verbose = True, encoding = 'std',
             # have to preapend html info
             writer.write(utils.html_prepend)
             # seperate the write function to allow for writing smaller chunks of cards at a time
-            segments = sort_cards(cards)
+            segments = sort_colors(cards)
             for i in range(len(segments)):
+                # sort color by CMC
+                segments[i] = sort_cmc(segments[i])
                 # this allows card boxes to be colored for each color 
                 # for coloring of each box seperately cardlib.Card.format() must change non-minimaly
                 writer.write('<div id="' + utils.segment_ids[i] + '">')
@@ -162,7 +164,8 @@ def main(fname, oname = None, verbose = True, encoding = 'std',
 
             writer.write('\n'.encode('utf-8'))
 
-    def sort_cards(card_set):
+    # Sorting by colors
+    def sort_colors(card_set):
         # Initialize sections
         red_cards = []
         blue_cards = []
@@ -171,6 +174,7 @@ def main(fname, oname = None, verbose = True, encoding = 'std',
         white_cards = []
         multi_cards = []
         colorless_cards = []
+        lands = []
         for card in card_set:
             if len(card.get_colors())>1:
                 multi_cards += [card]
@@ -191,9 +195,26 @@ def main(fname, oname = None, verbose = True, encoding = 'std',
                 white_cards += [card]
                 continue
             else:
+                if "land" in card.get_types():
+                    lands += [card]
+                    continue
                 colorless_cards += [card]
-        return[white_cards, blue_cards, black_cards, red_cards, green_cards, multi_cards, colorless_cards]
+        return[white_cards, blue_cards, black_cards, red_cards, green_cards, multi_cards, colorless_cards, lands]
 
+    def sort_cmc(card_set):
+        sorted_cards = []
+        sorted_set = []
+        for card in card_set:
+            # make sure there is an empty set for each CMC
+            while len(sorted_cards)-1 < card.get_cmc():
+                sorted_cards += []
+            # add card to correct set of CMC values
+            sorted_cards[card.get_cmc()] += [card]
+        # combine each set of CMC valued cards together
+        for value in sorted_cards:
+            for card in value:
+                sorted_set += [card]
+        return sorted_set
 
 
     if oname:
