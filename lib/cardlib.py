@@ -1031,5 +1031,10 @@ class Card:
     def get_colors(self):
         return self.__dict__[field_cost].get_colors()
 
+    def get_types(self):
+        return self.__dict__[field_types]
+
+    def get_cmc(self):
+        return self.__dict__[field_cost].cmc
 
         
