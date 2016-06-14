@@ -97,7 +97,7 @@ def main(fname, oname = None, verbose = True, encoding = 'std',
                 # for coloring of each box seperately cardlib.Card.format() must change non-minimaly
                 writer.write('<div id="' + utils.segment_ids[i] + '">')
                 writehtml(writer, segments[i])
-                writer.write("</div>")
+                writer.write("</div><hr>")
             # closing the html file
             writer.write(utils.html_append)
             return #break out of the write cards funcrion to avoid writing cards twice
@@ -207,7 +207,7 @@ def main(fname, oname = None, verbose = True, encoding = 'std',
         for card in card_set:
             # make sure there is an empty set for each CMC
             while len(sorted_cards)-1 < card.get_cmc():
-                sorted_cards += []
+                sorted_cards += [[]]
             # add card to correct set of CMC values
             sorted_cards[card.get_cmc()] += [card]
         # combine each set of CMC valued cards together

@@ -501,4 +501,5 @@ html_prepend = """<!DOCTYPE html>
 			<li style="background-color:lightgrey;"><a href="#colorless" style="color:black">Colorless Cards</a></li>
 			<li style="background-color:darkgoldenrod;"><a href="#lands" style="color:black">lands Cards</a></li>
 	</ul>
+	<hr>
 """
