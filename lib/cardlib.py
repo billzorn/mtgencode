@@ -655,7 +655,7 @@ class Card:
                #force for_html to false to create tootip with forum spoiler
                 outstr += ('<div class="hover_img"><a href="#">[F]</a> <span><p>' 
                            + self.format(gatherer=gatherer, for_forum=for_forum, for_html=False, vdump=vdump).replace('\n', '<br>')
-                           + '</p></span></div>')
+                           + '</p></span></div><a href="#top" style="float: right;">back to top</a>')
 
             if vdump:
                 if not self.parsed:
