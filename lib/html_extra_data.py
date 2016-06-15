@@ -313,7 +313,7 @@ html_prepend = """<!DOCTYPE html>
 	        background: url('data:image/png; base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAIAAADZF8uwAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAFxSURBVChTY/z//z8DA8Pfv3+fPbj7+vnjL58+Xbhy3cbKXFRSVkpBmZmZGSgLUvT929erZ459//oFyL/38PH1m3e83RyBbE5uHm0TK04ubiagGXAVv3//OXDkxItXbyDGAwWBUkAFjI/u3Hxw6ypQ6O79RxNmLuDkYH/15i0HO0dxdrKqkjxQXEFNmwnoDiDr379/vdPmZiZGBXi7WpkaVRdlTpq18MfPn0ApoAKmb19AFl2+dktCTFRLXYWNlfXNu/ey0pL6Oho3bt8DSgEVMAEpIPjz5w8LC8gjnz9/FRUWAjKAqn///g2WZGDi4uEBUprqKrfvPrj34BEPDzfQ1R8/fT574YqyghxQCqgA4fCbd+73TZsrIyX59PkLoBNjwgLsLE2B4kCHMwItOn90HyQIvv/4sWbTDmAQpMaGCfDzAUWAQWVo7cQEDFNQiHGDLOXk4HCxtxIXFYarAEoBFaBHC9Avl67esDA3QUQLAwMA8Y7AP7Vm5bMAAAAASUVORK5CYII=') no-repeat;
 	    }
 	    
-	    .mana-B-R {
+	    .mana-R-B {
 	        display: inline-block;
 	        width: 12px;
 	        height: 12px;
