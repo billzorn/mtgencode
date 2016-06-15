@@ -92,7 +92,7 @@ def main(fname, oname = None, verbose = True, encoding = 'std',
             segments = sort_colors(cards)
             for i in range(len(segments)):
                 # sort color by CMC
-                segments[i] = sort_cmc(segments[i])
+                segments[i] = sort_type(segments[i])
                 # this allows card boxes to be colored for each color 
                 # for coloring of each box seperately cardlib.Card.format() must change non-minimaly
                 writer.write('<div id="' + utils.segment_ids[i] + '">')
@@ -200,6 +200,25 @@ def main(fname, oname = None, verbose = True, encoding = 'std',
                     continue
                 colorless_cards += [card]
         return[white_cards, blue_cards, black_cards, red_cards, green_cards, multi_cards, colorless_cards, lands]
+
+    def sort_type(card_set):
+        sorting = ["creature", "enchantment", "instant", "sorcery", "artifact", "planeswalker"]
+        sorted_cards = [[],[],[],[],[],[],[]]
+        sorted_set = []
+        for card in card_set:
+            types = card.get_types()
+            for i in range(len(sorting)):
+                if sorting[i] in types:
+                    sorted_cards[i] += [card]
+                    break
+            else:
+                sorted_cards[6] += [card]
+        for value in sorted_cards:
+            for card in value:
+                sorted_set += [card]
+        return sorted_set
+
+
 
     def sort_cmc(card_set):
         sorted_cards = []
