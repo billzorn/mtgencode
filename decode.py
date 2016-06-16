@@ -70,8 +70,8 @@ def main(fname, oname = None, verbose = True, encoding = 'std',
         if for_html:
             if code:
                 namestr = ('<div class="hover_img"><a href="#">' + truename 
-                           + '<span><img src="http://magiccards.info/scans/en/' + code
-                           + '" alt="image"/></span></a>' + ': ' + str(dist) + '</div>')
+                           + '<span><img style="background: url(http://magiccards.info/scans/en/' + code
+                           + ');" alt=""/></span></a>' + ': ' + str(dist) + '\n</div>\n')
             else:
                 namestr = '<div>' + truename + ': ' + str(dist) + '</div>'
         elif for_forum:
@@ -88,6 +88,20 @@ def main(fname, oname = None, verbose = True, encoding = 'std',
         if for_html:
             # have to preapend html info
             writer.write(utils.html_prepend)
+            # seperate the write function to allow for writing smaller chunks of cards at a time
+            segments = sort_colors(cards)
+            for i in range(len(segments)):
+                # sort color by CMC
+                segments[i] = sort_type(segments[i])
+                # this allows card boxes to be colored for each color 
+                # for coloring of each box seperately cardlib.Card.format() must change non-minimaly
+                writer.write('<div id="' + utils.segment_ids[i] + '">')
+                writehtml(writer, segments[i])
+                writer.write("</div><hr>")
+            # closing the html file
+            writer.write(utils.html_append)
+            return #break out of the write cards funcrion to avoid writing cards twice
+
 
         for card in cards:
             if for_mse:
@@ -105,8 +119,6 @@ def main(fname, oname = None, verbose = True, encoding = 'std',
             else:
                 fstring = card.format(gatherer = gatherer, for_forum = for_forum,
                                       vdump = vdump, for_html = for_html)
-                if creativity and for_html:
-                    fstring = fstring[:-6] # chop off the closing </div> to stick stuff in
                 writer.write((fstring + '\n').encode('utf-8'))
 
             if creativity:
@@ -118,11 +130,8 @@ def main(fname, oname = None, verbose = True, encoding = 'std',
                 nearest = card.nearest_names
                 for dist, cardname in nearest:
                     cstring += hoverimg(cardname, dist, namediff)
-                if for_html:
-                    cstring = '<hr><div>' + cstring.replace('\n', '<br>\n') + '</div>\n</div>'
-                elif for_mse:
+                if for_mse:
                     cstring = ('\n\n' + cstring[:-1]).replace('\n', '\n\t\t')
-                
                 writer.write(cstring.encode('utf-8'))
 
             writer.write('\n'.encode('utf-8'))
@@ -130,9 +139,102 @@ def main(fname, oname = None, verbose = True, encoding = 'std',
         if for_mse:
             # more formatting info
             writer.write('version control:\n\ttype: none\napprentice code: ')
-        if for_html:
-            # closing the html file
-            writer.write(utils.html_append)
+            
+
+    def writehtml(writer, card_set):
+        for card in card_set:
+            fstring = card.format(gatherer = gatherer, for_forum = True,
+                                      vdump = vdump, for_html = for_html)
+            if creativity:
+                fstring = fstring[:-6] # chop off the closing </div> to stick stuff in
+            writer.write((fstring + '\n').encode('utf-8'))
+
+            if creativity:
+                cstring = '~~ closest cards ~~\n<br>\n'
+                nearest = card.nearest_cards
+                for dist, cardname in nearest:
+                    cstring += hoverimg(cardname, dist, namediff)
+                cstring += "<br>\n"
+                cstring += '~~ closest names ~~\n<br>\n'
+                nearest = card.nearest_names
+                for dist, cardname in nearest:
+                    cstring += hoverimg(cardname, dist, namediff)
+                cstring = '<hr><div>' + cstring + '</div>\n</div>'
+                writer.write(cstring.encode('utf-8'))
+
+            writer.write('\n'.encode('utf-8'))
+
+    # Sorting by colors
+    def sort_colors(card_set):
+        # Initialize sections
+        red_cards = []
+        blue_cards = []
+        green_cards = []
+        black_cards = []
+        white_cards = []
+        multi_cards = []
+        colorless_cards = []
+        lands = []
+        for card in card_set:
+            if len(card.get_colors())>1:
+                multi_cards += [card]
+                continue
+            if 'R' in card.get_colors():
+                red_cards += [card]
+                continue
+            elif 'U' in card.get_colors():
+                blue_cards += [card]
+                continue
+            elif 'B' in card.get_colors():
+                black_cards += [card]
+                continue
+            elif 'G' in card.get_colors():
+                green_cards += [card]
+                continue
+            elif 'W' in card.get_colors():
+                white_cards += [card]
+                continue
+            else:
+                if "land" in card.get_types():
+                    lands += [card]
+                    continue
+                colorless_cards += [card]
+        return[white_cards, blue_cards, black_cards, red_cards, green_cards, multi_cards, colorless_cards, lands]
+
+    def sort_type(card_set):
+        sorting = ["creature", "enchantment", "instant", "sorcery", "artifact", "planeswalker"]
+        sorted_cards = [[],[],[],[],[],[],[]]
+        sorted_set = []
+        for card in card_set:
+            types = card.get_types()
+            for i in range(len(sorting)):
+                if sorting[i] in types:
+                    sorted_cards[i] += [card]
+                    break
+            else:
+                sorted_cards[6] += [card]
+        for value in sorted_cards:
+            for card in value:
+                sorted_set += [card]
+        return sorted_set
+
+
+
+    def sort_cmc(card_set):
+        sorted_cards = []
+        sorted_set = []
+        for card in card_set:
+            # make sure there is an empty set for each CMC
+            while len(sorted_cards)-1 < card.get_cmc():
+                sorted_cards += [[]]
+            # add card to correct set of CMC values
+            sorted_cards[card.get_cmc()] += [card]
+        # combine each set of CMC valued cards together
+        for value in sorted_cards:
+            for card in value:
+                sorted_set += [card]
+        return sorted_set
+
 
     if oname:
         if for_html:
