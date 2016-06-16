@@ -561,14 +561,12 @@ def randomize_choice(line):
                                     1)
     return new_line
     
-
 def randomize_lines(text):
     if text == '' or 'level up' in text:
         return text
 
     prelines, keylines, mainlines, costlines, postlines = separate_lines(text)
-    random.shuffle(prelines)
-    random.shuffle(keylines)
+
     new_mainlines = []
     for line in mainlines:
         if line.endswith(utils.choice_close_delimiter):
@@ -577,10 +575,18 @@ def randomize_lines(text):
         #     print(line)
         else:
             new_mainlines.append(line)
-    random.shuffle(new_mainlines)
-    random.shuffle(costlines)
-    #random.shuffle(postlines) # only one kind ever (countertype)
-    return utils.newline.join(prelines+keylines+new_mainlines+costlines+postlines)
+
+    if False: # TODO: make this an option
+        lines = prelines + keylines + new_mainlines + costlines + postlines
+        random.shuffle(lines)
+        return utils.newline.join(lines)
+    else:
+        random.shuffle(prelines)
+        random.shuffle(keylines)
+        random.shuffle(new_mainlines)
+        random.shuffle(costlines)
+        #random.shuffle(postlines) # only one kind ever (countertype)
+        return utils.newline.join(prelines+keylines+new_mainlines+costlines+postlines)
 
 
 # Text unpasses, for decoding. All assume the text inside a Manatext, so don't do anything
