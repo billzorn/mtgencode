@@ -48,7 +48,7 @@ def f_nearest_per_thread(workitem):
     (worknames, names, n) = workitem
     # each thread (well, process) needs to generate its own matchers
     matchers = [difflib.SequenceMatcher(b=name, autojunk=False) for name in names]
-    return map(lambda name: f_nearest(name, matchers, n), worknames)
+    return [f_nearest(name, matchers, n) for name in worknames]
 
 class Namediff:
     def __init__(self, verbose = True,
@@ -59,10 +59,10 @@ class Namediff:
         self.cardstrings = {}
 
         if self.verbose:
-            print 'Setting up namediff...'
+            print('Setting up namediff...')
 
         if self.verbose:
-            print '  Reading names from: ' + json_fname
+            print('  Reading names from: ' + json_fname)
         json_srcs = jdecode.mtg_open_json(json_fname, verbose)
         namecount = 0
         for json_cardname in sorted(json_srcs):
@@ -81,7 +81,7 @@ class Namediff:
                     jnum = ''
                     
                 if name in self.names:
-                    print '  Duplicate name ' + name + ', ignoring.'
+                    print('  Duplicate name ' + name + ', ignoring.')
                 else:
                     self.names[name] = jname
                     self.cardstrings[name] = card.encode()
@@ -91,13 +91,15 @@ class Namediff:
                         self.codes[name] = ''
                     namecount += 1
 
-        print '  Read ' + str(namecount) + ' unique cardnames'
-        print '  Building SequenceMatcher objects.'
-        
-        self.matchers = [difflib.SequenceMatcher(b=n, autojunk=False) for n in self.names]
-        self.card_matchers = [difflib.SequenceMatcher(b=self.cardstrings[n], autojunk=False) for n in self.cardstrings]
+        print('  Read ' + str(namecount) + ' unique cardnames')
+        print('  Building SequenceMatcher objects.')
 
-        print '... Done.'
+        self.matchers = [difflib.SequenceMatcher(
+            b=n, autojunk=False) for n in self.names]
+        self.card_matchers = [difflib.SequenceMatcher(
+            b=self.cardstrings[n], autojunk=False) for n in self.cardstrings]
+
+        print('... Done.')
     
     def nearest(self, name, n=3):
         return f_nearest(name, self.matchers, n)
@@ -105,7 +107,7 @@ class Namediff:
     def nearest_par(self, names, n=3, threads=cores):
         workpool = multiprocessing.Pool(threads)
         proto_worklist = list_split(names, threads)
-        worklist = map(lambda x: (x, self.names, n), proto_worklist)
+        worklist = [(x, self.names, n) for x in proto_worklist]
         donelist = workpool.map(f_nearest_per_thread, worklist)
         return list_flatten(donelist)
 
@@ -115,6 +117,7 @@ class Namediff:
     def nearest_card_par(self, cards, n=5, threads=cores):
         workpool = multiprocessing.Pool(threads)
         proto_worklist = list_split(cards, threads)
-        worklist = map(lambda x: (map(lambda c: c.encode(), x), self.cardstrings.values(), n), proto_worklist)
+        worklist = [([c.encode() for c in x], list(
+            self.cardstrings.values()), n) for x in proto_worklist]
         donelist = workpool.map(f_nearest_per_thread, worklist)
         return list_flatten(donelist)

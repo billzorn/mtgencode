@@ -63,7 +63,7 @@ def mtg_open_json(fname, verbose = False):
             #print bsides[uid]
 
     if verbose:
-        print 'Opened ' + str(len(allcards)) + ' uniquely named cards.'
+        print('Opened ' + str(len(allcards)) + ' uniquely named cards.')
     return allcards
 
 # filters to ignore some undesirable cards, only used when opening json
@@ -91,7 +91,7 @@ def mtg_open_file(fname, verbose = False,
 
     if fname[-5:] == '.json':
         if verbose:
-            print 'This looks like a json file: ' + fname
+            print('This looks like a json file: ' + fname)
         json_srcs = mtg_open_json(fname, verbose)
         # sorted for stability
         for json_cardname in sorted(json_srcs):
@@ -136,7 +136,7 @@ def mtg_open_file(fname, verbose = False,
     # fall back to opening a normal encoded file
     else:
         if verbose:
-            print 'Opening encoded card file: ' + fname
+            print('Opening encoded card file: ' + fname)
         with open(fname, 'rt') as f:
             text = f.read()
         for card_src in text.split(utils.cardsep):
@@ -152,8 +152,8 @@ def mtg_open_file(fname, verbose = False,
                     unparsed += 1
 
     if verbose:
-        print (str(valid) + ' valid, ' + str(skipped) + ' skipped, '
-               + str(invalid) + ' invalid, ' + str(unparsed) + ' failed to parse.')
+        print((str(valid) + ' valid, ' + str(skipped) + ' skipped, '
+               + str(invalid) + ' invalid, ' + str(unparsed) + ' failed to parse.'))
 
     good_count = 0
     bad_count = 0
@@ -168,7 +168,7 @@ def mtg_open_file(fname, verbose = False,
             break
     # random heuristic
     if bad_count > 10:
-        print 'WARNING: Saw a bunch of unparsed cards:'
-        print '         Is this a legacy format, you may need to specify the field order.'
+        print('WARNING: Saw a bunch of unparsed cards:')
+        print('         Is this a legacy format, you may need to specify the field order.')
 
     return cards

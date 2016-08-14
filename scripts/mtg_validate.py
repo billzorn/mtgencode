@@ -91,13 +91,13 @@ def check_X(card):
             lcosts = mt.costs[:actcosts]
             rcosts = mt.costs[actcosts:]
             if 'X' in sides[0] or (utils.reserved_mana_marker in sides[0] and
-                                   'X' in ''.join(map(lambda c: c.encode(), lcosts))):
+                                   'X' in ''.join([c.encode() for c in lcosts])):
 
                 if incost:
-                    return False # bad, duplicated Xs in costs
+                    return False  # bad, duplicated Xs in costs
 
                 if 'X' in sides[1] or (utils.reserved_mana_marker in sides[1] and
-                                       'X' in ''.join(map(lambda c: c.encode(), rcosts))):
+                                       'X' in ''.join([c.encode() for c in rcosts])):
                     correct = True # good, defined X is either specified or used
                     if 'monstrosity' in sides[1]:
                         extra_cost_lines += 1
@@ -384,9 +384,9 @@ def process_props(cards, dump = False, uncovered = False):
                     if card.name not in ['demonic pact', 'lavaclaw reaches',
                                          "ertai's trickery", 'rumbling aftershocks', # i hate these
                     ] and dump:
-                        print('---- ' + prop + ' ----')
-                        print(card.encode())
-                        print(card.format())
+                        print(('---- ' + prop + ' ----'))
+                        print((card.encode()))
+                        print((card.format()))
                 values[prop] = (total, good, bad)
         if overall:
             total_good += 1
@@ -396,8 +396,8 @@ def process_props(cards, dump = False, uncovered = False):
             total_uncovered += 1
             if uncovered:
                 print('---- uncovered ----')
-                print(card.encode())
-                print(card.format())
+                print((card.encode()))
+                print((card.format()))
 
     return ((total_all, total_good, total_bad, total_uncovered),
             values)
@@ -419,8 +419,8 @@ def main(fname, oname = None, verbose = False, dump = False):
             else:
                 rg[g] = 1
             if g >= 60:
-                print g
-                print card.format()
+                print(g)
+                print(card.format())
 
         tot = 0
         vmax = sum(rg.values())
@@ -428,7 +428,7 @@ def main(fname, oname = None, verbose = False, dump = False):
         pct95 = None
         pct99 = None
         for i in sorted(rg):
-            print str(i) + ' rare ngrams: ' + str(rg[i])
+            print(str(i) + ' rare ngrams: ' + str(rg[i]))
             tot += rg[i]
             if pct90 is None and tot >= vmax * 0.90:
                 pct90 = i
@@ -437,9 +437,9 @@ def main(fname, oname = None, verbose = False, dump = False):
             if pct99 is None and tot >= vmax * 0.99:
                 pct99 = i
 
-        print '90% - ' + str(pct90)
-        print '95% - ' + str(pct95)
-        print '99% - ' + str(pct99)
+        print('90% - ' + str(pct90))
+        print('95% - ' + str(pct95))
+        print('99% - ' + str(pct99))
 
     else:
         ((total_all, total_good, total_bad, total_uncovered), 
@@ -447,19 +447,21 @@ def main(fname, oname = None, verbose = False, dump = False):
 
         # summary
         print('-- overall --')
-        print('  total     : ' + str(total_all))
-        print('  good      : ' + str(total_good) + ' ' + pct(total_good, total_all))
-        print('  bad       : ' + str(total_bad) + ' ' + pct(total_bad, total_all))
-        print('  uncocoverd: ' + str(total_uncovered) + ' ' + pct(total_uncovered, total_all))
+        print(('  total     : ' + str(total_all)))
+        print(('  good      : ' + str(total_good) +
+               ' ' + pct(total_good, total_all)))
+        print(('  bad       : ' + str(total_bad) + ' ' + pct(total_bad, total_all)))
+        print(('  uncocoverd: ' + str(total_uncovered) +
+               ' ' + pct(total_uncovered, total_all)))
         print('----')
 
         # breakdown
         for prop in props:
             (total, good, bad) = values[prop]
-            print(prop + ':')
-            print('  total: ' + str(total) + ' ' + pct(total, total_all))
-            print('  good : ' + str(good) + ' ' + pct(good, total_all))
-            print('  bad  : ' + str(bad) + ' ' + pct(bad, total_all))
+            print((prop + ':'))
+            print(('  total: ' + str(total) + ' ' + pct(total, total_all)))
+            print(('  good : ' + str(good) + ' ' + pct(good, total_all)))
+            print(('  bad  : ' + str(bad) + ' ' + pct(bad, total_all)))
 
 
 if __name__ == '__main__':

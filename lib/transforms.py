@@ -144,7 +144,7 @@ def text_pass_4b_x(s):
     s = s.replace(' x ', ' ' + x_marker + ' ')
     s = s.replace('x:', x_marker + ':')
     s = s.replace('x~', x_marker + '~')
-    s = s.replace(u'x\u2014', x_marker + u'\u2014')
+    s = s.replace('x\u2014', x_marker + '\u2014')
     s = s.replace('x.', x_marker + '.')
     s = s.replace('x,', x_marker + ',')
     s = s.replace('x is', x_marker + ' is')
@@ -359,7 +359,8 @@ def text_pass_7_choice(s):
     # to '[n = ability = ability]\n'
     
     def choice_formatting_helper(s_helper, prefix, count, suffix = ''):
-        single_choices = re.findall(ur'(' + prefix + ur'\n?(\u2022.*(\n|$))+)', s_helper)
+        single_choices = re.findall(
+            r'(' + prefix + r'\n?(\u2022.*(\n|$))+)', s_helper)
         for choice in single_choices:
             newchoice = choice[0]
             newchoice = newchoice.replace(prefix, unary_marker + (unary_counter * count) + suffix)
@@ -371,20 +372,23 @@ def text_pass_7_choice(s):
             s_helper = s_helper.replace(choice[0], newchoice)
         return s_helper
 
-    s = choice_formatting_helper(s, ur'choose one \u2014', 1)
-    s = choice_formatting_helper(s, ur'choose one \u2014 ', 1) # ty Promise of Power
-    s = choice_formatting_helper(s, ur'choose two \u2014', 2)
-    s = choice_formatting_helper(s, ur'choose two \u2014 ', 2) # ty Profane Command
-    s = choice_formatting_helper(s, ur'choose one or both \u2014', 0)
-    s = choice_formatting_helper(s, ur'choose one or more \u2014', 0)
-    s = choice_formatting_helper(s, ur'choose khans or dragons.', 1)
-    # this is for 'an opponent chooses one', which will be a bit weird but still work out
-    s = choice_formatting_helper(s, ur'chooses one \u2014', 1)
+    s = choice_formatting_helper(s, r'choose one \u2014', 1)
+    s = choice_formatting_helper(
+        s, r'choose one \u2014 ', 1)  # ty Promise of Power
+    s = choice_formatting_helper(s, r'choose two \u2014', 2)
+    s = choice_formatting_helper(
+        s, r'choose two \u2014 ', 2)  # ty Profane Command
+    s = choice_formatting_helper(s, r'choose one or both \u2014', 0)
+    s = choice_formatting_helper(s, r'choose one or more \u2014', 0)
+    s = choice_formatting_helper(s, r'choose khans or dragons.', 1)
+    # this is for 'an opponent chooses one', which will be a bit weird but
+    # still work out
+    s = choice_formatting_helper(s, r'chooses one \u2014', 1)
     # Demonic Pact has 'choose one that hasn't been chosen'...
-    s = choice_formatting_helper(s, ur"choose one that hasn't been chosen \u2014", 1,
+    s = choice_formatting_helper(s, r"choose one that hasn't been chosen \u2014", 1,
                                  suffix=" that hasn't been chosen")
     # 'choose n. you may choose the same mode more than once.'
-    s = choice_formatting_helper(s, ur'choose three. you may choose the same mode more than once.', 3,
+    s = choice_formatting_helper(s, r'choose three. you may choose the same mode more than once.', 3,
                                  suffix='. you may choose the same mode more than once.')
 
     return s
@@ -409,7 +413,7 @@ def text_pass_8_equip(s):
         else:
             s = equip + '\n' + s
 
-    nonmana = re.findall(ur'(equip\u2014.*(\n|$))', s)
+    nonmana = re.findall(r'(equip\u2014.*(\n|$))', s)
     if len(nonmana) == 1:
         equip = nonmana[0][0]
         s = s.replace('\n' + equip, '')
@@ -470,7 +474,7 @@ def text_pass_11_linetrans(s):
                     postlines += [subline]
                 else:
                     keylines += [subline]
-        elif u'\u2014' in line and not u' \u2014 ' in line:
+        elif '\u2014' in line and not ' \u2014 ' in line:
             if 'equip' in line or 'enchant' in line:
                 prelines += [line]
             elif 'countertype' in line or 'kicker' in line:
@@ -669,6 +673,6 @@ def text_unpass_7_newlines(s):
 
 
 def text_unpass_8_unicode(s):
-    s = s.replace(dash_marker, u'\u2014')
-    s = s.replace(bullet_marker, u'\u2022')
+    s = s.replace(dash_marker, '\u2014')
+    s = s.replace(bullet_marker, '\u2022')
     return s
