@@ -8,7 +8,7 @@ The purpose of this code is mostly to wrangle text between various human and mac
 
 ## Requirements
 
-Updated to Python 3; tested specifically on Python 3.5 on 64-bit Linux Mint 17.3
+Updated to Python 3; tested specifically on Python 3.4.3 on 64-bit Linux Mint 17.3
 
 For the most part it should work out of the box, though there are a few optional bonus features that will make it much better. See [DEPENDENCIES.md](https://github.com/billzorn/mtgencode/blob/master/DEPENDENCIES.md#dependencies).
 
