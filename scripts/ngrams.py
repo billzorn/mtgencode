@@ -95,7 +95,7 @@ def main(fname, oname, gmin = 2, gmax = 8, nltk = False, sep = False, verbose = 
 
             with open(oname_full, 'wt') as f:
                 for ngram in sorted(gramdict,
-                                    lambda x: gramdict[x],
+                                    key=lambda x: gramdict[x],
                                     reverse = True):
                     f.write((ngram + ': ' + str(gramdict[ngram]) + '\n').encode('utf-8'))
 

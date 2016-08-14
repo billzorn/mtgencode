@@ -601,7 +601,7 @@ def text_unpass_1_choice(s, delimit = False):
     choice_regex = (re.escape(choice_open_delimiter) + re.escape(unary_marker)
                     + r'.*' + re.escape(bullet_marker) + r'.*' + re.escape(choice_close_delimiter))
     choices = re.findall(choice_regex, s)
-    for choice in sorted(choices, len, reverse=True):
+    for choice in sorted(choices, key=len, reverse=True):
         fragments = choice[1:-1].split(bullet_marker)
         countfrag = fragments[0]
         optfrags = fragments[1:]

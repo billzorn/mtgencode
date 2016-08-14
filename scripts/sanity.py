@@ -108,7 +108,7 @@ def check_vocab(fname):
             else:
                 vocab[word] += 1
 
-    for word in sorted(vocab, lambda x: vocab[x], reverse=True):
+    for word in sorted(vocab, key=lambda x: vocab[x], reverse=True):
         print(('{:8d} : {:s}'.format(vocab[word], word)))
 
     n = 3

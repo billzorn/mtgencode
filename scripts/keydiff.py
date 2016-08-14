@@ -50,18 +50,18 @@ def main(fname1, fname2, verbose = True):
             ratios[k] = float(v2 * tot1) / float(v1 * tot2)
 
     print('shared: ' + str(len(ratios)))
-    for k in sorted(ratios, lambda x: d2[x], reverse=True):
+    for k in sorted(ratios, key=lambda x: d2[x], reverse=True):
         print('  ' + k + ': ' + str(d2[k]) + '/' +
               str(d1[k]) + ' (' + str(ratios[k]) + ')')
     print('')
 
     print('1 only: ' + str(len(only_1)))
-    for k in sorted(only_1, lambda x: d1[x], reverse=True):
+    for k in sorted(only_1, key=lambda x: d1[x], reverse=True):
         print('  ' + k + ': ' + str(d1[k]))
     print('')
 
     print('2 only: ' + str(len(only_2)))
-    for k in sorted(only_2, lambda x: d2[x], reverse=True):
+    for k in sorted(only_2, key=lambda x: d2[x], reverse=True):
         print('  ' + k + ': ' + str(d2[k]))
     print('')
 

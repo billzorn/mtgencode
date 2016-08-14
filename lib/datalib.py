@@ -173,7 +173,7 @@ class Datamine:
               str(len(self.by_type)) + ' combinations')
         print('Breakdown by type:')
         d = sorted(self.by_type_inclusive,
-                   lambda x: len(self.by_type_inclusive[x]),
+                   key=lambda x: len(self.by_type_inclusive[x]),
                    reverse=True)
         rows = [[k for k in d[:hsize]]]
         rows += [[len(self.by_type_inclusive[k]) for k in rows[0]]]
@@ -183,7 +183,7 @@ class Datamine:
                + str(len(self.by_subtype)) + ' combinations'))
         print('-- Popular subtypes: --')
         d = sorted(self.by_subtype_inclusive,
-                   lambda x: len(self.by_subtype_inclusive[x]),
+                   key=lambda x: len(self.by_subtype_inclusive[x]),
                    reverse=True)
         rows = []
         for k in d[0:vsize]:
@@ -191,7 +191,7 @@ class Datamine:
         printrows(padrows(rows))
         print('-- Top combinations: --')
         d = sorted(self.by_subtype,
-                   lambda x: len(self.by_subtype[x]),
+                   key=lambda x: len(self.by_subtype[x]),
                    reverse = True)
         rows = []
         for k in d[0:vsize]:
@@ -202,7 +202,7 @@ class Datamine:
                + str(len(self.by_supertype)) + ' combinations'))
         print('Breakdown by supertype:')
         d = sorted(self.by_supertype_inclusive,
-                   lambda x: len(self.by_supertype_inclusive[x]),
+                   key=lambda x: len(self.by_supertype_inclusive[x]),
                    reverse=True)
         rows = [[k for k in d[:hsize]]]
         rows += [[len(self.by_supertype_inclusive[k]) for k in rows[0]]]
@@ -217,7 +217,7 @@ class Datamine:
         printrows(padrows(rows))
         print('-- Popular mana costs: --')
         d = sorted(self.by_cost,
-                   lambda x: len(self.by_cost[x]),
+                   key=lambda x: len(self.by_cost[x]),
                    reverse = True)
         rows = []
         for k in d[0:vsize]:
@@ -230,7 +230,7 @@ class Datamine:
                    ', largest toughness: ' + str(max(list(map(len, self.by_toughness))) - 1)))
         print('-- Popular p/t values: --')
         d = sorted(self.by_pt,
-                   lambda x: len(self.by_pt[x]),
+                   key=lambda x: len(self.by_pt[x]),
                    reverse = True)
         rows = []
         for k in d[0:vsize]:
@@ -239,7 +239,7 @@ class Datamine:
         print('--------------------')
         print('Loyalty values:')
         d = sorted(self.by_loyalty,
-                   lambda x: len(self.by_loyalty[x]),
+                   key=lambda x: len(self.by_loyalty[x]),
                    reverse = True)
         rows = []
         for k in d[0:vsize]:
@@ -253,7 +253,7 @@ class Datamine:
                    + str(max(self.by_textlines)) + ' lines'))
         print('-- Line counts by frequency: --')
         d = sorted(self.by_textlines,
-                   lambda x: len(self.by_textlines[x]),
+                   key=lambda x: len(self.by_textlines[x]),
                    reverse = True)
         rows = []
         for k in d[0:vsize]:
@@ -273,17 +273,17 @@ class Datamine:
         print('********************')
         if len(self.by_name) > 0:
             scardname = sorted(self.by_name,
-                               len,
+                               key=len,
                                reverse=False)[0]
             print('Shortest Cardname: (' + str(len(scardname)) + ')')
             print('  ' + scardname)
             lcardname = sorted(self.by_name,
-                               len,
+                               key=len,
                                reverse=True)[0]
             print('Longest Cardname: (' + str(len(lcardname)) + ')')
             print('  ' + lcardname)
             d = sorted(self.by_name,
-                       lambda x: len(self.by_name[x]),
+                       key=lambda x: len(self.by_name[x]),
                        reverse = True)
             rows = []
             for k in d[0:vsize]:
@@ -299,7 +299,7 @@ class Datamine:
         print('--------------------')
         if len(self.by_type) > 0:
             ltypes = sorted(self.by_type,
-                            len,
+                            key=len,
                             reverse=True)[0]
             print('Longest card type: (' + str(len(ltypes)) + ')')
             print('  ' + ltypes)
@@ -307,7 +307,7 @@ class Datamine:
             print('No cards indexed by type?')
         if len(self.by_subtype) > 0:
             lsubtypes = sorted(self.by_subtype,
-                               len,
+                               key=len,
                                reverse=True)[0]
             print('Longest subtype: (' + str(len(lsubtypes)) + ')')
             print('  ' + lsubtypes)
@@ -315,7 +315,7 @@ class Datamine:
             print('No cards indexed by subtype?')
         if len(self.by_supertype) > 0:
             lsupertypes = sorted(self.by_supertype,
-                                 len,
+                                 key=len,
                                  reverse=True)[0]
             print('Longest supertype: (' + str(len(lsupertypes)) + ')')
             print('  ' + lsupertypes)
@@ -324,7 +324,7 @@ class Datamine:
         print('--------------------')
         if len(self.by_cost) > 0:
             lcost = sorted(self.by_cost,
-                           len,
+                           key=len,
                            reverse=True)[0]
             print('Longest mana cost: (' + str(len(lcost)) + ')')
             print('  ' + utils.from_mana(lcost))
@@ -341,7 +341,7 @@ class Datamine:
         print('--------------------')
         if len(self.by_power) > 0:
             lpower = sorted(self.by_power,
-                            len,
+                            key=len,
                             reverse=True)[0]
             print('Largest creature power: ' + utils.from_unary(lpower))
             print('\n' + plimit(self.by_power[lpower][0].encode()) + '\n')
@@ -349,7 +349,7 @@ class Datamine:
             print('No cards indexed by power?')
         if len(self.by_toughness) > 0:
             ltoughness = sorted(self.by_toughness,
-                                len,
+                                key=len,
                                 reverse=True)[0]
             print('Largest creature toughness: ' +
                   utils.from_unary(ltoughness))
