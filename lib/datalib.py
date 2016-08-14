@@ -173,8 +173,7 @@ class Datamine:
               str(len(self.by_type)) + ' combinations')
         print('Breakdown by type:')
         d = sorted(self.by_type_inclusive,
-                   lambda x, y: cmp(len(self.by_type_inclusive[x]), len(
-                       self.by_type_inclusive[y])),
+                   lambda x: len(self.by_type_inclusive[x]),
                    reverse=True)
         rows = [[k for k in d[:hsize]]]
         rows += [[len(self.by_type_inclusive[k]) for k in rows[0]]]
@@ -183,16 +182,16 @@ class Datamine:
         print((str(len(self.by_subtype_inclusive)) + ' unique subtypes, '
                + str(len(self.by_subtype)) + ' combinations'))
         print('-- Popular subtypes: --')
-        d = sorted(self.by_subtype_inclusive, 
-                   lambda x,y: cmp(len(self.by_subtype_inclusive[x]), len(self.by_subtype_inclusive[y])), 
-                   reverse = True)
+        d = sorted(self.by_subtype_inclusive,
+                   lambda x: len(self.by_subtype_inclusive[x]),
+                   reverse=True)
         rows = []
         for k in d[0:vsize]:
             rows += [[k, len(self.by_subtype_inclusive[k])]]
         printrows(padrows(rows))
         print('-- Top combinations: --')
-        d = sorted(self.by_subtype, 
-                   lambda x,y: cmp(len(self.by_subtype[x]), len(self.by_subtype[y])), 
+        d = sorted(self.by_subtype,
+                   lambda x: len(self.by_subtype[x]),
                    reverse = True)
         rows = []
         for k in d[0:vsize]:
@@ -203,8 +202,7 @@ class Datamine:
                + str(len(self.by_supertype)) + ' combinations'))
         print('Breakdown by supertype:')
         d = sorted(self.by_supertype_inclusive,
-                   lambda x, y: cmp(len(self.by_supertype_inclusive[x]), len(
-                       self.by_supertype_inclusive[y])),
+                   lambda x: len(self.by_supertype_inclusive[x]),
                    reverse=True)
         rows = [[k for k in d[:hsize]]]
         rows += [[len(self.by_supertype_inclusive[k]) for k in rows[0]]]
@@ -218,8 +216,8 @@ class Datamine:
         rows += [[len(self.by_cmc[k]) for k in rows[0]]]
         printrows(padrows(rows))
         print('-- Popular mana costs: --')
-        d = sorted(self.by_cost, 
-                   lambda x,y: cmp(len(self.by_cost[x]), len(self.by_cost[y])), 
+        d = sorted(self.by_cost,
+                   lambda x: len(self.by_cost[x]),
                    reverse = True)
         rows = []
         for k in d[0:vsize]:
@@ -231,8 +229,8 @@ class Datamine:
             print(('Largest power: ' + str(max(list(map(len, self.by_power))) - 1) +
                    ', largest toughness: ' + str(max(list(map(len, self.by_toughness))) - 1)))
         print('-- Popular p/t values: --')
-        d = sorted(self.by_pt, 
-                   lambda x,y: cmp(len(self.by_pt[x]), len(self.by_pt[y])), 
+        d = sorted(self.by_pt,
+                   lambda x: len(self.by_pt[x]),
                    reverse = True)
         rows = []
         for k in d[0:vsize]:
@@ -240,8 +238,8 @@ class Datamine:
         printrows(padrows(rows))
         print('--------------------')
         print('Loyalty values:')
-        d = sorted(self.by_loyalty, 
-                   lambda x,y: cmp(len(self.by_loyalty[x]), len(self.by_loyalty[y])), 
+        d = sorted(self.by_loyalty,
+                   lambda x: len(self.by_loyalty[x]),
                    reverse = True)
         rows = []
         for k in d[0:vsize]:
@@ -254,8 +252,8 @@ class Datamine:
             print(('Card text ranges from ' + str(min(self.by_textlines)) + ' to '
                    + str(max(self.by_textlines)) + ' lines'))
         print('-- Line counts by frequency: --')
-        d = sorted(self.by_textlines, 
-                   lambda x,y: cmp(len(self.by_textlines[x]), len(self.by_textlines[y])), 
+        d = sorted(self.by_textlines,
+                   lambda x: len(self.by_textlines[x]),
                    reverse = True)
         rows = []
         for k in d[0:vsize]:
@@ -275,17 +273,17 @@ class Datamine:
         print('********************')
         if len(self.by_name) > 0:
             scardname = sorted(self.by_name,
-                               lambda x, y: cmp(len(x), len(y)),
+                               len,
                                reverse=False)[0]
             print('Shortest Cardname: (' + str(len(scardname)) + ')')
             print('  ' + scardname)
             lcardname = sorted(self.by_name,
-                               lambda x, y: cmp(len(x), len(y)),
+                               len,
                                reverse=True)[0]
             print('Longest Cardname: (' + str(len(lcardname)) + ')')
             print('  ' + lcardname)
-            d = sorted(self.by_name, 
-                       lambda x,y: cmp(len(self.by_name[x]), len(self.by_name[y])), 
+            d = sorted(self.by_name,
+                       lambda x: len(self.by_name[x]),
                        reverse = True)
             rows = []
             for k in d[0:vsize]:
@@ -301,7 +299,7 @@ class Datamine:
         print('--------------------')
         if len(self.by_type) > 0:
             ltypes = sorted(self.by_type,
-                            lambda x, y: cmp(len(x), len(y)),
+                            len,
                             reverse=True)[0]
             print('Longest card type: (' + str(len(ltypes)) + ')')
             print('  ' + ltypes)
@@ -309,7 +307,7 @@ class Datamine:
             print('No cards indexed by type?')
         if len(self.by_subtype) > 0:
             lsubtypes = sorted(self.by_subtype,
-                               lambda x, y: cmp(len(x), len(y)),
+                               len,
                                reverse=True)[0]
             print('Longest subtype: (' + str(len(lsubtypes)) + ')')
             print('  ' + lsubtypes)
@@ -317,7 +315,7 @@ class Datamine:
             print('No cards indexed by subtype?')
         if len(self.by_supertype) > 0:
             lsupertypes = sorted(self.by_supertype,
-                                 lambda x, y: cmp(len(x), len(y)),
+                                 len,
                                  reverse=True)[0]
             print('Longest supertype: (' + str(len(lsupertypes)) + ')')
             print('  ' + lsupertypes)
@@ -326,7 +324,7 @@ class Datamine:
         print('--------------------')
         if len(self.by_cost) > 0:
             lcost = sorted(self.by_cost,
-                           lambda x, y: cmp(len(x), len(y)),
+                           len,
                            reverse=True)[0]
             print('Longest mana cost: (' + str(len(lcost)) + ')')
             print('  ' + utils.from_mana(lcost))
@@ -343,7 +341,7 @@ class Datamine:
         print('--------------------')
         if len(self.by_power) > 0:
             lpower = sorted(self.by_power,
-                            lambda x, y: cmp(len(x), len(y)),
+                            len,
                             reverse=True)[0]
             print('Largest creature power: ' + utils.from_unary(lpower))
             print('\n' + plimit(self.by_power[lpower][0].encode()) + '\n')
@@ -351,7 +349,7 @@ class Datamine:
             print('No cards indexed by power?')
         if len(self.by_toughness) > 0:
             ltoughness = sorted(self.by_toughness,
-                                lambda x, y: cmp(len(x), len(y)),
+                                len,
                                 reverse=True)[0]
             print('Largest creature toughness: ' +
                   utils.from_unary(ltoughness))

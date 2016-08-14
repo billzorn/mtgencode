@@ -114,7 +114,7 @@ unary_exceptions = config.unary_exceptions
 def to_unary(s, warn = False):
     numbers = re.findall(r'[0123456789]+', s)
     # replace largest first to avoid accidentally replacing shared substrings
-    for n in sorted(numbers, cmp = lambda x,y: cmp(int(x), int(y)), reverse = True):
+    for n in sorted(numbers, key=int, reverse=True):
         i = int(n)
         if i in unary_exceptions:
             s = s.replace(n, unary_exceptions[i])
@@ -130,7 +130,7 @@ def to_unary(s, warn = False):
 def from_unary(s):
     numbers = re.findall(re.escape(unary_marker + unary_counter) + '*', s)
     # again, largest first so we don't replace substrings and break everything
-    for n in sorted(numbers, cmp = lambda x,y: cmp(len(x), len(y)), reverse = True):
+    for n in sorted(numbers, len, reverse=True):
         i = (len(n) - len(unary_marker)) / len(unary_counter)
         s = s.replace(n, str(i))
     return s
@@ -381,16 +381,18 @@ mana_unary_regex = (re.escape(mana_json_open_delimiter) + number_unary_regex
 def mana_translate(jmanastr):
     manastr = jmanastr
     for n in sorted(re.findall(mana_unary_regex, manastr),
-                    lambda x,y: cmp(len(x), len(y)), reverse = True):
+                    len, reverse=True):
         ns = re.findall(number_unary_regex, n)
-        i = (len(ns[0]) - len(unary_marker)) / len(unary_counter)
-        manastr = manastr.replace(n, mana_unary_marker + mana_unary_counter * i)
+        i = (len(ns[0]) - len(unary_marker)) // len(unary_counter)
+        manastr = manastr.replace(
+            n, mana_unary_marker + mana_unary_counter * i)
     for n in sorted(re.findall(mana_decimal_regex, manastr),
-                        lambda x,y: cmp(len(x), len(y)), reverse = True):
+                    len, reverse=True):
         ns = re.findall(number_decimal_regex, n)
         i = int(ns[0])
-        manastr = manastr.replace(n, mana_unary_marker + mana_unary_counter * i)
-    for jsym in sorted(mana_symall_jdecode, lambda x,y: cmp(len(x), len(y)), reverse = True):
+        manastr = manastr.replace(
+            n, mana_unary_marker + mana_unary_counter * i)
+    for jsym in sorted(mana_symall_jdecode, len, reverse=True):
         if jsym in manastr:
             manastr = manastr.replace(jsym, mana_encode_direct(jsym))
     return mana_open_delimiter + manastr + mana_close_delimiter
@@ -458,13 +460,14 @@ def mana_untranslate(manastr, for_forum = False, for_html = False):
 # notice the calls to .upper(), this way we recognize lowercase symbols as well just in case
 def to_mana(s):
     jmanastrs = re.findall(mana_json_regex, s)
-    for jmanastr in sorted(jmanastrs, lambda x,y: cmp(len(x), len(y)), reverse = True):
+    for jmanastr in sorted(jmanastrs, len, reverse=True):
         s = s.replace(jmanastr, mana_translate(jmanastr.upper()))
     return s
 
-def from_mana(s, for_forum = False):
+
+def from_mana(s, for_forum=False):
     manastrs = re.findall(mana_regex, s)
-    for manastr in sorted(manastrs, lambda x,y: cmp(len(x), len(y)), reverse = True):
+    for manastr in sorted(manastrs, len, reverse=True):
         s = s.replace(manastr, mana_untranslate(manastr.upper(), for_forum = for_forum))
     return s
     
@@ -504,13 +507,14 @@ symbol_regex = '[' + tap_marker + untap_marker + ']'
 
 def to_symbols(s):
     jsymstrs = re.findall(json_symbol_regex, s)
-    for jsymstr in sorted(jsymstrs, lambda x,y: cmp(len(x), len(y)), reverse = True):
+    for jsymstr in sorted(jsymstrs, len, reverse=True):
         s = s.replace(jsymstr, json_symbol_trans[jsymstr])
     return s
 
-def from_symbols(s, for_forum = False, for_html = False):
+
+def from_symbols(s, for_forum=False, for_html=False):
     symstrs = re.findall(symbol_regex, s)
-    #for symstr in sorted(symstrs, lambda x,y: cmp(len(x), len(y)), reverse = True):
+    #for symstr in sorted(symstrs, len, reverse = True):
     # We have to do the right thing here, because the thing we replace exists in the thing
     # we replace it with...
     for symstr in set(symstrs):
