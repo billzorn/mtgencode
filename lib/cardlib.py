@@ -166,11 +166,15 @@ def fields_check_valid(fields):
         return False
     if not field_types in fields:
         return False
-    # creatures have p/t, other things don't
+    # creatures and vehicles have p/t, other things don't
     iscreature = False
     for idx, value in fields[field_types]:
         if 'creature' in value:
             iscreature = True
+    if fields.get(field_subtypes):
+        for idx, value in fields[field_subtypes]:
+            if 'vehicle' in value:
+                iscreature = True
     if iscreature:
         return field_pt in fields
     else:
