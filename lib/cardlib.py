@@ -171,10 +171,10 @@ def fields_check_valid(fields):
     for idx, value in fields[field_types]:
         if 'creature' in value:
             iscreature = True
-    if fields.get(field_subtypes):
-        for idx, value in fields[field_subtypes]:
-            if 'vehicle' in value:
-                iscreature = True
+        elif fields.get(field_subtypes):
+	    for idx, value in fields[field_subtypes]:
+	        if 'vehicle' in value:
+		    iscreature = True
     if iscreature:
         return field_pt in fields
     else:
