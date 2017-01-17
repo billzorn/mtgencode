@@ -158,6 +158,51 @@ def text_pass_4b_x(s):
     return s
 
 
+def text_pass_4c_abilitywords(s):
+    # Ability words are flavor text. We can discard them
+    abilitywords = [
+	'battalion',
+	'bloodrush',
+	'channel',
+	'chroma',
+	'cohort',
+	'constellation',
+	'converge',
+	"council's dilemma",
+	'delirium',
+	'domain',
+	'fateful hour',
+	'ferocious',
+	'formidable',
+	'grandeur',
+	'hellbent',
+	'heroic',
+	'imprint',
+	'inspired',
+	'join forces',
+	'kinship',
+	'landfall',
+	'lieutenant',
+	'metalcraft',
+	'morbid',
+	'parley',
+	'radiance',
+	'raid',
+	'rally',
+	'spell mastery',
+	'strive',
+	'sweep',
+	'tempting offer',
+	'threshold',
+	'will of the council',
+    ]
+
+    for abilityword in abilitywords:
+        s = s.replace(abilityword + ' ' + u'\u2014' + ' ', '')
+
+    return s
+
+
 # Call this before replacing newlines.
 # This one ends up being really bad because of the confusion
 # with 'counter target spell or ability'.

@@ -298,6 +298,7 @@ def fields_from_json(src_json, linetrans = True):
         text_val = transforms.text_pass_3_unary(text_val)
         text_val = transforms.text_pass_4a_dashes(text_val)
         text_val = transforms.text_pass_4b_x(text_val)
+        text_val = transforms.text_pass_4c_abilitywords(text_val)
         text_val = transforms.text_pass_5_counters(text_val)
         text_val = transforms.text_pass_6_uncast(text_val)
         text_val = transforms.text_pass_7_choice(text_val)
