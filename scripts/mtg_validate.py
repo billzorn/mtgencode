@@ -63,8 +63,8 @@ def check_types(card):
         return list_only(card.types, ['tribal', 'artifact', 'land', 'enchantment'])
 
 def check_pt(card):
-    if 'creature' in card.types or card.pt:
-        return (('creature' in card.types and len(re.findall(re.escape('/'), card.pt)) == 1)
+    if ('creature' in card.types or 'vehicle' in card.subtypes) or card.pt:
+        return ((('creature' in card.types or 'vehicle' in card.subtypes) and len(re.findall(re.escape('/'), card.pt)) == 1)
                 and not card.loyalty)
     if 'planeswalker' in card.types or card.loyalty:
         return (('planeswalker' in card.types and card.loyalty)
@@ -201,6 +201,12 @@ def check_equipment(card):
         return 'equip' in card.text.text
     else:
         return None
+
+def check_vehicles(card):
+    if 'vehicle' in card.subtypes:
+	return 'crew' in card.text.text
+    else:
+	return None
 
 def check_planeswalkers(card):
     if 'planeswalker' in card.types:
@@ -350,6 +356,7 @@ props = OrderedDict([
     ('quotes', check_quotes),
     ('auras', check_auras),
     ('equipment', check_equipment),
+    ('vehicles', check_vehicles),
     ('planeswalkers', check_planeswalkers),
     ('levelup', check_levelup),
     ('chosen', check_chosen),
