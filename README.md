@@ -331,3 +331,5 @@ Here's an attempt at a list of all the things I do:
 * Clean all the unicode junk like accents and unicode minus signs out of the text so there are fewer characters
 
 * Split composite text lines (i.e. "flying, first strike" -> "flying\first strike") and put the lines into canonical order
+
+* Remove ability words from rules text
