@@ -28,7 +28,7 @@ rarity_uncommon_marker = 'N'
 rarity_rare_marker = 'A'
 rarity_mythic_marker = 'Y'
 # with some crazy exceptions
-rarity_special_marker = 'E'
+rarity_special_marker = 'I'
 rarity_basic_land_marker = 'L'
 
 # unambiguous synonyms
