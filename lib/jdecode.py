@@ -151,7 +151,7 @@ def mtg_open_file(fname, verbose = False,
                 elif card.parsed:
                     invalid += 1
                     if verbose:
-		        print 'Invalid card: ' + json_cardname
+		        print 'Invalid card: ' + card_src
                 else:
                     unparsed += 1
 
