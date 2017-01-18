@@ -47,16 +47,16 @@ def main(fname, oname = None, verbose = True, encoding = 'std',
         raise ValueError('encode.py: unknown encoding: ' + encoding)
 
     if verbose:
-        print 'Preparing to encode:'
-        print '  Using encoding ' + repr(encoding)
+        print('Preparing to encode:')
+        print('  Using encoding ' + repr(encoding))
         if stable:
-            print '  NOT randomizing order of cards.'
+            print('  NOT randomizing order of cards.')
         if randomize_mana:
-            print '  Randomizing order of symobls in manacosts.'
+            print('  Randomizing order of symobls in manacosts.')
         if not fmt_labeled:
-            print '  NOT labeling fields for this run (may be harder to decode).'
+            print('  NOT labeling fields for this run (may be harder to decode).')
         if not line_transformations:
-            print '  NOT using line reordering transformations'
+            print('  NOT using line reordering transformations')
 
     cards = jdecode.mtg_open_file(fname, verbose=verbose, linetrans=line_transformations)
 
@@ -82,7 +82,7 @@ def main(fname, oname = None, verbose = True, encoding = 'std',
 
     if oname:
         if verbose:
-            print 'Writing output to: ' + oname
+            print('Writing output to: ' + oname)
         with open(oname, 'w') as ofile:
             writecards(ofile)
     else:

@@ -19,14 +19,14 @@ def main(fname, oname, verbose = True, parallel = True):
     cbow = CBOW()
 
     if verbose:
-        print 'Computing nearest names...'
+        print('Computing nearest names...')
     if parallel:
-        nearest_names = namediff.nearest_par(map(lambda c: c.name, cards), n=1)
+        nearest_names = namediff.nearest_par([c.name for c in cards], n=1)
     else:
         nearest_names = [namediff.nearest(c.name, n=1) for c in cards]
 
     if verbose:
-        print 'Computing nearest cards...'
+        print('Computing nearest cards...')
     if parallel:
         nearest_cards = cbow.nearest_par(cards, n=1)
     else:
@@ -45,7 +45,7 @@ def main(fname, oname, verbose = True, parallel = True):
     #     nearest_cards_text = [namediff.nearest_card(c, n=1) for c in cards]
 
     if verbose:
-        print '...Done.'
+        print('...Done.')
 
     # write to a file to store the data, this is a terribly long computation
     # we could also just store this same info in the cards themselves as more fields...

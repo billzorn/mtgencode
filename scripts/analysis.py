@@ -35,14 +35,16 @@ def annotate_values(values):
 def print_statistics(stats, ident = 0):
     for k in stats:
         if isinstance(stats[k], OrderedDict):
-            print(' ' * ident + str(k) + ':')
-            print_statistics(stats[k], ident=ident+2)
+            print((' ' * ident + str(k) + ':'))
+            print_statistics(stats[k], ident=ident + 2)
         elif isinstance(stats[k], dict):
-            print(' ' * ident + str(k) + ': <dict with ' + str(len(stats[k])) + ' entries>')
+            print((' ' * ident + str(k) + ': <dict with ' +
+                   str(len(stats[k])) + ' entries>'))
         elif isinstance(stats[k], list):
-            print(' ' * ident + str(k) + ': <list with ' + str(len(stats[k])) + ' entries>')
+            print((' ' * ident + str(k) + ': <list with ' +
+                   str(len(stats[k])) + ' entries>'))
         else:
-            print(' ' * ident + str(k) + ': ' + str(stats[k]))
+            print((' ' * ident + str(k) + ': ' + str(stats[k])))
 
 def get_statistics(fname, lm = None, sep = False, verbose=False):
     stats = OrderedDict()

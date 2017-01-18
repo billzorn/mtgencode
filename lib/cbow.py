@@ -147,7 +147,7 @@ def f_nearest(card, vocab, vecs, cardvecs, n):
 
 def f_nearest_per_thread(workitem):
     (workcards, vocab, vecs, cardvecs, n) = workitem
-    return map(lambda card: f_nearest(card, vocab, vecs, cardvecs, n), workcards)
+    return [f_nearest(card, vocab, vecs, cardvecs, n) for card in workcards]
 
 class CBOW:
     def __init__(self, verbose = True,
@@ -157,17 +157,18 @@ class CBOW:
         self.cardvecs = []
 
         if self.verbose:
-            print 'Building a cbow model...'
+            print('Building a cbow model...')
 
         if self.verbose:
-            print '  Reading binary vector data from: ' + vector_fname
+            print('  Reading binary vector data from: ' + vector_fname)
         (vocab, vecs) = read_vector_file(vector_fname)
         self.vocab = vocab
         self.vecs = vecs
-        
+
         if self.verbose:
-            print '  Reading encoded cards from: ' + card_fname
-            print '  They\'d better be in the same order as the file used to build the vector model!'
+            print('  Reading encoded cards from: ' + card_fname)
+            print(
+                '  They\'d better be in the same order as the file used to build the vector model!')
         with open(card_fname, 'rt') as f:
             text = f.read()
         for card_src in text.split(utils.cardsep):
@@ -179,10 +180,10 @@ class CBOW:
                                                     card.vectorize()))]
                 
         if self.verbose:
-            print '... Done.'
-            print '  vocab size: ' + str(len(self.vocab))
-            print '  raw vecs:   ' + str(len(self.vecs))
-            print '  card vecs:  ' + str(len(self.cardvecs))
+            print('... Done.')
+            print('  vocab size: ' + str(len(self.vocab)))
+            print('  raw vecs:   ' + str(len(self.vecs)))
+            print('  card vecs:  ' + str(len(self.cardvecs)))
 
     def nearest(self, card, n=5):
         return f_nearest(card, self.vocab, self.vecs, self.cardvecs, n)
@@ -190,6 +191,7 @@ class CBOW:
     def nearest_par(self, cards, n=5, threads=cores):
         workpool = multiprocessing.Pool(threads)
         proto_worklist = namediff.list_split(cards, threads)
-        worklist = map(lambda x: (x, self.vocab, self.vecs, self.cardvecs, n), proto_worklist)
+        worklist = [(x, self.vocab, self.vecs, self.cardvecs, n)
+                    for x in proto_worklist]
         donelist = workpool.map(f_nearest_per_thread, worklist)
         return namediff.list_flatten(donelist)
