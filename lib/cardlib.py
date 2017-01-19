@@ -16,6 +16,7 @@ except ImportError:
             "'S",
             ' A ',
             ' For ',
+            ' From ',
             ' In ',
             ' Of ',
             ' The ',
