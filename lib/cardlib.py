@@ -12,7 +12,7 @@ try:
 except ImportError:
     def titlecase(s):
         s = s.title()
-	smallwords = [
+        smallwords = [
             "'S",
             ' A ',
             ' For ',
@@ -22,7 +22,7 @@ except ImportError:
             ' To ',
         ]
         for word in smallwords:
-	    s = s.replace(word, word.lower())
+            s = s.replace(word, word.lower())
         return s
 
 try:
@@ -692,7 +692,7 @@ class Card:
             if self.__dict__[field_subtypes]:
                 outstr += (' ' + utils.dash_marker)
                 for subtype in self.__dict__[field_subtypes]:
-		    outstr += ' ' + titlecase(subtype)
+                    outstr += ' ' + titlecase(subtype)
 
             if self.__dict__[field_pt]:
                 outstr += ' (' + utils.from_unary(self.__dict__[field_pt]) + ')'
