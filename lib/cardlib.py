@@ -11,7 +11,19 @@ try:
     from titlecase import titlecase
 except ImportError:
     def titlecase(s):
-        return s.title()
+        s = s.title()
+	smallwords = [
+            "'S",
+            ' A ',
+            ' For ',
+            ' In ',
+            ' Of ',
+            ' The ',
+            ' To ',
+        ]
+        for word in smallwords:
+	    s = s.replace(word, word.lower())
+        return s
 
 try:
     import textwrap
@@ -678,8 +690,9 @@ class Card:
             outstr += ' '.join(map(str.capitalize, self.__dict__[field_supertypes]) + basetypes)
 
             if self.__dict__[field_subtypes]:
-                outstr += (' ' + utils.dash_marker + ' ' + 
-                           ' '.join(self.__dict__[field_subtypes]).title())
+                outstr += (' ' + utils.dash_marker)
+                for subtype in self.__dict__[field_subtypes]:
+		    outstr += ' ' + titlecase(subtype)
 
             if self.__dict__[field_pt]:
                 outstr += ' (' + utils.from_unary(self.__dict__[field_pt]) + ')'
@@ -864,7 +877,10 @@ class Card:
         outstr += '\tsuper type: ' + ' '.join(self.__dict__[field_supertypes] 
                                               + self.__dict__[field_types]).title() + '\n'
         if self.__dict__[field_subtypes]:
-            outstr += '\tsub type: ' + ' '.join(self.__dict__[field_subtypes]).title() + '\n'
+            outstr += ('\tsub type:')
+            for subtype in self.__dict__[field_subtypes]:
+                outstr += ' ' + titlecase(subtype)
+            outstr += '\n'
 
         if self.__dict__[field_pt]:
             ptstring = utils.from_unary(self.__dict__[field_pt]).split('/')
