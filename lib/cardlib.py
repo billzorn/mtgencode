@@ -751,6 +751,10 @@ class Card:
             #cardname = transforms.name_unpass_1_dashes(self.__dict__[field_name])
             if vdump and not cardname:
                 cardname = '_NONAME_'
+            else:
+                cardname = titlecase(cardname)
+            if for_forum:
+                cardname = '[b]' + cardname + '[/b]'
             outstr += cardname
 
             coststr = self.__dict__[field_cost].format(for_forum=for_forum, for_html=for_html)
@@ -771,9 +775,17 @@ class Card:
             
             outstr += linebreak
 
-            outstr += ' '.join(self.__dict__[field_supertypes] + self.__dict__[field_types])
+            if self.__dict__[field_supertypes]:
+                for supertype in self.__dict__[field_supertypes]:
+                    outstr += titlecase(supertype) + ' '
+            for maintype in self.__dict__[field_types]:
+                outstr += titlecase(maintype) + ' '
             if self.__dict__[field_subtypes]:
-                outstr += ' ' + utils.dash_marker + ' ' + ' '.join(self.__dict__[field_subtypes])
+                outstr += utils.dash_marker
+                for subtype in self.__dict__[field_subtypes]:
+                    outstr += ' ' + titlecase(subtype)
+            else:
+                outstr = outstr.strip()
 
             if self.__dict__[field_rarity]:
                 if self.__dict__[field_rarity] in utils.json_rarity_unmap:
@@ -791,6 +803,7 @@ class Card:
                 #mtext = transforms.text_unpass_3_uncast(mtext)
                 mtext = transforms.text_unpass_4_unary(mtext)
                 mtext = transforms.text_unpass_5_symbols(mtext, for_forum, for_html)
+                mtext = sentencecase(mtext)
                 #mtext = transforms.text_unpass_6_cardname(mtext, cardname)
                 mtext = transforms.text_unpass_7_newlines(mtext)
                 #mtext = transforms.text_unpass_8_unicode(mtext)
@@ -1057,5 +1070,3 @@ class Card:
 
     def get_cmc(self):
         return self.__dict__[field_cost].cmc
-
-        
