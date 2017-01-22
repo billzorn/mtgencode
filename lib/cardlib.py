@@ -15,12 +15,16 @@ except ImportError:
         smallwords = [
             "'S",
             ' A ',
+            ' And ',
+            ' As ',
+            ' At ',
             ' For ',
             ' From ',
             ' In ',
             ' Of ',
             ' The ',
             ' To ',
+            ' With ',
         ]
         for word in smallwords:
             s = s.replace(word, word.lower())
