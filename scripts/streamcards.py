@@ -41,7 +41,8 @@ def force_kill_self_noreturn():
 def handler_kill_self(signum, frame):
     if signum != signal.SIGQUIT:
         traceback.print_stack(frame)
-        print('caught signal {:d} - streamer sending SIGTERM to self'.format(signum))
+        print(
+            ('caught signal {:d} - streamer sending SIGTERM to self'.format(signum)))
     force_kill_self_noreturn()
 
 def install_suicide_handlers():

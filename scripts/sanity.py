@@ -41,37 +41,37 @@ def check_lines(fname):
 
         for line in prel:
             if line.strip() == '':
-                print(card.name, card.text.text)
+                print((card.name, card.text.text))
             if any(line.startswith(s) for s in known):
                 line = 'known'
             prelines.add(line)
         for line in postl:
             if line.strip() == '':
-                print(card.name, card.text.text)
+                print((card.name, card.text.text))
             if any(line.startswith(s) for s in known):
                 line = 'known'
             postlines.add(line)
         for line in keyl:
             if line.strip() == '':
-                print(card.name, card.text.text)
+                print((card.name, card.text.text))
             if any(line.startswith(s) for s in known):
                 line = 'known'
             keylines.add(line)
         for line in mainl:
             if line.strip() == '':
-                print(card.name, card.text.text)
+                print((card.name, card.text.text))
             # if any(line.startswith(s) for s in known):
             #     line = 'known'
             mainlines.add(line)
         for line in costl:
             if line.strip() == '':
-                print(card.name, card.text.text)
+                print((card.name, card.text.text))
             # if any(line.startswith(s) for s in known) or 'cycling' in line or 'monstrosity' in line:
             #     line = 'known'
             costlines.add(line)
 
-    print('prel: {:d}, keyl: {:d}, mainl: {:d}, postl {:d}'
-          .format(len(prelines), len(keylines), len(mainlines), len(postlines)))
+    print(('prel: {:d}, keyl: {:d}, mainl: {:d}, postl {:d}'
+           .format(len(prelines), len(keylines), len(mainlines), len(postlines))))
 
     print('\nprelines')
     for line in sorted(prelines):
@@ -108,8 +108,8 @@ def check_vocab(fname):
             else:
                 vocab[word] += 1
 
-    for word in sorted(vocab, lambda x,y: cmp(vocab[x], vocab[y]), reverse = True):
-        print('{:8d} : {:s}'.format(vocab[word], word))
+    for word in sorted(vocab, key=lambda x: vocab[x], reverse=True):
+        print(('{:8d} : {:s}'.format(vocab[word], word)))
 
     n = 3
 
@@ -120,8 +120,8 @@ def check_vocab(fname):
         for word in words:
             if vocab[word] <= n:
             #if 'name' in word:
-                print('\n{:8d} : {:s}'.format(vocab[word], word))
-                print(card.encode())
+                print(('\n{:8d} : {:s}'.format(vocab[word], word)))
+                print((card.encode()))
                 break
 
 def check_characters(fname, vname):
@@ -135,14 +135,15 @@ def check_characters(fname, vname):
     token_to_idx = {tok:i+1 for i, tok in enumerate(sorted(tokens))}
     idx_to_token = {i+1:tok for i, tok in enumerate(sorted(tokens))}
 
-    print('Vocabulary: ({:d} symbols)'.format(len(token_to_idx)))
+    print(('Vocabulary: ({:d} symbols)'.format(len(token_to_idx))))
     for token in sorted(token_to_idx):
-        print('{:8s} : {:4d}'.format(repr(token), token_to_idx[token]))
+        print(('{:8s} : {:4d}'.format(repr(token), token_to_idx[token])))
 
     # compliant with torch-rnn
     if vname:
-        json_data = {'token_to_idx':token_to_idx, 'idx_to_token':idx_to_token}
-        print('writing vocabulary to {:s}'.format(vname))
+        json_data = {'token_to_idx': token_to_idx,
+                     'idx_to_token': idx_to_token}
+        print(('writing vocabulary to {:s}'.format(vname)))
         with open(vname, 'w') as f:
             json.dump(json_data, f)
 

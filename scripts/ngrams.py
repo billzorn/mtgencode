@@ -33,22 +33,24 @@ def describe_bins(gramdict, bins):
     
     for i in range(0, len(counts)):
         if counts[i] > 0:
-            print ('  ' + (str(bins[i]) if i < len(bins) else str(bins[-1]) + '+') 
-                   + ': ' + str(counts[i]))
+            print(('  ' + (str(bins[i]) if i < len(bins) else str(bins[-1]) + '+')
+                   + ': ' + str(counts[i])))
 
-def extract_language(cards, separate_lines = True):
+
+def extract_language(cards, separate_lines=True):
     if separate_lines:
         lang = [line.vectorize() for card in cards for line in card.text_lines]
     else:
         lang = [card.text.vectorize() for card in cards]
-    return map(lambda s: s.split(), lang)
+    return [s.split() for s in lang]
 
-def build_ngram_model(cards, n, separate_lines = True, verbose = False):
+
+def build_ngram_model(cards, n, separate_lines=True, verbose=False):
     if verbose:
-        print('generating ' + str(n) + '-gram model')
+        print(('generating ' + str(n) + '-gram model'))
     lang = extract_language(cards, separate_lines=separate_lines)
     if verbose:
-        print('found ' + str(len(lang)) + ' sentences')
+        print(('found ' + str(len(lang)) + ' sentences'))
     lm = model.NgramModel(n, lang, pad_left=True, pad_right=True)
     if verbose:
         print(lm)
@@ -65,35 +67,35 @@ def main(fname, oname, gmin = 2, gmax = 8, nltk = False, sep = False, verbose = 
         lm = build_ngram_model(cards, n, separate_lines=sep, verbose=verbose)
         if verbose:
             teststr = 'when @ enters the battlefield'
-            print('litmus test: perplexity of ' + repr(teststr))
-            print('  ' + str(lm.perplexity(teststr.split())))
+            print(('litmus test: perplexity of ' + repr(teststr)))
+            print(('  ' + str(lm.perplexity(teststr.split()))))
         if verbose:
-            print('pickling module to ' + oname)
+            print(('pickling module to ' + oname))
         with open(oname, 'wb') as f:
             pickle.dump(lm, f)
 
     else:
         bins = [1, 2, 3, 10, 30, 100, 300, 1000]
         if gmin < 2 or gmax < gmin:
-            print 'invalid gram sizes: ' + str(gmin) + '-' + str(gmax)
+            print('invalid gram sizes: ' + str(gmin) + '-' + str(gmax))
             exit(1)
 
-        for grams in range(gmin, gmax+1):
+        for grams in range(gmin, gmax + 1):
             if verbose:
-                print 'generating ' + str(grams) + '-grams...'
+                print('generating ' + str(grams) + '-grams...')
             gramdict = {}
             for card in cards:
                 update_ngrams(card.text_lines_words, gramdict, grams)
 
             oname_full = oname + '.' + str(grams) + 'g'
             if verbose:
-                print('  writing ' + str(len(gramdict)) + ' unique ' + str(grams) 
-                      + '-grams to ' + oname_full)
+                print(('  writing ' + str(len(gramdict)) + ' unique ' + str(grams)
+                       + '-grams to ' + oname_full))
                 describe_bins(gramdict, bins)
 
             with open(oname_full, 'wt') as f:
                 for ngram in sorted(gramdict,
-                                    lambda x,y: cmp(gramdict[x], gramdict[y]),
+                                    key=lambda x: gramdict[x],
                                     reverse = True):
                     f.write((ngram + ': ' + str(gramdict[ngram]) + '\n').encode('utf-8'))
 

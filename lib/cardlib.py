@@ -251,20 +251,19 @@ def fields_from_json(src_json, linetrans = True):
         fields[field_cost] = [(-1, cost)]
 
     if 'supertypes' in src_json:
-        fields[field_supertypes] = [(-1, map(lambda s: utils.to_ascii(s.lower()), 
-                                             src_json['supertypes']))]
+        fields[field_supertypes] = [
+            (-1, [utils.to_ascii(s.lower()) for s in src_json['supertypes']])]
 
     if 'types' in src_json:
-        fields[field_types] = [(-1, map(lambda s: utils.to_ascii(s.lower()), 
-                                        src_json['types']))]
+        fields[field_types] = [(-1, [utils.to_ascii(s.lower())
+                                     for s in src_json['types']])]
     else:
         parsed = False
 
     if 'subtypes' in src_json:
-        fields[field_subtypes] = [(-1, map(lambda s: utils.to_ascii(s.lower())
-                                           # urza's lands...
-                                           .replace('"', "'").replace('-', utils.dash_marker), 
-                                           src_json['subtypes']))]
+        fields[field_subtypes] = [(-1, [utils.to_ascii(s.lower())
+                                        # urza's lands...
+                                        .replace('"', "'").replace('-', utils.dash_marker) for s in src_json['subtypes']])]
         
 
     if 'rarity' in src_json:
@@ -327,7 +326,7 @@ def fields_from_format(src_text, fmt_ordered, fmt_labeled, fieldsep):
 
     if fmt_labeled:
         labels = {fmt_labeled[k] : k for k in fmt_labeled}
-        field_label_regex = '[' + ''.join(labels.keys()) + ']'
+        field_label_regex = '[' + ''.join(list(labels.keys())) + ']'
     def addf(fields, fkey, fval):
         # make sure you pass a pair
         if fval and fval[1]:
@@ -548,14 +547,13 @@ class Card:
                 self.__dict__[field_text] = mtext
                 fulltext = mtext.encode()
                 if fulltext:
-                    self.__dict__[field_text + '_lines'] = map(Manatext, 
-                                                               fulltext.split(utils.newline))
-                    self.__dict__[field_text + '_words'] = re.sub(utils.unletters_regex, 
-                                                                  ' ', 
+                    self.__dict__[field_text + '_lines'] = list(map(Manatext,
+                                                                    fulltext.split(utils.newline)))
+                    self.__dict__[field_text + '_words'] = re.sub(utils.unletters_regex,
+                                                                  ' ',
                                                                   fulltext).split()
-                    self.__dict__[field_text + '_lines_words'] = map(
-                        lambda line: re.sub(utils.unletters_regex, ' ', line).split(),
-                        fulltext.split(utils.newline))
+                    self.__dict__[field_text + '_lines_words'] = [re.sub(
+                        utils.unletters_regex, ' ', line).split() for line in fulltext.split(utils.newline)]
             else:
                 self.valid = False
                 self.__dict__[field_other] += [(idx, '<text> ' + str(value))]
@@ -671,11 +669,12 @@ class Card:
                 
             outstr += linebreak
 
-            basetypes = map(str.capitalize, self.__dict__[field_types])
+            basetypes = list(map(str.capitalize, self.__dict__[field_types]))
             if vdump and len(basetypes) < 1:
                 basetypes = ['_NOTYPE_']
-            
-            outstr += ' '.join(map(str.capitalize, self.__dict__[field_supertypes]) + basetypes)
+
+            outstr += ' '.join(list(map(str.capitalize,
+                                        self.__dict__[field_supertypes])) + basetypes)
 
             if self.__dict__[field_subtypes]:
                 outstr += (' ' + utils.dash_marker + ' ' + 
@@ -1009,8 +1008,8 @@ class Card:
         if coststr:
             outstr += coststr + ' '
 
-        typestr = ' '.join(map(lambda s: '(' + s + ')',
-                               self.__dict__[field_supertypes] + self.__dict__[field_types]))
+        typestr = ' '.join(
+            ['(' + s + ')' for s in self.__dict__[field_supertypes] + self.__dict__[field_types]])
         if typestr:
             outstr += typestr + ' '
 
@@ -1018,8 +1017,8 @@ class Card:
             outstr += ' '.join(self.__dict__[field_subtypes]) + ' '
 
         if self.__dict__[field_pt]:
-            outstr += ' '.join(map(lambda s: '(' + s + ')',
-                                   self.__dict__[field_pt].replace('/', '/ /').split()))
+            outstr += ' '.join(['(' + s + ')' for s in self.__dict__[
+                               field_pt].replace('/', '/ /').split()])
             outstr += ' '
         
         if self.__dict__[field_loyalty]:
