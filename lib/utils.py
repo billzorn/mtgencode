@@ -97,6 +97,11 @@ unicode_trans = {
     u'\xe2' : 'a', # a with caret
     u'\xf6' : 'o', # o with umlaut
     u'\xed' : 'i', # i with accent
+    u'\u03c0' : 'pi',  # pi
+    u'\xae' : 'r', # Registered trademark as r
+    u'\xbd' : "1/2", # 1/2 unicode to string
+    u'\u221e': "inf",  # infinity
+    u'\u2610': "na"  # ballot box as na
 }
 
 # this one is one-way only
