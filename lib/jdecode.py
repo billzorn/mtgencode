@@ -3,11 +3,12 @@ import json
 import utils
 import cardlib
 
-def mtg_open_json(fname, verbose = False):
+
+def mtg_open_json(fname, verbose=False):
 
     with open(fname, 'r') as f:
-        jobj = json.load(f)
-    
+        jobj = json.load(f)["data"]
+
     allcards = {}
     asides = {}
     bsides = {}
@@ -19,7 +20,7 @@ def mtg_open_json(fname, verbose = False):
             codename = set['magicCardsInfoCode']
         else:
             codename = ''
-        
+
         for card in set['cards']:
             card[utils.json_field_set_name] = setname
             card[utils.json_field_info_code] = codename
@@ -42,7 +43,7 @@ def mtg_open_json(fname, verbose = False):
                     allcards[cardname] += [card]
                 else:
                     allcards[cardname] = [card]
-                    
+
             # also aggregate aside cards by uid so we can add bsides later
             if uid[-1:] == 'a':
                 asides[uid] = card
@@ -59,29 +60,35 @@ def mtg_open_json(fname, verbose = False):
             pass
             # this exposes some coldsnap theme deck bsides that aren't
             # really bsides; shouldn't matter too much
-            #print aside_uid
-            #print bsides[uid]
+            # print aside_uid
+            # print bsides[uid]
 
     if verbose:
         print 'Opened ' + str(len(allcards)) + ' uniquely named cards.'
     return allcards
 
 # filters to ignore some undesirable cards, only used when opening json
+
+
 def default_exclude_sets(cardset):
     return cardset == 'Unglued' or cardset == 'Unhinged' or cardset == 'Celebration'
 
+
 def default_exclude_types(cardtype):
     return cardtype in ['conspiracy']
+
 
 def default_exclude_layouts(layout):
     return layout in ['token', 'plane', 'scheme', 'phenomenon', 'vanguard']
 
 # centralized logic for opening files of cards, either encoded or json
-def mtg_open_file(fname, verbose = False,
-                  linetrans = True, fmt_ordered = cardlib.fmt_ordered_default,
-                  exclude_sets = default_exclude_sets,
-                  exclude_types = default_exclude_types,
-                  exclude_layouts = default_exclude_layouts):
+
+
+def mtg_open_file(fname, verbose=False,
+                  linetrans=True, fmt_ordered=cardlib.fmt_ordered_default,
+                  exclude_sets=default_exclude_sets,
+                  exclude_types=default_exclude_types,
+                  exclude_layouts=default_exclude_layouts):
 
     cards = []
     valid = 0
@@ -116,7 +123,7 @@ def mtg_open_file(fname, verbose = False,
 
                 skip = False
                 if (exclude_sets(jcards[idx][utils.json_field_set_name])
-                    or exclude_layouts(jcards[idx]['layout'])):
+                        or exclude_layouts(jcards[idx]['layout'])):
                     skip = True
                 for cardtype in card.types:
                     if exclude_types(cardtype):
@@ -131,7 +138,7 @@ def mtg_open_file(fname, verbose = False,
                 elif card.parsed:
                     invalid += 1
                     if verbose:
-		        print 'Invalid card: ' + json_cardname
+                        print 'Invalid card: ' + json_cardname
                 else:
                     unparsed += 1
 
@@ -151,13 +158,13 @@ def mtg_open_file(fname, verbose = False,
                 elif card.parsed:
                     invalid += 1
                     if verbose:
-		        print 'Invalid card: ' + json_cardname
+                        print 'Invalid card: ' + json_cardname
                 else:
                     unparsed += 1
 
     if verbose:
-        print (str(valid) + ' valid, ' + str(skipped) + ' skipped, '
-               + str(invalid) + ' invalid, ' + str(unparsed) + ' failed to parse.')
+        print(str(valid) + ' valid, ' + str(skipped) + ' skipped, '
+              + str(invalid) + ' invalid, ' + str(unparsed) + ' failed to parse.')
 
     good_count = 0
     bad_count = 0
