@@ -114,7 +114,7 @@ unary_exceptions = config.unary_exceptions
 def to_unary(s, warn = False):
     numbers = re.findall(r'[0123456789]+', s)
     # replace largest first to avoid accidentally replacing shared substrings
-    for n in sorted(numbers, cmp = lambda x,y: cmp(int(x), int(y)), reverse = True):
+    for n in sorted(numbers, key=int, reverse = True):
         i = int(n)
         if i in unary_exceptions:
             s = s.replace(n, unary_exceptions[i])
@@ -382,17 +382,15 @@ mana_unary_regex = (re.escape(mana_json_open_delimiter) + number_unary_regex
 # convert a json mana string to the proper encoding
 def mana_translate(jmanastr):
     manastr = jmanastr
-    for n in sorted(re.findall(mana_unary_regex, manastr),
-                    lambda x,y: cmp(len(x), len(y)), reverse = True):
+    for n in sorted(re.findall(mana_unary_regex, manastr), key=len, reverse=True):
         ns = re.findall(number_unary_regex, n)
-        i = (len(ns[0]) - len(unary_marker)) / len(unary_counter)
+        i = int((len(ns[0]) - len(unary_marker)) / len(unary_counter))
         manastr = manastr.replace(n, mana_unary_marker + mana_unary_counter * i)
-    for n in sorted(re.findall(mana_decimal_regex, manastr),
-                        lambda x,y: cmp(len(x), len(y)), reverse = True):
+    for n in sorted(re.findall(mana_decimal_regex, manastr), key=len, reverse=True):
         ns = re.findall(number_decimal_regex, n)
         i = int(ns[0])
         manastr = manastr.replace(n, mana_unary_marker + mana_unary_counter * i)
-    for jsym in sorted(mana_symall_jdecode, lambda x,y: cmp(len(x), len(y)), reverse = True):
+    for jsym in sorted(mana_symall_jdecode, key=len, reverse = True):
         if jsym in manastr:
             manastr = manastr.replace(jsym, mana_encode_direct(jsym))
     return mana_open_delimiter + manastr + mana_close_delimiter
@@ -506,7 +504,7 @@ symbol_regex = '[' + tap_marker + untap_marker + ']'
 
 def to_symbols(s):
     jsymstrs = re.findall(json_symbol_regex, s)
-    for jsymstr in sorted(jsymstrs, lambda x,y: cmp(len(x), len(y)), reverse = True):
+    for jsymstr in sorted(jsymstrs, key=len, reverse = True):
         s = s.replace(jsymstr, json_symbol_trans[jsymstr])
     return s
 
