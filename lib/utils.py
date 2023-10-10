@@ -83,20 +83,20 @@ json_field_info_code = config.json_field_info_code
 
 # unicode / ascii conversion
 unicode_trans = {
-    u'\u2014' : dash_marker, # unicode long dash
-    u'\u2022' : bullet_marker, # unicode bullet
-    u'\u2019' : '"', # single quote
-    u'\u2018' : '"', # single quote
-    u'\u2212' : '-', # minus sign
-    u'\xe6' : 'ae', # ae symbol
-    u'\xfb' : 'u', # u with caret
-    u'\xfa' : 'u', # u with accent
-    u'\xe9' : 'e', # e with accent
-    u'\xe1' : 'a', # a with accent
-    u'\xe0' : 'a', # a with accent going the other way
-    u'\xe2' : 'a', # a with caret
-    u'\xf6' : 'o', # o with umlaut
-    u'\xed' : 'i', # i with accent
+    '\\u2014' : dash_marker, # unicode long dash
+    '\\u2022' : bullet_marker, # unicode bullet
+    '\\u2019' : '"', # single quote
+    '\\u2018' : '"', # single quote
+    '\\u2212' : '-', # minus sign
+    '\xe6' : 'ae', # ae symbol
+    '\xfb' : 'u', # u with caret
+    '\xfa' : 'u', # u with accent
+    '\xe9' : 'e', # e with accent
+    '\xe1' : 'a', # a with accent
+    '\xe0' : 'a', # a with accent going the other way
+    '\xe2' : 'a', # a with caret
+    '\xf6' : 'o', # o with umlaut
+    '\xed' : 'i', # i with accent
 }
 
 # this one is one-way only
@@ -121,7 +121,7 @@ def to_unary(s, warn = False):
         elif i > unary_max:
             i = unary_max
             if warn:
-                print s
+                print(s)
             s = s.replace(n, unary_marker + unary_counter * i)
         else:
             s = s.replace(n, unary_marker + unary_counter * i)

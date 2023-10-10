@@ -11,7 +11,7 @@
 # an attempt was made to preserve the exact functionality of this code,
 # hampered somewhat by its brokenness
 
-from __future__ import unicode_literals
+
 
 from math import log
 
@@ -169,9 +169,9 @@ class NgramModel(ModelI):
 
     # fixed
     def _words_following(self, context, cond_freq_dist):
-        for ctxt in cond_freq_dist.iterkeys():
+        for ctxt in list(cond_freq_dist.keys()):
             if ctxt == context:
-                yield cond_freq_dist[ctxt].keys()
+                yield list(cond_freq_dist[ctxt].keys())
 
     def prob(self, word, context):
         """

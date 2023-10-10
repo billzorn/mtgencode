@@ -11,7 +11,7 @@ from datalib import Datamine
 def main(fname, verbose = True, outliers = False, dump_all = False):
     if fname[-5:] == '.json':
         if verbose:
-            print 'This looks like a json file: ' + fname
+            print(('This looks like a json file: ' + fname))
         json_srcs = jdecode.mtg_open_json(fname, verbose)
         card_srcs = []
         for json_cardname in sorted(json_srcs):
@@ -19,7 +19,7 @@ def main(fname, verbose = True, outliers = False, dump_all = False):
                 card_srcs += [json_srcs[json_cardname][0]]
     else:
         if verbose:
-            print 'Opening encoded card file: ' + fname
+            print(('Opening encoded card file: ' + fname))
         with open(fname, 'rt') as f:
             text = f.read()
         card_srcs = text.split(utils.cardsep)

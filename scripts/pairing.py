@@ -87,8 +87,8 @@ def main(fname, oname, n=20, verbose=False):
     #selected = selected[:limit]
 
     if verbose:
-        print('computing nearest cards for ' + str(len(selected)) + ' candindates...')
-    cbow_nearest = cbow.nearest_par(map(lambda (i, c): c, selected))
+        print(('computing nearest cards for ' + str(len(selected)) + ' candindates...'))
+    cbow_nearest = cbow.nearest_par([i_c[1] for i_c in selected])
     for i in range(0, len(selected)):
         (j, card) = selected[i]
         selected[i] = (j, card, cbow_nearest[i])
@@ -104,17 +104,17 @@ def main(fname, oname, n=20, verbose=False):
                 break
 
     for (i, card, realcard, dist) in final:
-        print '-- real --'
-        print realcard.format()
-        print '-- fake --'
-        print card.format()
-        print '-- stats --'
+        print('-- real --')
+        print((realcard.format()))
+        print('-- fake --')
+        print((card.format()))
+        print('-- stats --')
         perp_per = stats['ngram']['perp_per'][i]
         perp_max = stats['ngram']['perp_max'][i]
-        print dist
-        print perp_per
-        print perp_max
-        print '----'
+        print(dist)
+        print(perp_per)
+        print(perp_max)
+        print('----')
 
     if not oname is None:
         with open(oname, 'wt') as ofile:
@@ -126,7 +126,7 @@ def main(fname, oname, n=20, verbose=False):
             ofile.write('version control:\n\ttype: none\napprentice code: ')
             # Copy whatever output file is produced, name the copy 'set' (yes, no extension).
             if os.path.isfile('set'):
-                print 'ERROR: tried to overwrite existing file "set" - aborting.'
+                print('ERROR: tried to overwrite existing file "set" - aborting.')
                 return
             shutil.copyfile(oname, 'set')
             # Use the freaky mse extension instead of zip.
@@ -136,7 +136,7 @@ def main(fname, oname, n=20, verbose=False):
                     zf.write('set') 
                 finally:
                     if verbose:
-                        print 'Made an MSE set file called ' + oname + '.mse-set.'
+                        print(('Made an MSE set file called ' + oname + '.mse-set.'))
                     # The set file is useless outside the .mse-set, delete it.
                     os.remove('set')
 

@@ -47,20 +47,20 @@ def process_dir(basedir, targetdir, ident, copy_cp = False, verbose = False):
     cp_infos = identify_checkpoints(basedir, ident)
     for (dpath, cpath, (epoch, vloss, temp)) in cp_infos:
         if verbose:
-            print('found dumpfile ' + dpath)
+            print(('found dumpfile ' + dpath))
         dname = basedirname + '_epoch' + epoch + '_' + vloss + '.' + ident + '.' + temp + '.txt'
         cname = basedirname + '_epoch' + epoch + '_' + vloss + '.t7'
         tdpath = os.path.join(targetdir, dname)
         tcpath = os.path.join(targetdir, cname)
         if verbose:
-            print('    cpx ' + dpath + ' ' + tdpath)
+            print(('    cpx ' + dpath + ' ' + tdpath))
         with open(dpath, 'rt') as infile:
             with open(tdpath, 'wt') as outfile:
                 outfile.write(cleanup_dump(infile.read()))
         if copy_cp:
             if os.path.isfile(cpath):
                 if verbose:
-                    print('    cp ' + cpath + ' ' + tcpath)
+                    print(('    cp ' + cpath + ' ' + tcpath))
                 shutil.copy(cpath,  tcpath)
 
     if copy_cp and len(cp_infos) > 0:
@@ -68,7 +68,7 @@ def process_dir(basedir, targetdir, ident, copy_cp = False, verbose = False):
         tcmdpath = os.path.join(targetdir, basedirname + '.command')
         if os.path.isfile(cmdpath):
             if verbose:
-                print('    cp ' + cmdpath + ' ' + tcmdpath)
+                print(('    cp ' + cmdpath + ' ' + tcmdpath))
             shutil.copy(cmdpath,  tcmdpath)
 
     for path in os.listdir(basedir):

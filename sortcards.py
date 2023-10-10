@@ -141,7 +141,7 @@ def sortcards(cards):
 
 def main(fname, oname = None, verbose = True):
     if verbose:
-        print 'Opening encoded card file: ' + fname
+        print('Opening encoded card file: ' + fname)
 
     f = open(fname, 'r')
     text = f.read()
@@ -153,14 +153,14 @@ def main(fname, oname = None, verbose = True):
 
     if not oname == None:
         if verbose:
-            print 'Writing output to: ' + oname
+            print('Writing output to: ' + oname)
         ofile = codecs.open(oname, 'w', 'utf-8')
 
     for cardclass in classes:
         if classes[cardclass] == None:
-            print cardclass
+            print(cardclass)
         else:
-            print '  ' + cardclass + ': ' + str(len(classes[cardclass]))
+            print('  ' + cardclass + ': ' + str(len(classes[cardclass])))
 
     if oname == None:
         outputter = sys.stdout
@@ -189,6 +189,6 @@ if __name__ == '__main__':
     elif len(sys.argv) == 3:
         main(sys.argv[1], oname = sys.argv[2])
     else:
-        print 'Usage: ' + sys.argv[0] + ' ' + '<encoded file> [output filename]'
+        print('Usage: ' + sys.argv[0] + ' ' + '<encoded file> [output filename]')
         exit(1)
 

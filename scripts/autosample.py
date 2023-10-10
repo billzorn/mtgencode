@@ -22,7 +22,7 @@ def sample(cp, temp, count, seed = None, ident = 'output'):
            + ' -seed ' + str(seed)
            + ' >> ' + outfile)
     if os.path.exists(outfile):
-        print(outfile + ' already exists, skipping')
+        print((outfile + ' already exists, skipping'))
         return False
     else:
         # UNSAFE SHELL=TRUE FOR CONVENIENCE
@@ -45,7 +45,7 @@ def find_best_cp(cpdir):
 
 def process_dir(cpdir, temp, count, seed = None, ident = 'output', verbose = False):
     if verbose:
-        print('processing ' + cpdir)
+        print(('processing ' + cpdir))
     best_cp = find_best_cp(cpdir)
     if not best_cp is None:
         sample(best_cp, temp, count, seed=seed, ident=ident)
